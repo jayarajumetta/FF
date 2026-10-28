@@ -47,23 +47,35 @@ parameters:
   default: true
 
 variables:
-  DOTNET_VERSION: "8.0.x"
-  BUILD_CONFIGURATION: "Release"
-  NUGET_PACKAGES: '$(Pipeline.Workspace)\.nuget\packages'
-  PACKAGE_ROOT: '$(Pipeline.Workspace)\testpackage'
-  DATA_POOL_URL: "http://scpw-pnc-plw1:5100"
-  PLAYWRIGHT_VERSION: "1.57.0"
+- group: "PnC_DC_TestAutomation"
+- name: DOTNET_VERSION
+  value: "8.0.x"
+- name: BUILD_CONFIGURATION
+  value: "Release"
+- name: NUGET_PACKAGES
+  value: '$(Pipeline.Workspace)\.nuget\packages'
+- name: PACKAGE_ROOT
+  value: '$(Pipeline.Workspace)\testpackage'
+- name: DATA_POOL_URL
+  value: "http://scpw-pnc-plw1:5100"
+- name: PLAYWRIGHT_VERSION
+  value: "1.57.0"
 
-  ${{ if eq(parameters.suite, 'All') }}:
-    TEST_FILTER: "TestCategory=SFP&TestCategory!=DevOnly"
-  ${{ if eq(parameters.suite, 'SingleExample') }}:
-    TEST_FILTER: "TestCategory=PipelineSmoke&TestCategory!=DevOnly"
-  ${{ if eq(parameters.suite, 'BasicPolicy') }}:
-    TEST_FILTER: "TestCategory=SFP&TestCategory!=CE&TestCategory!=DevOnly"
-  ${{ if eq(parameters.suite, 'CountryEstate') }}:
-    TEST_FILTER: "TestCategory=CE&TestCategory!=DevOnly"
-  ${{ if eq(parameters.suite, 'Smoke') }}:
-    TEST_FILTER: "TestCategory=Smoke&TestCategory!=DevOnly"
+- ${{ if eq(parameters.suite, 'All') }}:
+  - name: TEST_FILTER
+    value: "TestCategory=SFP&TestCategory!=DevOnly"
+- ${{ if eq(parameters.suite, 'SingleExample') }}:
+  - name: TEST_FILTER
+    value: "TestCategory=PipelineSmoke&TestCategory!=DevOnly"
+- ${{ if eq(parameters.suite, 'BasicPolicy') }}:
+  - name: TEST_FILTER
+    value: "TestCategory=SFP&TestCategory!=CE&TestCategory!=DevOnly"
+- ${{ if eq(parameters.suite, 'CountryEstate') }}:
+  - name: TEST_FILTER
+    value: "TestCategory=CE&TestCategory!=DevOnly"
+- ${{ if eq(parameters.suite, 'Smoke') }}:
+  - name: TEST_FILTER
+    value: "TestCategory=Smoke&TestCategory!=DevOnly"
 
 stages:
 - stage: Build
@@ -121,7 +133,6 @@ stages:
 
         Copy-Item "$(Build.SourcesDirectory)\ci.runsettings" $packageRoot -Force
         Copy-Item "$(Build.SourcesDirectory)\Scripts\Initialize-PipelineTestRuntime.ps1" $scriptsRoot -Force
-        Copy-Item "$(Build.SourcesDirectory)\Scripts\Invoke-KeyVaultTestRun.ps1" $scriptsRoot -Force
 
         $settingsPath = Join-Path $testsRoot "appsettings.json"
         $settings = Get-Content -LiteralPath $settingsPath -Raw | ConvertFrom-Json
@@ -221,6 +232,13 @@ stages:
           -Environment "${{ parameters.environment }}"
           -DataPoolUrl "$(DATA_POOL_URL)"
           -ValidateEndpoints
+      env:
+        Credentials__Username: "$(CL_EQ_USERNAME)"
+        Credentials__Password: "$(CL_EQ_PASSWORD)"
+        DuckCreekForms__Username: "$(CL_DC_USERNAME)"
+        DUCKCREEK_PASSWORD: "$(CL_DC_PASSWORD)"
+        DuckCreekForms__CLASUsername: "$(CL_DC_USERNAME)"
+        DuckCreekForms__CLASPassword: "$(CL_DC_PASSWORD)"
 
     - task: VSTest@3
       displayName: "Run ExpertQuote smoke gate"
@@ -257,12 +275,12 @@ stages:
         DataPool__BaseUrl: "$(DATA_POOL_URL)"
         DataPool__AutoStart: "false"
         DuckCreekForms__ResultsBasePath: '$(TEST_RESULTS_ROOT)\FormsCheck'
-        Credentials__Username: "$(Credentials__Username)"
-        Credentials__Password: "$(Credentials__Password)"
-        DuckCreekForms__Username: "$(DuckCreekForms__Username)"
-        DUCKCREEK_PASSWORD: "$(DUCKCREEK_PASSWORD)"
-        DuckCreekForms__CLASUsername: "$(DuckCreekForms__CLASUsername)"
-        DuckCreekForms__CLASPassword: "$(DuckCreekForms__CLASPassword)"
+        Credentials__Username: "$(CL_EQ_USERNAME)"
+        Credentials__Password: "$(CL_EQ_PASSWORD)"
+        DuckCreekForms__Username: "$(CL_DC_USERNAME)"
+        DUCKCREEK_PASSWORD: "$(CL_DC_PASSWORD)"
+        DuckCreekForms__CLASUsername: "$(CL_DC_USERNAME)"
+        DuckCreekForms__CLASPassword: "$(CL_DC_PASSWORD)"
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish preflight evidence"
@@ -324,6 +342,13 @@ stages:
           -ResultsRoot "$(TEST_RESULTS_ROOT)"
           -Environment "${{ parameters.environment }}"
           -DataPoolUrl "$(DATA_POOL_URL)"
+      env:
+        Credentials__Username: "$(CL_EQ_USERNAME)"
+        Credentials__Password: "$(CL_EQ_PASSWORD)"
+        DuckCreekForms__Username: "$(CL_DC_USERNAME)"
+        DUCKCREEK_PASSWORD: "$(CL_DC_PASSWORD)"
+        DuckCreekForms__CLASUsername: "$(CL_DC_USERNAME)"
+        DuckCreekForms__CLASPassword: "$(CL_DC_PASSWORD)"
 
     - task: VSTest@3
       displayName: "Execute tests with time-based agent slicing"
@@ -361,12 +386,12 @@ stages:
         DataPool__BaseUrl: "$(DATA_POOL_URL)"
         DataPool__AutoStart: "false"
         DuckCreekForms__ResultsBasePath: '$(TEST_RESULTS_ROOT)\FormsCheck'
-        Credentials__Username: "$(Credentials__Username)"
-        Credentials__Password: "$(Credentials__Password)"
-        DuckCreekForms__Username: "$(DuckCreekForms__Username)"
-        DUCKCREEK_PASSWORD: "$(DUCKCREEK_PASSWORD)"
-        DuckCreekForms__CLASUsername: "$(DuckCreekForms__CLASUsername)"
-        DuckCreekForms__CLASPassword: "$(DuckCreekForms__CLASPassword)"
+        Credentials__Username: "$(CL_EQ_USERNAME)"
+        Credentials__Password: "$(CL_EQ_PASSWORD)"
+        DuckCreekForms__Username: "$(CL_DC_USERNAME)"
+        DUCKCREEK_PASSWORD: "$(CL_DC_PASSWORD)"
+        DuckCreekForms__CLASUsername: "$(CL_DC_USERNAME)"
+        DuckCreekForms__CLASPassword: "$(CL_DC_PASSWORD)"
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish this agent's evidence"

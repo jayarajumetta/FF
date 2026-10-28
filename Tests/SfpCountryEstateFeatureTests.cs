@@ -155,17 +155,17 @@ namespace PnCTestAutomation.Tests
                 "Pipelines",
                 "pnc-automated-regression.yml");
             var pipeline = File.ReadAllText(path);
-            var filters = File.ReadLines(path)
-                .Where(line => System.Text.RegularExpressions.Regex.IsMatch(
-                    line,
-                    @"^\s+TEST_FILTER:\s*"""))
-                .ToArray();
+            var filterDefinitions = System.Text.RegularExpressions.Regex.Matches(
+                pipeline,
+                @"name:\s*TEST_FILTER\s*\r?\n\s*value:\s*""([^""]+)""");
 
             Assert.Multiple(() =>
             {
-                Assert.That(filters, Has.Length.EqualTo(5));
+                Assert.That(filterDefinitions, Has.Count.EqualTo(5));
                 Assert.That(
-                    filters.All(line => line.Contains("TestCategory!=DevOnly")),
+                    filterDefinitions
+                        .Cast<System.Text.RegularExpressions.Match>()
+                        .All(match => match.Groups[1].Value.Contains("TestCategory!=DevOnly")),
                     Is.True);
                 Assert.That(
                     pipeline,

@@ -365,6 +365,11 @@ count as queue-time options. Scheduled runs use one agent by default until the
 Playwright pool has independently provisioned hosts. Automatic failed-test retries
 are intentionally disabled so the published result remains authoritative.
 
+Azure DevOps execution uses the authorized `PnC_DC_TestAutomation` variable group,
+matching the SGS credential model. ExpertQuote values map from `CL_EQ_*`, and
+Duck Creek/CLAS values map from `CL_DC_*`. The Key Vault runner described above
+remains available for local or separately provisioned managed-identity execution.
+
 Choose `SingleExample` for a short pipeline validation. It runs only the Alabama
 SFP Basic Policy example tagged `@PipelineSmoke` and skips the separate ExpertQuote
 smoke gate, so only one browser test executes after dependency preflight.

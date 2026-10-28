@@ -13,10 +13,6 @@ param(
     [Parameter(Mandatory)]
     [string]$DataPoolUrl,
 
-    [string]$VaultName = "kv-pa-d-tstauto-1",
-
-    [string]$ManagedIdentityClientId = "0baaaf70-3528-475d-9906-506d65b72a77",
-
     [switch]$ValidateEndpoints
 )
 
@@ -73,6 +69,22 @@ foreach ($requiredPath in @($testsRoot, $scriptsRoot, $runSettingsPath, $testAss
 New-Item -ItemType Directory -Force -Path $resolvedResultsRoot | Out-Null
 Write-Host "##vso[task.setvariable variable=TEST_RESULTS_ROOT]$resolvedResultsRoot"
 
+$requiredSecrets = @(
+    "Credentials__Username",
+    "Credentials__Password",
+    "DuckCreekForms__Username",
+    "DUCKCREEK_PASSWORD",
+    "DuckCreekForms__CLASUsername",
+    "DuckCreekForms__CLASPassword"
+)
+foreach ($secretName in $requiredSecrets) {
+    $secretValue = [Environment]::GetEnvironmentVariable($secretName)
+    if ([string]::IsNullOrWhiteSpace($secretValue) -or $secretValue -match '^\$\(.+\)$') {
+        throw "Required pipeline secret '$secretName' is unavailable. Authorize the PnC_DC_TestAutomation variable group for this pipeline."
+    }
+}
+Write-Host "Required pipeline credentials are available."
+
 $browserPath = if ($env:PLAYWRIGHT_BROWSERS_PATH) {
     $env:PLAYWRIGHT_BROWSERS_PATH
 }
@@ -103,14 +115,6 @@ if (-not $chromium) {
         throw "Playwright Chromium installation failed with exit code $LASTEXITCODE."
     }
 }
-
-$keyVaultRunner = Join-Path $scriptsRoot "Invoke-KeyVaultTestRun.ps1"
-& $keyVaultRunner `
-    -VaultName $VaultName `
-    -ManagedIdentityClientId $ManagedIdentityClientId `
-    -AuthenticationMode ManagedIdentity `
-    -ValidateCredentialsOnly `
-    -ExportAzureDevOpsVariables
 
 if ($ValidateEndpoints) {
     $baseConfigPath = Join-Path $testsRoot "appsettings.json"
