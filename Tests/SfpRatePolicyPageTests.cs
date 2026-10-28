@@ -7,6 +7,7 @@ using Microsoft.Playwright;
 using NUnit.Framework;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Pages;
+using PnCTestAutomation.Pages.ExpressPages;
 using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 
@@ -44,6 +45,38 @@ namespace PnCTestAutomation.Tests
             if (_browser != null)
                 await _browser.DisposeAsync();
             _playwright?.Dispose();
+        }
+
+        [Test]
+        public async Task ClasExpress_UsesTheRenderedQuickSearchControls()
+        {
+            await _page.SetContentAsync("""
+                <input name="_username">
+                <input name="_password">
+                <div id="home"><a href="#">Log In</a></div>
+                <script>
+                  document.querySelector('#home a').addEventListener('click', event => {
+                    event.preventDefault();
+                    document.body.innerHTML = `
+                      <input id="quickSearchTextId-inputEl"
+                             name="quickSearchText"
+                             data-componentid="quickSearchTextId">
+                      <a id="id_quickSearch" name="name_quickSearch" href="#">Search</a>`;
+                    document.querySelector('#id_quickSearch').addEventListener('click', searchEvent => {
+                      searchEvent.preventDefault();
+                      window.searchedQuote = document.querySelector('[name="quickSearchText"]').value;
+                    });
+                  });
+                </script>
+                """);
+
+            await new ExpressLoginPage(_page).ExpressLoginAsync("user", "password");
+
+            var homePage = new ExpressHomePage(_page);
+            await homePage.EnterQuoteNumber("02103852");
+            await homePage.ClickSearchButtonAsync();
+
+            Assert.That(await _page.EvaluateAsync<string>("window.searchedQuote"), Is.EqualTo("02103852"));
         }
 
         [Test]
@@ -1162,8 +1195,11 @@ namespace PnCTestAutomation.Tests
                     <li class="js-current-item">
                       <span>Residence Photo #1</span>
                     </li>
-                    <li id="next-item">
+                    <li>
                       <span>UL Roof Type Credit</span>
+                    </li>
+                    <li>
+                      <span>Loss Runs (Tiered - 5 Years; Not tiered - 3 years)</span>
                     </li>
                   </ul>
                   <div id="checklist-details" style="display:none">
@@ -1193,11 +1229,10 @@ namespace PnCTestAutomation.Tests
                     const exceptionConfirm = document.getElementById('exception-note-confirm');
                     const applyChanges = document.getElementById('apply-changes-modal');
                     const addNote = document.querySelector('.js-add-note');
-                    const currentItem = document.querySelector('li.js-current-item');
-                    const nextItem = document.getElementById('next-item');
                     const toastContainer = document.getElementById('toast-container');
 
                     window.generalNoteClicks = 0;
+                    window.exceptionNotes = [];
 
                     row.addEventListener('click', event => {
                       event.preventDefault();
@@ -1218,7 +1253,7 @@ namespace PnCTestAutomation.Tests
                     exceptionNote.addEventListener('keyup', enableExceptionConfirm);
 
                     exceptionConfirm.addEventListener('click', async () => {
-                      row.dataset.exceptionNote = exceptionNote.value;
+                      window.exceptionNotes.push(exceptionNote.value);
                       exceptionModal.className = 'modal fade';
                       exceptionModal.setAttribute('aria-hidden', 'true');
                       applyChanges.className = 'modal fade in';
@@ -1248,11 +1283,17 @@ namespace PnCTestAutomation.Tests
                         applyChanges.style.display = 'none';
                         applyChanges.setAttribute('aria-hidden', 'true');
                         document.body.classList.remove('modal-open');
+                        const currentItem = document.querySelector('li.js-current-item');
+                        const nextItem = currentItem.nextElementSibling;
                         currentItem.classList.remove('js-current-item');
-                        nextItem.classList.add('js-current-item');
-                        details.dataset.currentItem = 'UL Roof Type Credit';
-                        toastContainer.textContent = 'Exception was requested successfully.';
-                        row.dataset.applyFinished = 'true';
+                        if (nextItem) {
+                          nextItem.classList.add('js-current-item');
+                          details.dataset.currentItem = nextItem.textContent.trim();
+                        }
+                        const toast = document.createElement('div');
+                        toast.className = 'toast-message';
+                        toast.textContent = 'Exception was requested successfully.';
+                        toastContainer.prepend(toast);
                       }, 200);
                     });
 
@@ -1289,20 +1330,26 @@ namespace PnCTestAutomation.Tests
                 "Exception",
                 "Photo not available",
                 "Photo not available");
+            await new SFP_ChecklistPage(_page).CompleteChecklistItemAsync(
+                "UL Roof Type Credit",
+                "Exception",
+                "Roof type confirmed",
+                "Roof type confirmed");
 
-            var row = _page.Locator("a.js-checklist-summary-item");
-            Assert.That(await row.GetAttributeAsync("data-exception-note"), Is.EqualTo("Photo not available"));
-            Assert.That(await row.GetAttributeAsync("data-apply-finished"), Is.EqualTo("true"));
-            Assert.That(exceptionRequests, Is.EqualTo(1));
+            var exceptionNotes = await _page.EvaluateAsync<string[]>("window.exceptionNotes");
+            Assert.That(exceptionNotes, Is.EqualTo(new[] { "Photo not available", "Roof type confirmed" }));
+            Assert.That(exceptionRequests, Is.EqualTo(2));
             Assert.That(await _page.EvaluateAsync<int>("window.generalNoteClicks"), Is.Zero);
             Assert.That(await _page.Locator("#apply-changes-modal").IsVisibleAsync(), Is.False);
             Assert.That(await _page.Locator("#checklist-details").IsVisibleAsync(), Is.True);
             Assert.That(await _page.Locator("#checklist-details")
-                .GetAttributeAsync("data-current-item"), Is.EqualTo("UL Roof Type Credit"));
+                .GetAttributeAsync("data-current-item"),
+                Is.EqualTo("Loss Runs (Tiered - 5 Years; Not tiered - 3 years)"));
             Assert.That(await _page.Locator("li.js-current-item")
-                .Filter(new() { HasText = "UL Roof Type Credit" }).CountAsync(), Is.EqualTo(1));
+                .Filter(new() { HasText = "Loss Runs (Tiered - 5 Years; Not tiered - 3 years)" })
+                .CountAsync(), Is.EqualTo(1));
             Assert.That(await _page.GetByText(
-                "Exception was requested successfully.", new() { Exact = true }).CountAsync(), Is.EqualTo(1));
+                "Exception was requested successfully.", new() { Exact = true }).CountAsync(), Is.EqualTo(2));
         }
 
         [Test]

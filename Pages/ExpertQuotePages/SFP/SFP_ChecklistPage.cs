@@ -30,8 +30,6 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         public ILocator ExceptionNoteTextarea => _page.Locator(".js-exception-note-text textarea");
         public ILocator ExceptionNoteConfirm => _page.Locator("#exception-note-confirm");
         public ILocator ApplyChangesModal => _page.Locator("#apply-changes-modal");
-        public ILocator ExceptionSuccessMessage =>
-            _page.GetByText("Exception was requested successfully.", new() { Exact = true });
 
         // Main note + Add Note
         public ILocator MainNoteTextarea => _page.Locator("textarea.js-note");
@@ -249,8 +247,6 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 // while it refreshes the menu and automatically opens the next item.
                 await ExceptionNoteModal.WaitForAsync(
                     new() { State = WaitForSelectorState.Hidden, Timeout = 15000 });
-                await ExceptionSuccessMessage.WaitForAsync(
-                    new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
                 try
                 {
                     await ApplyChangesModal.WaitForAsync(

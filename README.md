@@ -299,6 +299,35 @@ $env:PING_SECRET_ID = "your-ping-secret-id"
 
 Ask your QA lead for the credential values. Do **not** commit them to any file.
 
+### Azure Key Vault
+
+On a Playwright agent with the user-assigned managed identity
+`id-cts-pa-d-tstauto-ado-1`, run framework tests with credentials loaded from
+Key Vault:
+
+```powershell
+# Run the complete test project
+.\Scripts\Invoke-KeyVaultTestRun.ps1
+
+# Run a selected suite
+.\Scripts\Invoke-KeyVaultTestRun.ps1 -Filter "Category=SFP&Category=Regression"
+
+# Verify local Key Vault access and required secrets without running tests
+az login
+.\Scripts\Invoke-KeyVaultTestRun.ps1 -ValidateCredentialsOnly
+```
+
+The runner reads secrets from `kv-pa-d-tstauto-1` in resource group
+`rg-cts-pa-d-1-tstauto-1` and authenticates with managed identity client ID
+`0baaaf70-3528-475d-9906-506d65b72a77`, maps the approved Key Vault secrets to
+process-only configuration variables, and restores the previous environment
+after the test run. Use `-VaultName` or `-ManagedIdentityClientId` only when
+intentionally targeting replacement resources.
+
+Authentication defaults to the current Azure CLI login for local runs and the
+managed identity for Azure DevOps runs. Local users need read access to the
+vault; test execution does not require permission to create or update secrets.
+
 ### `appsettings.json` Key Sections
 
 ```json
