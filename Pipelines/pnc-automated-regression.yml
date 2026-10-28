@@ -27,6 +27,7 @@ parameters:
   default: All
   values:
   - All
+  - SingleExample
   - BasicPolicy
   - CountryEstate
   - Smoke
@@ -55,6 +56,8 @@ variables:
 
   ${{ if eq(parameters.suite, 'All') }}:
     TEST_FILTER: "TestCategory=SFP&TestCategory!=DevOnly"
+  ${{ if eq(parameters.suite, 'SingleExample') }}:
+    TEST_FILTER: "TestCategory=PipelineSmoke&TestCategory!=DevOnly"
   ${{ if eq(parameters.suite, 'BasicPolicy') }}:
     TEST_FILTER: "TestCategory=SFP&TestCategory!=CE&TestCategory!=DevOnly"
   ${{ if eq(parameters.suite, 'CountryEstate') }}:
@@ -219,7 +222,7 @@ stages:
 
     - task: VSTest@3
       displayName: "Run ExpertQuote smoke gate"
-      condition: and(succeeded(), ${{ eq(parameters.runSmokeGate, true) }})
+      condition: and(succeeded(), ${{ and(eq(parameters.runSmokeGate, true), ne(parameters.suite, 'SingleExample')) }})
       inputs:
         testSelector: testAssemblies
         testAssemblyVer2: |

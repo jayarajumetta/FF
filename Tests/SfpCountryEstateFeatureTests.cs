@@ -163,10 +163,13 @@ namespace PnCTestAutomation.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.That(filters, Has.Length.EqualTo(4));
+                Assert.That(filters, Has.Length.EqualTo(5));
                 Assert.That(
                     filters.All(line => line.Contains("TestCategory!=DevOnly")),
                     Is.True);
+                Assert.That(
+                    pipeline,
+                    Does.Contain("TestCategory=PipelineSmoke&TestCategory!=DevOnly"));
                 Assert.That(
                     pipeline,
                     Does.Contain("parallel: ${{ parameters.agentCount }}"));
@@ -174,6 +177,14 @@ namespace PnCTestAutomation.Tests
                 Assert.That(pipeline, Does.Contain("rerunFailedTests: false"));
                 Assert.That(pipeline, Does.Not.Contain("SHARD_FILTER_"));
             });
+
+            var basicPolicyFeature = File.ReadAllText(
+                Path.Combine(ProjectRoot(), "Features", "SFP", "SFP_BasicPolicy.feature"));
+            Assert.That(
+                System.Text.RegularExpressions.Regex.Matches(
+                    basicPolicyFeature,
+                    @"@PipelineSmoke\b"),
+                Has.Count.EqualTo(1));
         }
 
         [Test]

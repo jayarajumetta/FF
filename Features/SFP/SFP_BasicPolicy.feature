@@ -278,7 +278,7 @@ Feature: SFP Basic Policy
     # Step 37: Validate Forms attachment via Duckcreek
     When user validates Forms via Duckcreek for state "<StateAbbv>"
 
-    @Shard1 @Debug
+    @Shard1 @Debug @PipelineSmoke
     Examples:
       | State   | StateAbbv | Address         | AddressLine2 | City          | Zip   | County  | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
       | Alabama | AL        | 1918 Avalon Ave |          111 | Muscle Shoals | 35661 | Colbert |           |                    | 1%                 |                     |                   |

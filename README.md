@@ -365,6 +365,10 @@ count as queue-time options. Scheduled runs use one agent by default until the
 Playwright pool has independently provisioned hosts. Automatic failed-test retries
 are intentionally disabled so the published result remains authoritative.
 
+Choose `SingleExample` for a short pipeline validation. It runs only the Alabama
+SFP Basic Policy example tagged `@PipelineSmoke` and skips the separate ExpertQuote
+smoke gate, so only one browser test executes after dependency preflight.
+
 ### State Filtering (Dev environment)
 
 In `appsettings.Dev.json`, `StateFilters:DevAllowedStates` limits which states run:
