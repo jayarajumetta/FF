@@ -148,19 +148,32 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
-        public void QaSfpPipelines_ExcludeDevOnlyExamplesFromEveryShardFilter()
+        public void PnCRegressionPipeline_UsesSafeDynamicDistributionFilters()
         {
-            foreach (var file in new[] { "sfp-smoke-adhoc.yml", "sfp-smoke-vm.yml" })
-            {
-                var path = Path.Combine(ProjectRoot(), "Pipelines", file);
-                var filters = File.ReadLines(path)
-                    .Where(line => System.Text.RegularExpressions.Regex.IsMatch(
-                        line, @"SHARD_FILTER_(FULL|DEBUG|SMOKE):\s*"""))
-                    .ToArray();
+            var path = Path.Combine(
+                ProjectRoot(),
+                "Pipelines",
+                "pnc-automated-regression.yml");
+            var pipeline = File.ReadAllText(path);
+            var filters = File.ReadLines(path)
+                .Where(line => System.Text.RegularExpressions.Regex.IsMatch(
+                    line,
+                    @"^\s+TEST_FILTER:\s*"""))
+                .ToArray();
 
-                Assert.That(filters, Is.Not.Empty, file);
-                Assert.That(filters.All(line => line.Contains("TestCategory!=DevOnly")), Is.True, file);
-            }
+            Assert.Multiple(() =>
+            {
+                Assert.That(filters, Has.Length.EqualTo(4));
+                Assert.That(
+                    filters.All(line => line.Contains("TestCategory!=DevOnly")),
+                    Is.True);
+                Assert.That(
+                    pipeline,
+                    Does.Contain("parallel: ${{ parameters.agentCount }}"));
+                Assert.That(pipeline, Does.Contain("distributionBatchType: basedOnExecutionTime"));
+                Assert.That(pipeline, Does.Contain("rerunFailedTests: false"));
+                Assert.That(pipeline, Does.Not.Contain("SHARD_FILTER_"));
+            });
         }
 
         [Test]

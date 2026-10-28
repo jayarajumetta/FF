@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
+  <RunConfiguration>
+    <MaxCpuCount>1</MaxCpuCount>
+  </RunConfiguration>
   <NUnit>
     <!--
-      Single worker per shard — tests are not thread-safe (shared browser context).
-      Parallelism is achieved at the shard/job level in the pipeline, not within a shard.
+      UI tests are not thread-safe inside one process. The pipeline distributes
+      individual tests across independent agents while each agent stays serial.
     -->
     <NumberOfTestWorkers>1</NumberOfTestWorkers>
   </NUnit>

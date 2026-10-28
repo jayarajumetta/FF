@@ -23,6 +23,9 @@
 .PARAMETER ValidateCredentialsOnly
     Verifies that every configured secret can be read without running tests.
 
+.PARAMETER ExportAzureDevOpsVariables
+    Exports retrieved values as secret Azure DevOps variables for later tasks.
+
 .PARAMETER NoBuild
     Passes --no-build to dotnet test.
 
@@ -49,6 +52,8 @@ param(
 
     [switch]$ValidateCredentialsOnly,
 
+    [switch]$ExportAzureDevOpsVariables,
+
     [switch]$NoBuild
 )
 
@@ -61,6 +66,12 @@ $projectPath = Join-Path $projectRoot "TestAutomation.csproj"
 $timestamp = Get-Date -Format "yyyy-MM-dd_HHmmss"
 $resultsDirectory = Join-Path $projectRoot "TestResults\KeyVaultRuns"
 $trxName = "Framework_$timestamp.trx"
+
+if ($env:TF_BUILD -eq "True" -and [string]::IsNullOrWhiteSpace($env:AZURE_CONFIG_DIR)) {
+    $jobIdentity = "$($env:BUILD_BUILDID)-$($env:SYSTEM_JOBID)-$($env:SYSTEM_JOBATTEMPT)"
+    $env:AZURE_CONFIG_DIR = Join-Path $env:AGENT_TEMPDIRECTORY "azure-cli-$jobIdentity"
+    New-Item -ItemType Directory -Force -Path $env:AZURE_CONFIG_DIR | Out-Null
+}
 
 if (-not (Get-Command az -ErrorAction SilentlyContinue)) {
     throw "Azure CLI 'az' is required to authenticate with managed identity and read Key Vault secrets."
@@ -129,6 +140,15 @@ try {
 
         $previous[$entry.Key] = [Environment]::GetEnvironmentVariable($entry.Key)
         [Environment]::SetEnvironmentVariable($entry.Key, [string]$value)
+
+        if ($ExportAzureDevOpsVariables) {
+            $escapedValue = [string]$value
+            $escapedValue = $escapedValue.Replace("%", "%AZP25")
+            $escapedValue = $escapedValue.Replace("`r", "%0D")
+            $escapedValue = $escapedValue.Replace("`n", "%0A")
+            Write-Host "##vso[task.setvariable variable=$($entry.Key);issecret=true]$escapedValue"
+        }
+
         $value = $null
     }
 
@@ -138,6 +158,7 @@ try {
             AuthenticationMode = $resolvedAuthenticationMode
             RequiredSecrets = $secretMap.Count
             SecretRetrievalPassed = $true
+            AzureDevOpsVariablesExported = [bool]$ExportAzureDevOpsVariables
             TestsExecuted = $false
         }
     }

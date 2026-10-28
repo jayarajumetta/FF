@@ -88,8 +88,11 @@ PnC-TestAutomation/
 
 > **Pipeline note:** The supported .NET Azure DevOps definitions are under `Pipelines/`.
 > `Pipelines/pnc-automated-regression.yml` is the primary scheduled and on-demand
-> **PnC Automated Regression** pipeline. Its current matrix covers SFP Basic Policy
-> and Country Estate and is designed to expand to additional lines of business.
+> **PnC Automated Regression** pipeline. It builds one immutable package, runs
+> dependency and ExpertQuote smoke checks, and uses VSTest to distribute tests
+> dynamically across the requested number of agents. Tests remain serial inside
+> each agent. Use more than one agent only when those agents run on independent
+> hosts or otherwise have genuinely isolated CPU, memory, disk, and browser capacity.
 > The root `CLAS.DevST.Playwright.yml` is a legacy Node-based definition that runs
 > `npm`/`npx`; it is not compatible with the current .NET project and should not be
 > used as the framework's execution entry point.
@@ -357,7 +360,10 @@ vault; test execution does not require permission to create or update secrets.
 - **IT:** `appsettings.IT.json` (targets `https://expertquote-it.americannational.com/expertquote/`)
 - **Env-specific selection:** Set `TEST_ENVIRONMENT=Dev` or `TEST_ENVIRONMENT=IT` before running
 
-The PnC Automated Regression pipeline exposes QA and IT as queue-time environment options.
+The PnC Automated Regression pipeline exposes QA and IT, suite selection, and agent
+count as queue-time options. Scheduled runs use one agent by default until the
+Playwright pool has independently provisioned hosts. Automatic failed-test retries
+are intentionally disabled so the published result remains authoritative.
 
 ### State Filtering (Dev environment)
 

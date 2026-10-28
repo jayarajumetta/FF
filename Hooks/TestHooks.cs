@@ -32,6 +32,7 @@ namespace PnCTestAutomation.Hooks
         private IBrowser _browser;
         private IBrowserContext _browserContext;
         private IPage _page;
+        private bool _tracingStarted;
 
         private readonly ScenarioContext _scenarioContext;
         private readonly FeatureContext _featureContext;
@@ -100,8 +101,10 @@ namespace PnCTestAutomation.Hooks
             }
 
             // Create timestamped test results folder for this run
-            var root = Directory.GetCurrentDirectory();
-            var testResultsRoot = Path.Combine(root, "TestResults");
+            var configuredResultsRoot = Environment.GetEnvironmentVariable("TEST_RESULTS_ROOT");
+            var testResultsRoot = string.IsNullOrWhiteSpace(configuredResultsRoot)
+                ? Path.Combine(Directory.GetCurrentDirectory(), "TestResults")
+                : Path.GetFullPath(configuredResultsRoot);
             _testResultsRunFolder = Path.Combine(testResultsRoot, DateTime.Now.ToString("yyyy-MM-dd_HHmmss"));
             Directory.CreateDirectory(_testResultsRunFolder);
 
@@ -173,13 +176,14 @@ namespace PnCTestAutomation.Hooks
                     RecordVideoDir = Path.Combine(_testResultsRunFolder, "Videos")
                 });
 
-                // Start tracing — skip on CI unless a full trace is needed for debugging.
-                // On CI, traces are only saved on failure anyway, so the overhead is wasted
-                // for passing tests. Locally, always trace for developer convenience.
                 var isCI = string.Equals(Environment.GetEnvironmentVariable("CI"), "true",
                     StringComparison.OrdinalIgnoreCase);
+                var traceEnabled = !isCI || string.Equals(
+                    _configuration["Playwright:TraceEnabled"],
+                    "true",
+                    StringComparison.OrdinalIgnoreCase);
 
-                if (!isCI)
+                if (traceEnabled)
                 {
                     await _browserContext.Tracing.StartAsync(new TracingStartOptions
                     {
@@ -187,6 +191,7 @@ namespace PnCTestAutomation.Hooks
                         Snapshots = true,
                         Sources = true
                     });
+                    _tracingStarted = true;
                 }
 
                 _page = await _browserContext.NewPageAsync();
@@ -275,15 +280,11 @@ namespace PnCTestAutomation.Hooks
             {
                 var scenarioFolder = GetScenarioResultsFolder();
 
-                var isCI = string.Equals(Environment.GetEnvironmentVariable("CI"), "true",
-                    StringComparison.OrdinalIgnoreCase);
-
                 if (hasFailed)
                 {
                     Directory.CreateDirectory(scenarioFolder);
 
-                    // Save trace on failure (only if tracing was started — not on CI)
-                    if (!isCI)
+                    if (_tracingStarted)
                     {
                         var traceFile = Path.Combine(scenarioFolder, "trace.zip");
                         try
@@ -299,8 +300,7 @@ namespace PnCTestAutomation.Hooks
                 }
                 else
                 {
-                    // Stop tracing without saving if test passed (only if it was started)
-                    if (!isCI)
+                    if (_tracingStarted)
                     {
                         try { await _browserContext.Tracing.StopAsync(); } catch { /* ignore */ }
                     }
