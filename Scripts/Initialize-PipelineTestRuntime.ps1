@@ -28,29 +28,38 @@ function Test-HttpEndpoint {
         [string]$Uri
     )
 
+    $handler = [System.Net.Http.HttpClientHandler]::new()
+    $handler.AllowAutoRedirect = $false
+    $client = [System.Net.Http.HttpClient]::new($handler)
+    $client.Timeout = [TimeSpan]::FromSeconds(30)
+    $response = $null
+
     try {
-        $response = Invoke-WebRequest `
-            -Uri $Uri `
-            -Method Get `
-            -MaximumRedirection 0 `
-            -TimeoutSec 30 `
-            -UseBasicParsing
+        $response = $client.GetAsync($Uri).GetAwaiter().GetResult()
         $statusCode = [int]$response.StatusCode
-    }
-    catch {
-        if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
-            $statusCode = [int]$_.Exception.Response.StatusCode
+
+        if ($statusCode -lt 200 -or $statusCode -ge 400) {
+            throw "$Name returned HTTP $statusCode from '$Uri'."
+        }
+
+        $location = if ($response.Headers.Location) {
+            " -> $($response.Headers.Location)"
         }
         else {
-            throw "$Name is unreachable at '$Uri': $($_.Exception.Message)"
+            ""
         }
+        Write-Host "$Name is reachable at '$Uri' (HTTP $statusCode$location)."
     }
-
-    if ($statusCode -lt 200 -or $statusCode -ge 400) {
-        throw "$Name returned HTTP $statusCode from '$Uri'."
+    catch {
+        throw "$Name is unreachable at '$Uri': $($_.Exception.Message)"
     }
-
-    Write-Host "$Name is reachable at '$Uri' (HTTP $statusCode)."
+    finally {
+        if ($response) {
+            $response.Dispose()
+        }
+        $client.Dispose()
+        $handler.Dispose()
+    }
 }
 
 $resolvedArtifactRoot = [IO.Path]::GetFullPath($ArtifactRoot)
