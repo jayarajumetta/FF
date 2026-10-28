@@ -1151,7 +1151,7 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
-        public async Task ChecklistException_WaitsForApplyChangesAndDoesNotAddDuplicateGeneralNote()
+        public async Task ChecklistException_VerifiesResponseAndAllowsSourceDrivenAutoAdvance()
         {
             const string html = """
                 <!doctype html>
@@ -1161,10 +1161,9 @@ namespace PnCTestAutomation.Tests
                   <ul>
                     <li class="js-current-item">
                       <span>Residence Photo #1</span>
-                      <span class="icons"></span>
                     </li>
-                    <li class="js-current-item">
-                      <span>Loss Runs (Tiered - 5 Years; Not tiered - 3 years)</span>
+                    <li id="next-item">
+                      <span>UL Roof Type Credit</span>
                     </li>
                   </ul>
                   <div id="checklist-details" style="display:none">
@@ -1183,6 +1182,7 @@ namespace PnCTestAutomation.Tests
                   <div id="apply-changes-modal" class="modal fade" aria-hidden="true" style="display:none">
                     Applying Changes...
                   </div>
+                  <div id="toast-container"></div>
 
                   <script>
                     const row = document.querySelector('.js-checklist-summary-item');
@@ -1193,7 +1193,9 @@ namespace PnCTestAutomation.Tests
                     const exceptionConfirm = document.getElementById('exception-note-confirm');
                     const applyChanges = document.getElementById('apply-changes-modal');
                     const addNote = document.querySelector('.js-add-note');
-                    const savedItem = document.querySelector('li.js-current-item');
+                    const currentItem = document.querySelector('li.js-current-item');
+                    const nextItem = document.getElementById('next-item');
+                    const toastContainer = document.getElementById('toast-container');
 
                     window.generalNoteClicks = 0;
 
@@ -1215,7 +1217,7 @@ namespace PnCTestAutomation.Tests
                     exceptionNote.addEventListener('input', enableExceptionConfirm);
                     exceptionNote.addEventListener('keyup', enableExceptionConfirm);
 
-                    exceptionConfirm.addEventListener('click', () => {
+                    exceptionConfirm.addEventListener('click', async () => {
                       row.dataset.exceptionNote = exceptionNote.value;
                       exceptionModal.className = 'modal fade';
                       exceptionModal.setAttribute('aria-hidden', 'true');
@@ -1227,15 +1229,29 @@ namespace PnCTestAutomation.Tests
                         exceptionModal.style.display = 'none';
                       }, 25);
 
+                      const response = await fetch(
+                        '/EChecklist/ChecklistDetails/RequestException',
+                        {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                          body: new URLSearchParams({
+                            checklistItemId: 'residence-photo-1',
+                            note: exceptionNote.value
+                          })
+                        });
+                      const result = await response.json();
+                      if (!result.Success)
+                        return;
+
                       setTimeout(() => {
                         applyChanges.className = 'modal fade';
                         applyChanges.style.display = 'none';
                         applyChanges.setAttribute('aria-hidden', 'true');
                         document.body.classList.remove('modal-open');
-                        savedItem.querySelector('.icons').innerHTML =
-                          '<i data-original-title="Document Attached" style="display:inline-block;width:10px;height:10px"></i>' +
-                          '<i data-original-title="Notes" style="display:inline-block;width:10px;height:10px"></i>';
-                        details.dataset.autoAdvanced = 'true';
+                        currentItem.classList.remove('js-current-item');
+                        nextItem.classList.add('js-current-item');
+                        details.dataset.currentItem = 'UL Roof Type Credit';
+                        toastContainer.textContent = 'Exception was requested successfully.';
                         row.dataset.applyFinished = 'true';
                       }, 200);
                     });
@@ -1248,8 +1264,24 @@ namespace PnCTestAutomation.Tests
                 </html>
                 """;
 
+            var exceptionRequests = 0;
             await _page.RouteAsync("https://test.anpac.info/EChecklist/**", route =>
-                route.FulfillAsync(new() { Body = html, ContentType = "text/html" }));
+            {
+                if (route.Request.Url.Contains(
+                        "/EChecklist/ChecklistDetails/RequestException",
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    exceptionRequests++;
+                    return route.FulfillAsync(new()
+                    {
+                        Status = 200,
+                        Body = """{"Success":true,"Message":null}""",
+                        ContentType = "application/json"
+                    });
+                }
+
+                return route.FulfillAsync(new() { Body = html, ContentType = "text/html" });
+            });
             await _page.GotoAsync("https://test.anpac.info/EChecklist/Viewing/offline-test");
 
             await new SFP_ChecklistPage(_page).CompleteChecklistItemAsync(
@@ -1261,14 +1293,16 @@ namespace PnCTestAutomation.Tests
             var row = _page.Locator("a.js-checklist-summary-item");
             Assert.That(await row.GetAttributeAsync("data-exception-note"), Is.EqualTo("Photo not available"));
             Assert.That(await row.GetAttributeAsync("data-apply-finished"), Is.EqualTo("true"));
+            Assert.That(exceptionRequests, Is.EqualTo(1));
             Assert.That(await _page.EvaluateAsync<int>("window.generalNoteClicks"), Is.Zero);
             Assert.That(await _page.Locator("#apply-changes-modal").IsVisibleAsync(), Is.False);
             Assert.That(await _page.Locator("#checklist-details").IsVisibleAsync(), Is.True);
             Assert.That(await _page.Locator("#checklist-details")
-                .GetAttributeAsync("data-auto-advanced"), Is.EqualTo("true"));
+                .GetAttributeAsync("data-current-item"), Is.EqualTo("UL Roof Type Credit"));
             Assert.That(await _page.Locator("li.js-current-item")
-                .Filter(new() { HasText = "Residence Photo #1" })
-                .Locator("i[data-original-title='Notes']").CountAsync(), Is.EqualTo(1));
+                .Filter(new() { HasText = "UL Roof Type Credit" }).CountAsync(), Is.EqualTo(1));
+            Assert.That(await _page.GetByText(
+                "Exception was requested successfully.", new() { Exact = true }).CountAsync(), Is.EqualTo(1));
         }
 
         [Test]
@@ -1316,26 +1350,38 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
-        public async Task ReviewRequired_DoesNotBypassAnEnabledReviewNowCorrection()
+        public async Task ReviewRequired_UsesKeepGoingWhenReviewNowIsAlsoAvailable()
         {
             await _page.SetContentAsync("""
                 <div role="dialog">
                   <h2>Review Required</h2>
-                  <p>10943: Calculated Value must be greater than zero.</p>
-                  <button>Review Now</button>
+                  <p>Some fields require your attention before you can transmit this quote, but you can revisit these later if needed.</p>
+                  <button onclick="window.reviewNowClicked=true">Review Now</button>
                   <button data-testid="btnConfirmYes"
-                          onclick="window.bypassed=true">Keep Going</button>
+                          onclick="
+                            window.keepGoingClicked=true;
+                            this.closest('[role=dialog]').remove();
+                            document.getElementById('coverage-table').style.display='block';
+                          ">Keep Going</button>
                 </div>
                 <div id="coverage-table" style="display:none">Liability coverages</div>
                 """);
 
-            var error = Assert.ThrowsAsync<PlaywrightException>(() =>
-                new SFP_NativeFormPage(_page)
-                    .ContinueReviewAndRequireReadyAsync(_page.Locator("#coverage-table")));
+            var destination = _page.Locator("#coverage-table");
+            await new SFP_NativeFormPage(_page)
+                .ContinueReviewAndRequireReadyAsync(destination);
 
-            Assert.That(error!.Message, Does.Contain("10943"));
-            Assert.That(await _page.EvaluateAsync<bool>("window.bypassed === true"), Is.False);
-            Assert.That(await _page.GetByRole(AriaRole.Dialog).IsVisibleAsync(), Is.True);
+            var keepGoingClicked =
+                await _page.EvaluateAsync<bool>("window.keepGoingClicked === true");
+            var reviewNowClicked =
+                await _page.EvaluateAsync<bool>("window.reviewNowClicked === true");
+            var destinationVisible = await destination.IsVisibleAsync();
+            Assert.Multiple(() =>
+            {
+                Assert.That(keepGoingClicked, Is.True);
+                Assert.That(reviewNowClicked, Is.False);
+                Assert.That(destinationVisible, Is.True);
+            });
         }
 
         [Test]

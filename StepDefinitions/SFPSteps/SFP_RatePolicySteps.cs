@@ -35,7 +35,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             {
                 "DEV" => "Playwright:ExpertQuoteDev",
                 "QA" => "Playwright:ExpertQuote",
-                _ => throw new InvalidOperationException("Rate Policy quote creation requires an explicit non-production DEV or QA environment.")
+                "IT" => "Playwright:ExpertQuote",
+                _ => throw new InvalidOperationException("Rate Policy quote creation requires an explicit non-production DEV, QA, or IT environment.")
             };
             if (!Uri.TryCreate(_configuration[key], UriKind.Absolute, out var endpoint)
                 || endpoint.Scheme != Uri.UriSchemeHttps

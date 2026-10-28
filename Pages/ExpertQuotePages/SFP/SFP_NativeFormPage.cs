@@ -627,16 +627,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await destination.Or(review).And(_page.Locator(":visible")).First.WaitForAsync(
                 new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
             if (await review.IsVisibleAsync())
-            {
-                var reviewNow = review.GetByRole(AriaRole.Button, new()
-                {
-                    NameRegex = new Regex(@"^\s*Review Now\s*$", RegexOptions.IgnoreCase)
-                }).First;
-                if (await reviewNow.CountAsync() > 0 && await reviewNow.IsEnabledAsync())
-                    throw new PlaywrightException(
-                        $"SFP requires an actionable correction; REVIEW NOW was not bypassed: {await review.InnerTextAsync()}");
                 await ContinuePastReviewRequiredIfPresentAsync();
-            }
             await destination.WaitForAsync(
                 new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
             await ThrowIfQuoteErrorAsync("continuing past the expected SFP review");

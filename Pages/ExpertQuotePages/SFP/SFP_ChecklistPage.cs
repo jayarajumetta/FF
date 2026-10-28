@@ -1,5 +1,6 @@
 ﻿using Microsoft.Playwright;
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
@@ -23,17 +24,14 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             _page.Locator("a.js-checklist-summary-item, li.js-current-item")
                 .Filter(new() { HasText = itemName, Visible = true });
 
-        public ILocator SavedItemNote(string itemName) =>
-            _page.Locator("li.js-current-item")
-                .Filter(new() { HasText = itemName, Visible = true })
-                .Locator("i[data-original-title='Notes']");
-
         // Exception flow
         public ILocator ExceptionButton => _page.Locator("button.js-exception");
         public ILocator ExceptionNoteModal => _page.Locator("#exception-note");
         public ILocator ExceptionNoteTextarea => _page.Locator(".js-exception-note-text textarea");
         public ILocator ExceptionNoteConfirm => _page.Locator("#exception-note-confirm");
         public ILocator ApplyChangesModal => _page.Locator("#apply-changes-modal");
+        public ILocator ExceptionSuccessMessage =>
+            _page.GetByText("Exception was requested successfully.", new() { Exact = true });
 
         // Main note + Add Note
         public ILocator MainNoteTextarea => _page.Locator("textarea.js-note");
@@ -236,13 +234,23 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 }", string.IsNullOrWhiteSpace(exceptionNote) ? note : exceptionNote);
 
                 await Assertions.Expect(ExceptionNoteConfirm).ToBeEnabledAsync(new() { Timeout = 10000 });
-                await ExceptionNoteConfirm.ClickAsync();
+                var response = await _page.RunAndWaitForResponseAsync(
+                    () => ExceptionNoteConfirm.ClickAsync(),
+                    candidate =>
+                        candidate.Request.Method == "POST"
+                        && candidate.Url.Contains(
+                            "/EChecklist/ChecklistDetails/RequestException",
+                            StringComparison.OrdinalIgnoreCase),
+                    new() { Timeout = 30000 });
+                await RequireSuccessfulExceptionResponseAsync(response, itemName);
 
                 // Saving an exception is the complete item action. EChecklist first fades
                 // the note modal, then displays a blocking "Applying Changes..." overlay
-                // while it saves and collapses the item detail panel.
+                // while it refreshes the menu and automatically opens the next item.
                 await ExceptionNoteModal.WaitForAsync(
                     new() { State = WaitForSelectorState.Hidden, Timeout = 15000 });
+                await ExceptionSuccessMessage.WaitForAsync(
+                    new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
                 try
                 {
                     await ApplyChangesModal.WaitForAsync(
@@ -255,8 +263,6 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
                 await ApplyChangesModal.WaitForAsync(
                     new() { State = WaitForSelectorState.Hidden, Timeout = 60000 });
-                await SavedItemNote(itemName).First.WaitForAsync(
-                    new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
                 return;
             }
 
@@ -289,6 +295,38 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await WaitForSsoRedirectAsync(_page, timeoutMs: 60000);
             await ThrowIfChecklistApplicationErrorAsync(_page);
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
+        }
+
+        private static async Task RequireSuccessfulExceptionResponseAsync(
+            IResponse response,
+            string itemName)
+        {
+            var responseBody = await response.TextAsync();
+            if (response.Status >= 400)
+                throw new PlaywrightException(
+                    $"Checklist exception for '{itemName}' returned HTTP {response.Status}. Response: {responseBody}");
+
+            try
+            {
+                using var json = JsonDocument.Parse(responseBody);
+                var root = json.RootElement;
+                var succeeded = root.TryGetProperty("Success", out var success)
+                                && success.ValueKind == JsonValueKind.True;
+                if (succeeded)
+                    return;
+
+                var message = root.TryGetProperty("Message", out var responseMessage)
+                    ? responseMessage.GetString()
+                    : null;
+                throw new PlaywrightException(
+                    $"Checklist exception for '{itemName}' was rejected by eChecklist"
+                    + (string.IsNullOrWhiteSpace(message) ? "." : $": {message}"));
+            }
+            catch (JsonException)
+            {
+                throw new PlaywrightException(
+                    $"Checklist exception for '{itemName}' returned invalid JSON: {responseBody}");
+            }
         }
 
         /// <summary>Closes the checklist popup tab — no Submit needed to enable Transmit.</summary>

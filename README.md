@@ -82,10 +82,14 @@ PnC-TestAutomation/
 ├── Resources/                   # Static test data (expected forms JSON)
 ├── Scripts/                     # PowerShell helper scripts
 ├── appsettings.json             # Default (QA) configuration; must not contain secrets
-└── appsettings.Dev.json         # Dev environment overrides
+├── appsettings.Dev.json         # Dev environment overrides
+└── appsettings.IT.json          # IT environment overrides
 ```
 
 > **Pipeline note:** The supported .NET Azure DevOps definitions are under `Pipelines/`.
+> `Pipelines/pnc-automated-regression.yml` is the primary scheduled and on-demand
+> **PnC Automated Regression** pipeline. Its current matrix covers SFP Basic Policy
+> and Country Estate and is designed to expand to additional lines of business.
 > The root `CLAS.DevST.Playwright.yml` is a legacy Node-based definition that runs
 > `npm`/`npx`; it is not compatible with the current .NET project and should not be
 > used as the framework's execution entry point.
@@ -321,7 +325,10 @@ Ask your QA lead for the credential values. Do **not** commit them to any file.
 
 - **QA (default):** `appsettings.json`
 - **Dev:** `appsettings.Dev.json` (overrides selected keys; merged at runtime)
-- **Env-specific selection:** Set `TEST_ENVIRONMENT=Dev` before running
+- **IT:** `appsettings.IT.json` (targets `https://expertquote-it.americannational.com/expertquote/`)
+- **Env-specific selection:** Set `TEST_ENVIRONMENT=Dev` or `TEST_ENVIRONMENT=IT` before running
+
+The PnC Automated Regression pipeline exposes QA and IT as queue-time environment options.
 
 ### State Filtering (Dev environment)
 

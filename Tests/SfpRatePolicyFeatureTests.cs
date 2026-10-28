@@ -308,6 +308,7 @@ namespace PnCTestAutomation.Tests
 
         [TestCase("Dev", "https://expertquote-dev.example", true)]
         [TestCase("QA", "https://expertquote-qa.example", true)]
+        [TestCase("IT", "https://expertquote-it.example", true)]
         [TestCase("Production", "https://expertquote.example", false)]
         [TestCase("Dev", "https://expertquote.example", false)]
         public void QuoteCreation_RequiresAnExplicitNonProductionTarget(string environment, string endpoint, bool allowed)

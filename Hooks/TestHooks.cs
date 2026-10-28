@@ -220,7 +220,10 @@ namespace PnCTestAutomation.Hooks
 
                 try
                 {
-                    await _context.Page.ScreenshotAsync(new() { Path = screenshotFile, FullPage = true });
+                    var screenshotPage = _context.ChecklistPage is { IsClosed: false }
+                        ? _context.ChecklistPage
+                        : _context.Page;
+                    await screenshotPage.ScreenshotAsync(new() { Path = screenshotFile, FullPage = true });
                     NUnitTestContext.WriteLine($"[screenshot] {screenshotFile}");
                 }
                 catch (Exception ex)
