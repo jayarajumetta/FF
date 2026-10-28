@@ -179,6 +179,8 @@ stages:
   - job: Validate
     displayName: "Preflight ${{ parameters.environment }}"
     timeoutInMinutes: 45
+    variables:
+      TEST_RESULTS_ROOT: '$(Agent.TempDirectory)\PnC-Preflight-$(Build.BuildId)-$(System.JobAttempt)'
     steps:
     - checkout: none
 
@@ -215,7 +217,7 @@ stages:
         filePath: '$(PACKAGE_ROOT)\scripts\Initialize-PipelineTestRuntime.ps1'
         arguments: >
           -ArtifactRoot "$(PACKAGE_ROOT)"
-          -ResultsRoot "$(Agent.TempDirectory)\PnC-Preflight-$(Build.BuildId)-$(System.JobAttempt)"
+          -ResultsRoot "$(TEST_RESULTS_ROOT)"
           -Environment "${{ parameters.environment }}"
           -DataPoolUrl "$(DATA_POOL_URL)"
           -ValidateEndpoints
@@ -281,6 +283,8 @@ stages:
       name: "Playwright"
     strategy:
       parallel: ${{ parameters.agentCount }}
+    variables:
+      TEST_RESULTS_ROOT: '$(Agent.TempDirectory)\PnC-Tests-$(Build.BuildId)-$(System.JobPositionInPhase)-$(System.JobAttempt)'
     steps:
     - checkout: none
 
@@ -317,7 +321,7 @@ stages:
         filePath: '$(PACKAGE_ROOT)\scripts\Initialize-PipelineTestRuntime.ps1'
         arguments: >
           -ArtifactRoot "$(PACKAGE_ROOT)"
-          -ResultsRoot "$(Agent.TempDirectory)\PnC-Tests-$(Build.BuildId)-$(System.JobPositionInPhase)-$(System.JobAttempt)"
+          -ResultsRoot "$(TEST_RESULTS_ROOT)"
           -Environment "${{ parameters.environment }}"
           -DataPoolUrl "$(DATA_POOL_URL)"
 

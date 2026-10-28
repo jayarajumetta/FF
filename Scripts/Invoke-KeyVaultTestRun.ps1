@@ -73,10 +73,6 @@ if ($env:TF_BUILD -eq "True" -and [string]::IsNullOrWhiteSpace($env:AZURE_CONFIG
     New-Item -ItemType Directory -Force -Path $env:AZURE_CONFIG_DIR | Out-Null
 }
 
-if (-not (Get-Command az -ErrorAction SilentlyContinue)) {
-    throw "Azure CLI 'az' is required to authenticate with managed identity and read Key Vault secrets."
-}
-
 if ($VaultName -match "^https://") {
     $vaultUri = [Uri]$VaultName
     $VaultName = $vaultUri.Host.Split(".")[0]
@@ -93,18 +89,32 @@ if ($resolvedAuthenticationMode -eq "Auto") {
 }
 
 if ($resolvedAuthenticationMode -eq "ManagedIdentity") {
-    Write-Host "Authenticating with managed identity '$managedIdentityName'."
-    & az login `
-        --identity `
-        --client-id $ManagedIdentityClientId `
-        --allow-no-subscriptions `
-        --output none `
-        --only-show-errors
-    if ($LASTEXITCODE -ne 0) {
-        throw "Azure CLI managed identity authentication failed for '$managedIdentityName'."
+    Write-Host "Authenticating with managed identity '$managedIdentityName' through Azure IMDS."
+    $tokenUri = "http://169.254.169.254/metadata/identity/oauth2/token" +
+        "?api-version=2018-02-01" +
+        "&resource=$([Uri]::EscapeDataString('https://vault.azure.net'))" +
+        "&client_id=$([Uri]::EscapeDataString($ManagedIdentityClientId))"
+    try {
+        $tokenResponse = Invoke-RestMethod `
+            -Method Get `
+            -Uri $tokenUri `
+            -Headers @{ Metadata = "true" } `
+            -TimeoutSec 30
+    }
+    catch {
+        throw "Managed identity authentication failed for '$managedIdentityName': $($_.Exception.Message)"
+    }
+
+    $vaultAccessToken = [string]$tokenResponse.access_token
+    if ([string]::IsNullOrWhiteSpace($vaultAccessToken)) {
+        throw "Managed identity authentication returned no Key Vault access token."
     }
 }
 else {
+    if (-not (Get-Command az -ErrorAction SilentlyContinue)) {
+        throw "Azure CLI 'az' is required for local AzureCli authentication."
+    }
+
     Write-Host "Using the current Azure CLI login."
     $tokenExpiry = & az account get-access-token `
         --resource "https://vault.azure.net" `
@@ -128,14 +138,34 @@ $secretMap = [ordered]@{
 $previous = @{}
 try {
     foreach ($entry in $secretMap.GetEnumerator()) {
-        $value = & az keyvault secret show `
-            --vault-name $VaultName `
-            --name $entry.Value `
-            --query value `
-            --output tsv `
-            --only-show-errors
-        if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($value)) {
-            throw "Unable to read required Key Vault secret '$($entry.Value)'."
+        if ($resolvedAuthenticationMode -eq "ManagedIdentity") {
+            $secretUri = "https://$VaultName.vault.azure.net/secrets/$($entry.Value)?api-version=7.4"
+            try {
+                $secretResponse = Invoke-RestMethod `
+                    -Method Get `
+                    -Uri $secretUri `
+                    -Headers @{ Authorization = "Bearer $vaultAccessToken" } `
+                    -TimeoutSec 30
+                $value = [string]$secretResponse.value
+            }
+            catch {
+                throw "Unable to read required Key Vault secret '$($entry.Value)': $($_.Exception.Message)"
+            }
+        }
+        else {
+            $value = & az keyvault secret show `
+                --vault-name $VaultName `
+                --name $entry.Value `
+                --query value `
+                --output tsv `
+                --only-show-errors
+            if ($LASTEXITCODE -ne 0) {
+                throw "Unable to read required Key Vault secret '$($entry.Value)'."
+            }
+        }
+
+        if ([string]::IsNullOrWhiteSpace($value)) {
+            throw "Key Vault secret '$($entry.Value)' is empty."
         }
 
         $previous[$entry.Key] = [Environment]::GetEnvironmentVariable($entry.Key)

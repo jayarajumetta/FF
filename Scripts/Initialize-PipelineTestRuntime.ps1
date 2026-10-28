@@ -71,6 +71,7 @@ foreach ($requiredPath in @($testsRoot, $scriptsRoot, $runSettingsPath, $testAss
 }
 
 New-Item -ItemType Directory -Force -Path $resolvedResultsRoot | Out-Null
+Write-Host "##vso[task.setvariable variable=TEST_RESULTS_ROOT]$resolvedResultsRoot"
 
 $browserPath = if ($env:PLAYWRIGHT_BROWSERS_PATH) {
     $env:PLAYWRIGHT_BROWSERS_PATH
@@ -140,6 +141,5 @@ if ($ValidateEndpoints) {
     }
 }
 
-Write-Host "##vso[task.setvariable variable=TEST_RESULTS_ROOT]$resolvedResultsRoot"
 Write-Host "##vso[task.setvariable variable=PLAYWRIGHT_BROWSERS_PATH]$browserPath"
 Write-Host "Runtime initialized for $Environment. Results: $resolvedResultsRoot"
