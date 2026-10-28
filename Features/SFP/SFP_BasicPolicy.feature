@@ -332,7 +332,7 @@ Feature: SFP Basic Policy
       | Maine         | ME        | 33 Davis St      |          111 | Presque Isle | 04769 | Aroostook |           |                    | 1%                 |                     |                   |
       | New Hampshire | NH        | 67 Comstock Road |          111 | Alstead      | 03602 | Cheshire  |           |                    | 1%                 |                     |                   |
 
-    @Shard2 @DevOnly
+    @Shard2
     Examples:
       | State    | StateAbbv | Address              | AddressLine2 | City    | Zip   | County     | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
       | Maryland | MD        | 18400 Muncaster Road |              | Derwood | 20855 | Montgomery |       007 | $1,000             | 2%                 | 2%                  | Yes               |
@@ -360,7 +360,7 @@ Feature: SFP Basic Policy
       | Wisconsin      | WI        | 3601 Memorial Dr |          111 | Madison       | 53704 | Dane       |           |                    | 1%                 |                     |                   |
       | Wyoming        | WY        | 100 E B St       |          111 | Casper        | 82601 | Natrona    |           |                    | 1%                 |                     |                   |
 
-    @Shard3 @DevOnly
+    @Shard3
     Examples:
       | State        | StateAbbv | Address               | AddressLine2 | City      | Zip   | County    | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
       | Pennsylvania | PA        | 2451 Kissel Hill Road |              | Lancaster | 17601 | Lancaster |       001 | $2,000             | None               | None                | No                |

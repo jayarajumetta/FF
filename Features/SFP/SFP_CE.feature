@@ -286,7 +286,7 @@ Feature: SFP Country Estate Policy
       | North Dakota | ND | 4204 Ottawa St | 111 | Bismarck | 58503 | Burleigh |  |  | 1% |  |  |
       | Oklahoma | OK | 621 W Broadway Ave | 111 | Enid | 73701 | Garfield |  |  | 1% |  |  |
 
-    @Shard5 @DevOnly
+    @Shard5
     Examples:
       | State    | StateAbbv | Address          | AddressLine2 | City      | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
       | Maryland | MD | 18400 Muncaster Road |  | Derwood | 20855 | Montgomery | 007 | $1,000 | 2% | 2% | Yes |
@@ -310,7 +310,7 @@ Feature: SFP Country Estate Policy
       | Wisconsin | WI | 4502 Regent St | 111 | Madison | 53705 | Dane |  |  | 1% |  |  |
       | Wyoming | WY | 730 E 2nd St | 111 | Casper | 82609 | Natrona |  |  | 1% |  |  |
 
-    @Shard6 @DevOnly
+    @Shard6
     Examples:
       | State        | StateAbbv | Address              | AddressLine2 | City       | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
       | Pennsylvania | PA | 2451 Kissel Hill Road |  | Lancaster | 17601 | Lancaster | 001 | $2,000 | None | None | No |
