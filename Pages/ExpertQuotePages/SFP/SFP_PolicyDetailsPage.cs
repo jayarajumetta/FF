@@ -174,6 +174,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
             {
                 await btn.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
                 await btn.ClickAsync();
+                await WaitForSpinnerAsync(appearanceGraceMs: 3000);
                 Console.WriteLine($"[PolicyDetails] Secondary farm category '{category}' selected via secondary testid.");
                 return true;
             }
@@ -191,6 +192,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
                 {
                     await primaryBtn.Nth(2).WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
                     await primaryBtn.Nth(2).ClickAsync();
+                    await WaitForSpinnerAsync(appearanceGraceMs: 3000);
                     Console.WriteLine($"[PolicyDetails] Secondary farm category '{category}' selected via Nth(1) fallback.");
                     return true;
                 }
@@ -210,6 +212,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
                     if (await textBtn.Nth(i).IsVisibleAsync())
                     {
                         await textBtn.Nth(i).ClickAsync();
+                        await WaitForSpinnerAsync(appearanceGraceMs: 3000);
                         Console.WriteLine($"[PolicyDetails] Secondary farm category '{category}' selected via text button Nth({i}).");
                         return true;
                     }
@@ -230,20 +233,32 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
             var radio = GetSecondaryFarmSubTypeRadio(subType);
             try
             {
-                await radio.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
-                await radio.First.ClickAsync();
-                return true;
+                await radio.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 25000 });
             }
             catch (TimeoutException)
             {
                 Console.WriteLine($"[PolicyDetails] Secondary farm sub-type '{subType}' radio not visible — skipping.");
                 return false;
             }
+
+            await radio.First.ClickAsync();
+            await WaitForSpinnerAsync(appearanceGraceMs: 3000);
+            await GrossFarmIncomeInput.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = 30000
+            });
+            return true;
         }
 
         public async Task EnterGrossFarmIncomeAsync(string grossFarmIncome)
         {
             await WaitForSpinnerAsync();
+            await GrossFarmIncomeInput.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = 30000
+            });
             await GrossFarmIncomeInput.ScrollIntoViewIfNeededAsync();
             await GrossFarmIncomeInput.ClearAsync();
             await GrossFarmIncomeInput.FillAsync(grossFarmIncome);
