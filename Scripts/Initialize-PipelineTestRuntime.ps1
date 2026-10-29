@@ -151,7 +151,7 @@ if ($ValidateEndpoints) {
         Write-Host "DataPool is reachable at '$dataPoolEndpoint'. Quote count: $(@($quotes).Count)."
     }
     catch {
-        throw "DataPool is unavailable at '$dataPoolEndpoint': $($_.Exception.Message)"
+        Write-Warning "DataPool is unavailable at '$dataPoolEndpoint'. Tests will continue, but completed quotes will not be recorded: $($_.Exception.Message)"
     }
 }
 
