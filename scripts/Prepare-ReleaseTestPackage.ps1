@@ -38,6 +38,7 @@ if (-not [bool]::TryParse($env:HEADLESS, [ref]$headless)) { throw 'Headless must
 $configSource = Join-Path $sourceRoot 'config\framework.json'
 $config = Get-Content -LiteralPath $configSource -Raw | ConvertFrom-Json
 $config.browser.headless = $headless
+$config.browser.channel = ''
 $config.browser.fallbackBrowser = $env:PLAYWRIGHTBROWSER
 $config.reporting.resultsRoot = $resultsDirectory
 $config.reporting.artifactRoot = 'Artifacts'
