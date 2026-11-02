@@ -650,10 +650,15 @@ public sealed class UiActions
         if (!_config.Waits.WaitForDomContentLoadedBeforeActions || !_browser.IsStarted) return;
         try
         {
+            await _browser.Page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions
+            {
+                Timeout = _config.Waits.PageReadyTimeoutMs
+            });
             await _browser.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded, new PageWaitForLoadStateOptions
             {
                 Timeout = _config.Waits.PageReadyTimeoutMs
             });
+
         }
         catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
         {
