@@ -122,7 +122,7 @@ public sealed class GLSmokeTestSteps
 
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_50}}"));
         await page.WaitForUnderwritingInfoAsync("Exists");
-        await page.EnterInsuredAndEntityTypeAsync(data.Resolve("{{data:insured_type_52}}"), data.Resolve("{{data:entity_type_62}}"))
+        await page.EnterInsuredAndEntityTypeAsync(data.Resolve("{{data:insured_type_52}}"), data.Resolve("{{data:entity_type_62}}"));
         await page.WaitForFirstNameAsync("Visible");
         await page.EnterFirstNameAsync(data.Resolve("{{data:first_name_56}}"));
         await page.EnterMiddleNameAsync(data.Resolve("{{data:middle_name_57}}"));
