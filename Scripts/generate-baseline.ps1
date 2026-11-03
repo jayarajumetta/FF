@@ -2,16 +2,18 @@
 # Reads an LOB Excel masterlist (and optionally the Common Forms masterlist)
 # and writes TestResults\FormsBaseline\{LOB}_MASTERLIST_CANDIDATE.json for review.
 # Catalog extraction does not qualify scenario rules or replace SFP.json.
+# StateProfile declares reviewed ApprovedPendingConfiguration states only.
 #
 # USAGE:
-#   .\.\Scripts\generate-baseline.ps1 -Excel "C:\path\to\SFP_Masterlist.xlsx"
-#   .\.\Scripts\generate-baseline.ps1 -Excel "C:\path\to\SFP_Masterlist.xlsx" -DryRun
-#   .\.\Scripts\generate-baseline.ps1 -Excel "C:\path\to\SFP_Masterlist.xlsx" -Common "C:\path\to\CommonForms.xlsx"
-#   .\.\Scripts\generate-baseline.ps1 -Excel "C:\path\to\SFP_Masterlist.xlsx" -Lob CE
+#   .\.\Scripts\generate-baseline.ps1 -Excel "C:\path\to\SFP_Masterlist.xlsx" -StateProfile "C:\path\to\states.json"
+#   .\.\Scripts\generate-baseline.ps1 -Excel "C:\path\to\SFP_Masterlist.xlsx" -StateProfile "C:\path\to\states.json" -DryRun
 
 param(
     [Parameter(Mandatory=$true)]
     [string]$Excel,
+
+    [Parameter(Mandatory=$true)]
+    [string]$StateProfile,
 
     [string]$Common = "",
 
@@ -25,6 +27,11 @@ if (-not (Test-Path $Excel)) {
     exit 1
 }
 
+if (-not (Test-Path $StateProfile)) {
+    Write-Error "State profile file not found: $StateProfile"
+    exit 1
+}
+
 $settings = "$PSScriptRoot\..\generate-baseline.runsettings"
 
 @"
@@ -33,6 +40,7 @@ $settings = "$PSScriptRoot\..\generate-baseline.runsettings"
   <TestRunParameters>
     <Parameter name="EXCEL"        value="$Excel" />
     <Parameter name="COMMON_EXCEL" value="$Common" />
+    <Parameter name="STATE_PROFILE" value="$StateProfile" />
     <Parameter name="LOB"          value="$Lob" />
     <Parameter name="DRY_RUN"      value="$($DryRun.IsPresent.ToString().ToLower())" />
   </TestRunParameters>

@@ -44,7 +44,9 @@ namespace PnCTestAutomation.Tests
             var file = variant == "BASIC" ? "SFP_BasicPolicy.feature" : "SFP_CE.feature";
             var scenario = new Parser().Parse(Path.Combine(ProjectRoot(), "Features", "SFP", file))
                 .Feature.Children.OfType<Scenario>().Single();
-            return scenario.Examples.SelectMany(example =>
+            return scenario.Examples
+                .Where(example => example.Tags.All(tag => tag.Name != "@DevOnly"))
+                .SelectMany(example =>
             {
                 var headers = example.TableHeader.Cells.Select(cell => cell.Value).ToArray();
                 var stateColumn = Array.IndexOf(headers, "StateAbbv");

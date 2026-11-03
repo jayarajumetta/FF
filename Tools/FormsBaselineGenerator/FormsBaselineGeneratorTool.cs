@@ -7,9 +7,12 @@
 //   dotnet test --filter "Category=Tools&Name~GenerateFormsBaseline" `
 //     -- TestRunParameters.Parameter(name="EXCEL",value="C:\path\to\SFP_Masterlist.xlsx")
 //
-// OPTIONAL PARAMETERS:
+// PARAMETERS:
 //   OUTPUT    Full path for the generated JSON
 //             (default: TestResults/FormsBaseline/{LOB}_MASTERLIST_CANDIDATE.json)
+//   BASIC_FEATURE  Authoritative Basic New Business feature (default: Features/SFP/SFP_BasicPolicy.feature)
+//   CE_FEATURE     Authoritative Country Estate feature (default: Features/SFP/SFP_CE.feature)
+//   STATE_PROFILE  Required reviewed JSON declaring only ApprovedPendingConfiguration states.
 //   LOB       Line-of-business prefix — used for folder/file naming  (default: SFP)
 //   DRY_RUN   Print the diff and new JSON preview without writing     (default: false)
 //   FORM_COL       Excel column header that contains form numbers          (default: auto-detect)
@@ -39,12 +42,6 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
     [TestFixture]
     public class FormsBaselineGeneratorTool
     {
-        private static readonly string[] SupportedStates =
-        [
-            "AL","AR","AZ","CO","ID","IL","KS","KY","LA","MN",
-            "MT","NE","NV","ND","OR","SC","SD","TN","TX","UT","WA","WI","WY"
-        ];
-
         [Test]
         [Category("Tools")]
         [Description("Reads an SFP (or other LOB) Excel masterlist and emits the include-only JSON baseline " +
@@ -54,6 +51,7 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
             // ── Read parameters ──────────────────────────────────────────────────
             var excelPath = TestContext.Parameters.Get("EXCEL", "");
             var commonExcelPath = TestContext.Parameters.Get("COMMON_EXCEL", "");
+            var stateProfilePath = TestContext.Parameters.Get("STATE_PROFILE", "");
             var lob = TestContext.Parameters.Get("LOB", "SFP");
             var formCol = TestContext.Parameters.Get("FORM_COL", "");
             var typeCol = TestContext.Parameters.Get("TYPE_COL", "");
@@ -68,15 +66,26 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
 
             // Catalog extraction is a review candidate, not a scenario-qualified runtime baseline.
             // AppContext.BaseDirectory = bin/Debug/net8.0 → go up three levels
+            var projectRoot = Path.GetFullPath(Path.Combine(
+                AppContext.BaseDirectory, "..", "..", ".."));
             var defaultOutput = Path.GetFullPath(Path.Combine(
-                AppContext.BaseDirectory, "..", "..", "..",
+                projectRoot,
                 "TestResults", "FormsBaseline", $"{lob}_MASTERLIST_CANDIDATE.json"));
             var outputPath = TestContext.Parameters.Get("OUTPUT", defaultOutput);
-            var canonicalSfpPath = Path.GetFullPath(Path.Combine(
-                AppContext.BaseDirectory, "..", "..", "..", "Resources", "ExpectedForms", "SFP", "SFP.json"));
-            if (!dryRun && Path.GetFullPath(outputPath).Equals(canonicalSfpPath, StringComparison.OrdinalIgnoreCase))
-                throw new InvalidOperationException(
-                    "Masterlist extraction cannot overwrite SFP.json. Emit a candidate and review state/company/scenario rules first.");
+            var basicFeaturePath = TestContext.Parameters.Get(
+                "BASIC_FEATURE",
+                Path.Combine(projectRoot, "Features", "SFP", "SFP_BasicPolicy.feature"));
+            var ceFeaturePath = TestContext.Parameters.Get(
+                "CE_FEATURE",
+                Path.Combine(projectRoot, "Features", "SFP", "SFP_CE.feature"));
+            RejectApprovedBaselineOutput(outputPath, dryRun);
+            var stateProfiles = LoadStateProfiles(basicFeaturePath, ceFeaturePath);
+            var pendingStateProfiles = LoadPendingStateProfiles(stateProfilePath, stateProfiles);
+            var recognizedStateColumns = stateProfiles.Values
+                .SelectMany(states => states)
+                .Distinct(StringComparer.Ordinal)
+                .OrderBy(state => state, StringComparer.Ordinal)
+                .ToArray();
 
             // ── Validate ─────────────────────────────────────────────────────────
             Console.WriteLine();
@@ -85,6 +94,10 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
             Console.WriteLine("╚══════════════════════════════════════════════════════════════╝");
             Console.WriteLine($"  Excel        : {excelPath}");
             Console.WriteLine($"  Common       : {(string.IsNullOrEmpty(commonExcelPath) ? "(none)" : commonExcelPath)}");
+            Console.WriteLine($"  Basic feature: {basicFeaturePath}");
+            Console.WriteLine($"  CE feature   : {ceFeaturePath}");
+            Console.WriteLine($"  State profile: {stateProfilePath}");
+            Console.WriteLine($"  Source states : {string.Join(", ", recognizedStateColumns)}");
             Console.WriteLine($"  Output       : {outputPath}");
             Console.WriteLine($"  LOB          : {lob}");
             Console.WriteLine($"  DryRun       : {dryRun}");
@@ -107,7 +120,7 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
             {
                 FormColumnHeader = formCol,
                 TypeColumnHeader = typeCol,
-                SupportedStates = SupportedStates,
+                RecognizedStateColumns = recognizedStateColumns,
                 IncludeSheets = includeSheets,
             };
 
@@ -128,6 +141,12 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
 
             Console.WriteLine();
             Console.WriteLine($"Total rows parsed: {rows.Count}");
+            foreach (var profile in pendingStateProfiles.Where(profile => profile.Value.Length > 0))
+            {
+                Console.WriteLine(
+                    $"WARNING: {profile.Key} ApprovedPendingConfiguration states are excluded from runtime STATES "
+                    + $"until complete feature rows exist: {string.Join(", ", profile.Value)}");
+            }
 
             if (rows.Count == 0)
             {
@@ -167,11 +186,117 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
             else
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
-                BaselineJsonEmitter.Emit(rows, SupportedStates, lob, outputPath);
+                BaselineJsonEmitter.Emit(rows, stateProfiles, pendingStateProfiles, lob, outputPath);
                 Console.WriteLine($"Baseline written: {outputPath}");
             }
 
             Assert.Pass($"Done. {rows.Count} forms processed.");
+        }
+
+        [Test]
+        [Explicit("Candidate-only canonical orchestration requires explicit local workbook inputs.")]
+        [Category("Tools")]
+        [Description("Runs the canonical Forms pipeline and writes an isolated review package. "
+            + "This never promotes or overwrites an approved baseline.")]
+        public void GenerateCanonicalFormsReviewPackage()
+        {
+            var projectRoot = Path.GetFullPath(Path.Combine(
+                AppContext.BaseDirectory, "..", "..", ".."));
+            var request = new CanonicalFormsPipelineRequest
+            {
+                SfpWorkbookPath = TestContext.Parameters.Get("SFP_EXCEL", ""),
+                CommonWorkbookPath = TestContext.Parameters.Get("COMMON_EXCEL", ""),
+                ApprovedBaselinePath = TestContext.Parameters.Get(
+                    "APPROVED_BASELINE",
+                    Path.Combine(
+                        projectRoot,
+                        "Resources",
+                        "ExpectedForms",
+                        "SFP",
+                        "SFP.json")),
+                BasicFeaturePath = TestContext.Parameters.Get(
+                    "BASIC_FEATURE",
+                    Path.Combine(
+                        projectRoot,
+                        "Features",
+                        "SFP",
+                        "SFP_BasicPolicy.feature")),
+                CountryEstateFeaturePath = TestContext.Parameters.Get(
+                    "CE_FEATURE",
+                    Path.Combine(
+                        projectRoot,
+                        "Features",
+                        "SFP",
+                        "SFP_CE.feature")),
+                PendingStateProfilePath = TestContext.Parameters.Get(
+                    "STATE_PROFILE",
+                    ""),
+                OutputDirectory = TestContext.Parameters.Get(
+                    "OUTPUT_DIR",
+                    Path.Combine(
+                        projectRoot,
+                        "TestResults",
+                        "FormsBaseline",
+                        "CanonicalReviewPackage")),
+                GeneratorVersion = "CanonicalFormsPipeline-1.0",
+                RuleVersions = new Dictionary<string, string>
+                {
+                    ["Aggregation"] = "1.0",
+                    ["Applicability"] =
+                        CanonicalApplicabilityInterpreter.RuleVersion,
+                    ["ScenarioEligibility"] =
+                        CanonicalScenarioEligibilityEvaluator.RuleVersion,
+                    ["EditionLifecycle"] =
+                        CanonicalEditionLifecycleResolver.RuleVersion,
+                    ["Projection"] = CanonicalExpectedRecordProjector.RuleVersion,
+                    ["SemanticComparison"] =
+                        CanonicalSemanticComparisonService.ComparisonRuleVersion
+                }
+            };
+            var result = CanonicalFormsPipeline.Run(
+                request,
+                new CanonicalFormsPipelineOptions
+                {
+                    AllowReviewedChanges =
+                        BoolParam("ALLOW_REVIEWED_CHANGES", false),
+                    OverwriteExisting = BoolParam("OVERWRITE", false),
+                    WritePackage = true
+                });
+            if (result.Status != CanonicalFormsPackageStatus.Generated)
+            {
+                Assert.Fail(
+                    $"Canonical review package status: {result.Status}. "
+                    + string.Join(" ", result.Reasons));
+            }
+            Assert.Pass(
+                $"Canonical review package generated: "
+                + $"{result.Paths?.PackageDirectory}; "
+                + $"CorrelationId={result.PackageCorrelationId}");
+        }
+
+        [Test]
+        [Explicit("Operational delta review requires exact acquired workbook paths and hashes.")]
+        [Category("Tools")]
+        [Description("Runs the change-driven canonical Forms delta pipeline. "
+            + "Package writing is disabled unless explicitly reviewed and requested.")]
+        public void RunCanonicalFormsDeltaReview()
+        {
+            var projectRoot = Path.GetFullPath(Path.Combine(
+                AppContext.BaseDirectory, "..", "..", ".."));
+            var settings = CanonicalFormsDeltaOperation.ReadSettings(
+                name => TestContext.Parameters.Get(name, ""),
+                Environment.GetEnvironmentVariable,
+                projectRoot);
+            var result = CanonicalFormsDeltaOperation.Run(settings);
+            if (result.Status == CanonicalFormsDeltaStatus.Failed)
+            {
+                Assert.Fail(
+                    $"Canonical Forms delta failed. {string.Join(" ", result.Reasons)}");
+            }
+            Assert.Pass(
+                $"Canonical Forms delta status: {result.Status}; "
+                + $"Result={settings.ResultPath}; "
+                + $"CorrelationId={result.PackageCorrelationId ?? ""}");
         }
 
         // ── Diff helper ──────────────────────────────────────────────────────────
@@ -234,6 +359,123 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
         }
 
         // ── Utility ──────────────────────────────────────────────────────────────
+
+        private static IReadOnlyDictionary<string, string[]> LoadStateProfiles(
+            string basicFeaturePath,
+            string ceFeaturePath)
+        {
+            return new Dictionary<string, string[]>(StringComparer.Ordinal)
+            {
+                ["BASIC"] = LoadScenarioStates(basicFeaturePath, "BASIC"),
+                ["CE"] = LoadScenarioStates(ceFeaturePath, "CE")
+            };
+        }
+
+        private static string[] LoadScenarioStates(string featurePath, string profileName)
+            => ScenarioProfileLoader.LoadConfiguredStates(featurePath, profileName);
+
+        private static IReadOnlyDictionary<string, string[]> LoadPendingStateProfiles(
+            string stateProfilePath,
+            IReadOnlyDictionary<string, string[]> configuredProfiles)
+        {
+            if (string.IsNullOrWhiteSpace(stateProfilePath) || !File.Exists(stateProfilePath))
+                throw new InvalidOperationException(
+                    $"STATE_PROFILE file not found: '{stateProfilePath}'. "
+                    + "Provide reviewed ApprovedPendingConfiguration declarations for BASIC and CE.");
+
+            try
+            {
+                using var document = JsonDocument.Parse(
+                    File.ReadAllText(stateProfilePath),
+                    new JsonDocumentOptions { CommentHandling = JsonCommentHandling.Skip });
+                if (document.RootElement.ValueKind != JsonValueKind.Object)
+                    throw new InvalidOperationException("STATE_PROFILE must be a JSON object.");
+
+                var result = new Dictionary<string, string[]>(StringComparer.Ordinal);
+                var profileNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var profile in document.RootElement.EnumerateObject())
+                {
+                    if (!profileNames.Add(profile.Name)
+                        || profile.Name is not ("BASIC" or "CE")
+                        || profile.Value.ValueKind != JsonValueKind.Object)
+                    {
+                        throw new InvalidOperationException(
+                            $"Invalid or duplicate STATE_PROFILE scenario '{profile.Name}'.");
+                    }
+
+                    var fields = profile.Value.EnumerateObject().ToArray();
+                    if (fields.Length != 2
+                        || fields.Count(field => field.NameEquals("Status")) != 1
+                        || fields.Count(field => field.NameEquals("States")) != 1
+                        || profile.Value.GetProperty("Status").ValueKind != JsonValueKind.String
+                        || profile.Value.GetProperty("Status").GetString() != "ApprovedPendingConfiguration"
+                        || profile.Value.GetProperty("States").ValueKind != JsonValueKind.Array)
+                    {
+                        throw new InvalidOperationException(
+                            $"STATE_PROFILE.{profile.Name} requires Status='ApprovedPendingConfiguration' and a States array.");
+                    }
+
+                    var states = new HashSet<string>(StringComparer.Ordinal);
+                    foreach (var stateValue in profile.Value.GetProperty("States").EnumerateArray())
+                    {
+                        var state = stateValue.ValueKind == JsonValueKind.String
+                            ? stateValue.GetString()
+                            : null;
+                        if (state == null
+                            || state.Length != 2
+                            || state.Any(character => character is < 'A' or > 'Z')
+                            || !states.Add(state))
+                        {
+                            throw new InvalidOperationException(
+                                $"Invalid or duplicate pending state in STATE_PROFILE.{profile.Name}.");
+                        }
+                    }
+
+                    var overlap = states.Intersect(configuredProfiles[profile.Name], StringComparer.Ordinal).ToArray();
+                    if (overlap.Length > 0)
+                    {
+                        throw new InvalidOperationException(
+                            $"STATE_PROFILE.{profile.Name} pending states already have configured feature rows: "
+                            + string.Join(", ", overlap));
+                    }
+                    result.Add(profile.Name, states.OrderBy(state => state, StringComparer.Ordinal).ToArray());
+                }
+
+                foreach (var profileName in new[] { "BASIC", "CE" })
+                    if (!result.ContainsKey(profileName))
+                        throw new InvalidOperationException($"STATE_PROFILE requires a {profileName} declaration.");
+                return result;
+            }
+            catch (JsonException exception)
+            {
+                throw new InvalidOperationException(
+                    $"STATE_PROFILE is not valid JSON: {exception.Message}", exception);
+            }
+        }
+
+        private static void RejectApprovedBaselineOutput(string outputPath, bool dryRun)
+        {
+            if (dryRun)
+                return;
+
+            var approvedBaselineDirectory = Path.GetFullPath(Path.Combine(
+                AppContext.BaseDirectory, "..", "..", "..", "Resources", "ExpectedForms", "SFP"));
+            var approvedBaselinePaths = new[]
+            {
+                Path.Combine(approvedBaselineDirectory, "SFP.json"),
+                Path.Combine(approvedBaselineDirectory, "SFP_RATEPOLICY.json")
+            };
+            var resolvedOutputPath = Path.GetFullPath(outputPath);
+            var approvedPath = approvedBaselinePaths.FirstOrDefault(path =>
+                resolvedOutputPath.Equals(Path.GetFullPath(path), StringComparison.OrdinalIgnoreCase));
+
+            if (approvedPath != null)
+            {
+                throw new InvalidOperationException(
+                    $"Masterlist extraction cannot overwrite approved Forms baseline '{Path.GetFileName(approvedPath)}'. " +
+                    "Emit a candidate and review state/company/scenario rules first.");
+            }
+        }
 
         private static bool BoolParam(string name, bool defaultValue)
             => string.Equals(

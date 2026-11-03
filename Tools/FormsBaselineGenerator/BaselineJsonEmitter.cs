@@ -7,11 +7,11 @@ using System.Text;
 namespace PnCTestAutomation.Tools.FormsBaselineGenerator
 {
     /// <summary>
-    /// Converts a list of ParsedFormRow objects into the include-only JSON format
-    /// consumed by FormsValidationService.LoadFromIncludeOnlyJson().
+    /// Converts ParsedFormRow objects and reviewed scenario state profiles into
+    /// the strict SFP JSON format consumed by FormsValidationService.ParseSfpJson().
     ///
     /// Output rules (per form, per section):
-    ///   All 23 states = YM  →  "all"
+    ///   All approved states = YM  →  "all"
     ///   Some states   = YM  →  ["AL", "AR", ...]
     ///   Mixed YM/YS/YU      →  { "AL": "YM", "TX": "YS" }
     ///   All states    = N   →  form is omitted entirely
@@ -29,39 +29,64 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
 
         public static void Emit(
             List<ParsedFormRow> rows,
-            string[] supportedStates,
+            IReadOnlyDictionary<string, string[]> stateProfiles,
+            IReadOnlyDictionary<string, string[]> pendingStateProfiles,
             string lob,
             string outputPath)
         {
             var sb = new StringBuilder();
 
             sb.AppendLine("{");
-            AppendFileHeader(sb, lob, supportedStates);
+            AppendFileHeader(sb, lob, stateProfiles, pendingStateProfiles);
+            AppendStates(sb, stateProfiles);
 
             // Group by canonical section name, ignore unknown sections
             var bySection = rows
                 .GroupBy(r => r.Section.ToUpperInvariant())
                 .ToDictionary(g => g.Key, g => g.OrderBy(r => r.FormNumber).ToList());
+            var missingProfiles = bySection.Keys
+                .Where(section => section is "BASIC" or "CE")
+                .Where(section => !stateProfiles.ContainsKey(section))
+                .OrderBy(section => section, StringComparer.Ordinal)
+                .ToArray();
+            if (missingProfiles.Length > 0)
+            {
+                throw new InvalidOperationException(
+                    $"STATE_PROFILE does not declare parsed scenario section(s): {string.Join(", ", missingProfiles)}.");
+            }
 
-            var sectionsPresent = SectionOrder.Where(s => bySection.ContainsKey(s)).ToList();
+            var sectionsPresent = SectionOrder
+                .Where(section => section == "BASE" || stateProfiles.ContainsKey(section))
+                .ToList();
+            var knownStates = stateProfiles.Values
+                .SelectMany(states => states)
+                .Distinct(StringComparer.Ordinal)
+                .OrderBy(state => state, StringComparer.Ordinal)
+                .ToArray();
 
             for (int si = 0; si < sectionsPresent.Count; si++)
             {
                 var sectionName = sectionsPresent[si];
-                var sectionRows = bySection[sectionName];
+                var sectionRows = bySection.GetValueOrDefault(sectionName, new List<ParsedFormRow>());
                 var isLastSection = si == sectionsPresent.Count - 1;
+                var applicableStates = sectionName == "BASE"
+                    ? knownStates
+                    : stateProfiles[sectionName].OrderBy(state => state, StringComparer.Ordinal).ToArray();
+                sectionRows = sectionRows
+                    .Where(row => HasIncludedState(row.StateValues, applicableStates))
+                    .ToList();
 
                 AppendSectionHeader(sb, sectionName);
                 sb.AppendLine($"  \"{sectionName}\": {{");
 
                 // Pad form numbers to the longest in this section for alignment
-                int maxLen = sectionRows.Max(r => r.FormNumber.Length);
+                int maxLen = sectionRows.Count == 0 ? 0 : sectionRows.Max(r => r.FormNumber.Length);
 
                 for (int ri = 0; ri < sectionRows.Count; ri++)
                 {
                     var row = sectionRows[ri];
                     var isLastRow = ri == sectionRows.Count - 1;
-                    var value = ComputeValue(row.StateValues, supportedStates);
+                    var value = ComputeValue(row.StateValues, applicableStates);
                     var padding = new string(' ', maxLen - row.FormNumber.Length);
                     var comma = isLastRow ? "" : ",";
 
@@ -80,7 +105,7 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
             Console.WriteLine();
             Console.WriteLine("  Section summary:");
             foreach (var s in sectionsPresent)
-                Console.WriteLine($"    {s,-8} {bySection[s].Count} forms");
+                Console.WriteLine($"    {s,-8} {bySection.GetValueOrDefault(s)?.Count ?? 0} forms");
             Console.WriteLine($"    Total    {rows.Count} forms");
         }
 
@@ -99,12 +124,12 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
                 .ToList();
 
             if (!included.Any())
-                return "\"N\"";  // shouldn't reach here (all-N rows filtered in parser)
+                throw new InvalidOperationException("Cannot emit a form with no approved non-N state.");
 
             var allYm = included.All(x => x.Status == "YM");
             var coversAll = included.Count == supportedStates.Length;
 
-            // All 23 states, all YM → "all"
+            // All approved states, all YM → "all"
             if (coversAll && allYm)
                 return "\"all\"";
 
@@ -120,13 +145,27 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
             return $"{{ {pairs} }}";
         }
 
+        private static bool HasIncludedState(
+            IReadOnlyDictionary<string, string> stateValues,
+            IEnumerable<string> approvedStates) =>
+            approvedStates.Any(state =>
+                stateValues.TryGetValue(state, out var value)
+                && !string.IsNullOrEmpty(value)
+                && !value.Equals("N", StringComparison.OrdinalIgnoreCase));
+
         // ── JSON text helpers ─────────────────────────────────────────────────────
 
-        private static void AppendFileHeader(StringBuilder sb, string lob, string[] states)
+        private static void AppendFileHeader(
+            StringBuilder sb,
+            string lob,
+            IReadOnlyDictionary<string, string[]> stateProfiles,
+            IReadOnlyDictionary<string, string[]> pendingStateProfiles)
         {
             var rule = new string('═', 77);
-            var dash = new string('─', 77);
-            var stateList = string.Join("  ", states);
+            var stateCount = stateProfiles.Values
+                .SelectMany(states => states)
+                .Distinct(StringComparer.Ordinal)
+                .Count();
 
             sb.AppendLine($"  // {rule}");
             sb.AppendLine($"  // {lob} Expected Forms Baseline");
@@ -143,9 +182,35 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
             sb.AppendLine($"  //   dotnet test --filter \"Category=Tools&Name~GenerateFormsBaseline\" ^");
             sb.AppendLine($"  //     -- TestRunParameters.Parameter(name=\"EXCEL\",value=\"path\\to\\{lob}_Masterlist.xlsx\")");
             sb.AppendLine($"  //");
-            sb.AppendLine($"  // SUPPORTED STATES ({states.Length})");
-            sb.AppendLine($"  //   {stateList}");
+            sb.AppendLine($"  // APPROVED PROFILE STATES ({stateCount})");
+            foreach (var profile in stateProfiles.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+                sb.AppendLine($"  //   {profile.Key}: {string.Join("  ", profile.Value)}");
+            sb.AppendLine($"  //");
+            sb.AppendLine($"  // APPROVED PENDING CONFIGURATION");
+            sb.AppendLine($"  //   Excluded from runtime STATES and form expectations until complete feature rows exist.");
+            foreach (var profile in pendingStateProfiles.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+                sb.AppendLine($"  //   {profile.Key}: {string.Join("  ", profile.Value)}");
             sb.AppendLine($"  // {rule}");
+            sb.AppendLine();
+        }
+
+        private static void AppendStates(
+            StringBuilder sb,
+            IReadOnlyDictionary<string, string[]> stateProfiles)
+        {
+            sb.AppendLine("  \"STATES\": {");
+            var profiles = stateProfiles.OrderBy(pair => pair.Key, StringComparer.Ordinal).ToList();
+            for (var index = 0; index < profiles.Count; index++)
+            {
+                var profile = profiles[index];
+                var comma = index == profiles.Count - 1 ? "" : ",";
+                var states = string.Join(
+                    ", ",
+                    profile.Value.OrderBy(state => state, StringComparer.Ordinal)
+                        .Select(state => $"\"{state}\""));
+                sb.AppendLine($"    \"{profile.Key}\": [{states}]{comma}");
+            }
+            sb.AppendLine("  },");
             sb.AppendLine();
         }
 

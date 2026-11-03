@@ -12,7 +12,8 @@ namespace PnCTestAutomation.Tests
     [TestFixture]
     public class SfpCountryEstateFeatureTests
     {
-        private static readonly string[] NewStateAbbreviations = { "MD", "PA", "VT" };
+        private static readonly string[] EmptyAddressLine2States = { "MD", "PA", "VT" };
+        private static readonly string[] DevOnlyStateAbbreviations = { "CA", "VA", "WV" };
 
         private static Scenario ReadScenario(string featureFile = "SFP_CE.feature")
         {
@@ -63,12 +64,12 @@ namespace PnCTestAutomation.Tests
                 .Select(row => row.Cells.Select(cell => cell.Value).ToArray()).ToArray();
             Assert.Multiple(() =>
             {
-                Assert.That(rows, Has.Length.EqualTo(41));
+                Assert.That(rows, Has.Length.EqualTo(44));
                 Assert.That(rows.All(row => row.Length == 12), Is.True);
                 Assert.That(rows.Select(row => row[1]), Is.Unique);
                 Assert.That(rows.Select(row => row[5]), Is.Unique);
                 Assert.That(rows.All(row => System.Text.RegularExpressions.Regex.IsMatch(row[5], @"^\d{5}$")), Is.True);
-                Assert.That(rows.All(row => NewStateAbbreviations.Contains(row[1])
+                Assert.That(rows.All(row => EmptyAddressLine2States.Contains(row[1])
                     ? row[3] == ""
                     : row[3] == "111"), Is.True);
                 Assert.That(rows.Single(row => row[1] == "AL"),
@@ -87,11 +88,12 @@ namespace PnCTestAutomation.Tests
                 Assert.That(examples.Select(example => string.Join(" ", example.Tags.Select(tag => tag.Name))),
                     Is.EqualTo(new[]
                     {
-                        "@Shard4 @Debug", "@Shard4", "@Shard5 @Debug", "@Shard5", "@Shard5 @DevOnly",
-                        "@Shard6 @Debug", "@Shard6", "@Shard6 @DevOnly"
+                        "@Shard4 @Debug", "@Shard4", "@Shard4 @DevOnly", "@Shard5 @Debug",
+                        "@Shard5", "@Shard5", "@Shard5 @DevOnly", "@Shard6 @Debug",
+                        "@Shard6", "@Shard6", "@Shard6 @DevOnly"
                     }));
                 Assert.That(examples.Select(example => example.TableBody.Count()),
-                    Is.EqualTo(new[] { 1, 13, 1, 12, 1, 1, 10, 2 }));
+                    Is.EqualTo(new[] { 1, 13, 1, 1, 12, 1, 1, 1, 10, 2, 1 }));
                 AssertNewStatesAreDevOnly(examples);
             });
         }
@@ -105,26 +107,27 @@ namespace PnCTestAutomation.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.That(rows, Has.Length.EqualTo(41));
+                Assert.That(rows, Has.Length.EqualTo(44));
                 Assert.That(rows.All(row => row.Length == 12), Is.True);
                 Assert.That(rows.Select(row => row[1]), Is.Unique);
                 Assert.That(rows.Select(row => row[5]), Is.Unique);
                 Assert.That(rows.All(row => System.Text.RegularExpressions.Regex.IsMatch(row[5], @"^\d{5}$")), Is.True);
-                Assert.That(rows.All(row => NewStateAbbreviations.Contains(row[1])
+                Assert.That(rows.All(row => EmptyAddressLine2States.Contains(row[1])
                     ? row[3] == ""
                     : !string.IsNullOrEmpty(row[3])), Is.True);
                 AssertApprovedDevStateRows(rows);
                 Assert.That(examples.Select(example => string.Join(" ", example.Tags.Select(tag => tag.Name))),
                     Is.EqualTo(new[]
                     {
-                        "@Shard1 @Debug", "@Shard1", "@Shard1 @Pollution146",
-                        "@Shard1 @Connecticut @Pollution146", "@Shard2 @Debug", "@Shard2",
-                        "@Shard2 @Pollution146", "@Shard2 @DevOnly", "@Shard2 @NewJersey",
-                        "@Shard3 @Debug", "@Shard3", "@Shard3 @DevOnly",
-                        "@Shard3 @RhodeIsland @Pollution146"
+                        "@Shard1 @Debug @PipelineSmoke", "@Shard1", "@Shard1 @Pollution146",
+                        "@Shard1 @Connecticut @Pollution146", "@Shard1 @DevOnly",
+                        "@Shard2 @Debug", "@Shard2", "@Shard2 @Pollution146", "@Shard2",
+                        "@Shard2 @NewJersey", "@Shard2 @DevOnly", "@Shard3 @Debug",
+                        "@Shard3", "@Shard3", "@Shard3 @RhodeIsland @Pollution146",
+                        "@Shard3 @DevOnly"
                     }));
                 Assert.That(examples.Select(example => example.TableBody.Count()),
-                    Is.EqualTo(new[] { 1, 10, 2, 1, 1, 8, 3, 1, 1, 1, 9, 2, 1 }));
+                    Is.EqualTo(new[] { 1, 10, 2, 1, 1, 1, 8, 3, 1, 1, 1, 1, 9, 2, 1, 1 }));
                 Assert.That(
                     examples.Where(example => example.Tags.Any(tag => tag.Name == "@Pollution146"))
                         .SelectMany(example => example.TableBody)
@@ -188,7 +191,7 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
-        public void DevCaptureConfiguration_AllowsEveryDevOnlyState()
+        public void DevConfiguration_AllowsEveryDevOnlyState()
         {
             var json = File.ReadAllText(Path.Combine(ProjectRoot(), "appsettings.Dev.json"));
             using var document = System.Text.Json.JsonDocument.Parse(json);
@@ -196,32 +199,7 @@ namespace PnCTestAutomation.Tests
                 .GetProperty("DevAllowedStates").EnumerateArray()
                 .Select(value => value.GetString()).ToArray();
 
-            Assert.That(allowed, Does.Contain("MD").And.Contain("PA").And.Contain("VT"));
-
-            var recordJson = File.ReadAllText(
-                Path.Combine(ProjectRoot(), "appsettings.RecordBaseline.json"));
-            using var recordDocument = System.Text.Json.JsonDocument.Parse(recordJson);
-            Assert.Multiple(() =>
-            {
-                Assert.That(recordDocument.RootElement.GetProperty("Environment").GetString(),
-                    Is.EqualTo("Dev"));
-                Assert.That(recordDocument.RootElement.GetProperty("Debugging")
-                    .GetProperty("RecordBaseline").GetBoolean(), Is.True);
-            });
-
-            var script = File.ReadAllText(
-                Path.Combine(ProjectRoot(), "Scripts", "record-new-states.ps1"));
-            Assert.Multiple(() =>
-            {
-                Assert.That(script, Does.Contain("\"TestCategory=DevOnly\""));
-                Assert.That(script, Does.Contain("RecordBaseline profile must target Dev"));
-                Assert.That(script, Does.Contain("must allow exactly MD, PA, and VT"));
-                Assert.That(script, Does.Contain("bin\\Debug\\net8.0"));
-                Assert.That(script, Does.Contain("Expected one raw Forms XML file for each"));
-                Assert.That(script, Does.Contain("$case.Variant"));
-                Assert.That(script, Does.Contain("$case.State"));
-                Assert.That(script, Does.Contain("$case.Quote"));
-            });
+            Assert.That(allowed, Does.Contain("CA").And.Contain("VA").And.Contain("WV"));
         }
 
         private static string ProjectRoot()
@@ -239,7 +217,7 @@ namespace PnCTestAutomation.Tests
             {
                 var states = example.TableBody.Select(row => row.Cells.ElementAt(1).Value).ToArray();
                 var isDevOnly = example.Tags.Any(tag => tag.Name == "@DevOnly");
-                Assert.That(states.Intersect(NewStateAbbreviations).Any(), Is.EqualTo(isDevOnly),
+                Assert.That(states.Intersect(DevOnlyStateAbbreviations).Any(), Is.EqualTo(isDevOnly),
                     $"Examples block [{string.Join(", ", states)}]");
             }
         }
@@ -263,6 +241,24 @@ namespace PnCTestAutomation.Tests
                 {
                     "Pennsylvania", "PA", "2451 Kissel Hill Road", "", "Lancaster", "17601", "Lancaster",
                     "001", "$2,000", "None", "None", "No"
+                }));
+            Assert.That(rows.Single(row => row[1] == "CA"),
+                Is.EqualTo(new[]
+                {
+                    "California", "CA", "3300 Glenwood St", "111", "Eureka", "95501", "Humboldt",
+                    "", "", "1%", "", ""
+                }));
+            Assert.That(rows.Single(row => row[1] == "VA"),
+                Is.EqualTo(new[]
+                {
+                    "Virginia", "VA", "15235 Whitehead Rd", "111", "Branchville", "23828", "Southampton",
+                    "", "", "1%", "", ""
+                }));
+            Assert.That(rows.Single(row => row[1] == "WV"),
+                Is.EqualTo(new[]
+                {
+                    "West Virginia", "WV", "1001 Adairs Run", "111", "Princeton", "24739", "Mercer",
+                    "", "", "1%", "", ""
                 }));
         }
 

@@ -344,3 +344,14 @@ Feature: SFP Rate Policy
     Examples:
       | State     | StateAbbv | Address            | AddressLine2 | City      | Zip   | County |
       | Wisconsin | WI        | 100 N Jefferson St | 111          | Green Bay | 54301 | Brown  |
+
+    @Jan27RatePolicy
+    Examples:
+      | State        | StateAbbv | Address           | AddressLine2 | City         | Zip   | County     |
+      | Wyoming      | WY        | 100 E B St        | 111          | Casper       | 82601 | Natrona    |
+      | Illinois     | IL        | 2576 Charles St   | 111          | Rockford     | 61108 | Winnebago  |
+      | Montana      | MT        | 1202 3rd St W     | 11           | Roundup      | 59072 | Musselshell |
+      | Indiana      | IN        | 5518 Calumet Ave  | 111          | Hammond      | 46320 | Lake        |
+      | North Dakota | ND        | 600 S 2nd St      | 111          | Bismarck     | 58504 | Burleigh    |
+      | Tennessee    | TN        | 207 N Boone St    | 111          | Johnson City | 37604 | Washington  |
+      | Kentucky     | KY        | 1002 Medical Dr   | 111          | Mayfield     | 42066 | Graves      |

@@ -111,8 +111,8 @@ namespace PnCTestAutomation.Tests
                     : line);
             var hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(
                 string.Join("\n", semanticLines) + "\n")));
-            Assert.That(hash, Is.EqualTo("253579EA9C1B718218307385F989A8FB40F9924649DED39BA4D46807A2A4DE38"),
-                "Only table alignment, the Rate Policy effective-date token, the two user-approved 200-acre expectations, the current pollution-coverage contracts, the billing-compatible escrow answer, and the verification-only referral/transmit expectations may differ from the supplied scenario.");
+            Assert.That(hash, Is.EqualTo("B337A851C3A194D1357D46AADADDE7CCAC478AEA886C65D1DD14DDADDFE64662"),
+                "Only table alignment, the Rate Policy effective-date token, the two user-approved 200-acre expectations, the current pollution-coverage contracts, the billing-compatible escrow answer, the verification-only referral/transmit expectations, and the approved Jan-27 examples may differ from the supplied scenario.");
         }
 
         private static void NormalizeApprovedStep(string[] lines, string current, string original)
@@ -148,7 +148,7 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
-        public void GeneratedFeature_HasExactlyFourStateAndShardCases()
+        public void GeneratedFeature_PreservesExistingStatesAndIsolatesSevenJan27Cases()
         {
             var feature = new Parser().Parse(FeaturePath()).Feature;
             var scenario = feature.Children.OfType<Scenario>().Single();
@@ -159,21 +159,43 @@ namespace PnCTestAutomation.Tests
                 new[] { "Minnesota", "MN", "401 S 4th St", "111", "Minneapolis", "55415", "Hennepin", "Shard1" },
                 new[] { "Nebraska", "NE", "555 S 10th St", "111", "Lincoln", "68508", "Lancaster", "Shard1" },
                 new[] { "South Dakota", "SD", "300 6th St", "111", "Rapid City", "57701", "Pennington", "Shard2" },
-                new[] { "Wisconsin", "WI", "100 N Jefferson St", "111", "Green Bay", "54301", "Brown", "Shard3" }
+                new[] { "Wisconsin", "WI", "100 N Jefferson St", "111", "Green Bay", "54301", "Brown", "Shard3" },
+                new[] { "Wyoming", "WY", "100 E B St", "111", "Casper", "82601", "Natrona", "Jan27RatePolicy" },
+                new[] { "Illinois", "IL", "2576 Charles St", "111", "Rockford", "61108", "Winnebago", "Jan27RatePolicy" },
+                new[] { "Montana", "MT", "1202 3rd St W", "11", "Roundup", "59072", "Musselshell", "Jan27RatePolicy" },
+                new[] { "Indiana", "IN", "5518 Calumet Ave", "111", "Hammond", "46320", "Lake", "Jan27RatePolicy" },
+                new[] { "North Dakota", "ND", "600 S 2nd St", "111", "Bismarck", "58504", "Burleigh", "Jan27RatePolicy" },
+                new[] { "Tennessee", "TN", "207 N Boone St", "111", "Johnson City", "37604", "Washington", "Jan27RatePolicy" },
+                new[] { "Kentucky", "KY", "1002 Medical Dr", "111", "Mayfield", "42066", "Graves", "Jan27RatePolicy" }
             };
             Assert.Multiple(() =>
             {
                 Assert.That(feature.Tags.Select(tag => tag.Name),
                     Is.EquivalentTo(new[] { "@SFP", "@RatePolicy", "@ExpertQuote", "@Regression" }));
                 Assert.That(scenario.Name, Is.EqualTo("SFP Rate Policy - <State>"));
-                Assert.That(scenario.Examples.Select(example => example.TableBody.Count()), Is.EqualTo(new[] { 2, 1, 1 }));
-                Assert.That(generated, Has.Length.EqualTo(4));
+                Assert.That(scenario.Examples.Select(example => example.TableBody.Count()), Is.EqualTo(new[] { 2, 1, 1, 7 }));
+                Assert.That(
+                    scenario.Examples.Select(example => example.Tags.Single().Name),
+                    Is.EqualTo(new[] { "@Shard1", "@Shard2", "@Shard3", "@Jan27RatePolicy" }));
+                Assert.That(generated, Has.Length.EqualTo(11));
+                Assert.That(generated.Select(test => test.Arguments[1]), Is.Unique);
                 foreach (var row in expected)
                 {
                     var test = generated.Single(candidate => Equals(candidate.Arguments[1], row[1]));
                     Assert.That(test.Arguments.Take(7), Is.EqualTo(row.Take(7)), row[1]);
                     Assert.That(test.Arguments[8], Is.EqualTo(new[] { row[7] }), row[1]);
                 }
+                Assert.That(
+                    generated.Where(test => ((string[])test.Arguments[8]!).Contains("Jan27RatePolicy"))
+                        .Select(test => test.Arguments[1]),
+                    Is.EquivalentTo(new[] { "WY", "IL", "MT", "IN", "ND", "TN", "KY" }));
+                Assert.That(
+                    generated.Where(test => new[] { "MN", "NE", "SD", "WI" }.Contains(test.Arguments[1]))
+                        .All(test => !((string[])test.Arguments[8]!).Contains("Jan27RatePolicy")),
+                    Is.True);
+                Assert.That(
+                    scenario.Steps.Last().Text,
+                    Is.EqualTo("user validates Forms via Duckcreek for state \"<StateAbbv>\""));
             });
         }
 

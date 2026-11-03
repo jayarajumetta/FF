@@ -1,0 +1,153 @@
+trigger: none
+pr: none
+schedules: []
+
+parameters:
+- name: sourceFamily
+  displayName: Changed source family
+  type: string
+  values:
+  - SFP
+  - Common
+- name: eventId
+  type: string
+- name: correlationId
+  type: string
+- name: previousSourceIdentity
+  type: string
+- name: previousSourceReference
+  displayName: Previous immutable SharePoint item/version reference
+  type: string
+- name: previousSourceSha256
+  type: string
+- name: currentSourceIdentity
+  type: string
+- name: currentSourceReference
+  displayName: Current immutable SharePoint item/version reference
+  type: string
+- name: currentSourceSha256
+  type: string
+- name: counterpartSourceIdentity
+  type: string
+- name: counterpartSourceReference
+  displayName: Current counterpart SharePoint item/version reference
+  type: string
+- name: counterpartSourceSha256
+  type: string
+- name: approvedBaselineSha256
+  type: string
+- name: branch
+  displayName: Expected source branch
+  type: string
+  default: Development
+- name: allowReviewedChanges
+  type: boolean
+  default: false
+- name: writePackage
+  type: boolean
+  default: false
+- name: overwriteExisting
+  type: boolean
+  default: false
+
+pool:
+  name: "Playwright"
+
+variables:
+- name: DOTNET_VERSION
+  value: "8.x"
+- name: BUILD_CONFIGURATION
+  value: "Release"
+- name: DELTA_RESULTS_ROOT
+  value: "$(Build.ArtifactStagingDirectory)\\FormsDelta"
+
+steps:
+- checkout: self
+  clean: true
+
+- powershell: |
+    $expected = "refs/heads/$env:EXPECTED_BRANCH"
+    if ("$(Build.SourceBranch)" -ne $expected) {
+      throw "Queued branch must be '$expected'."
+    }
+  displayName: "Validate queued branch"
+  env:
+    EXPECTED_BRANCH: ${{ parameters.branch }}
+
+- task: UseDotNet@2
+  displayName: "Install .NET SDK"
+  inputs:
+    packageType: sdk
+    version: "$(DOTNET_VERSION)"
+
+- powershell: |
+    dotnet restore TestAutomation.csproj
+    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    dotnet build TestAutomation.csproj `
+      --configuration "$(BUILD_CONFIGURATION)" `
+      --no-restore
+    exit $LASTEXITCODE
+  displayName: "Restore and build"
+
+- powershell: |
+    New-Item -ItemType Directory -Force -Path "$(DELTA_RESULTS_ROOT)" |
+      Out-Null
+  displayName: "Create Forms delta results directory"
+
+- task: PowerShell@2
+  name: RunFormsDelta
+  displayName: "Acquire pinned workbooks and run Forms delta review"
+  inputs:
+    targetType: filePath
+    filePath: "$(Build.SourcesDirectory)\\Scripts\\Invoke-FormsDeltaReview.ps1"
+    arguments: >
+      -ProjectRoot "$(Build.SourcesDirectory)"
+      -ResultRoot "$(DELTA_RESULTS_ROOT)"
+  env:
+    FORMS_DELTA_SOURCE_FAMILY: ${{ parameters.sourceFamily }}
+    FORMS_DELTA_EVENT_ID: ${{ parameters.eventId }}
+    FORMS_DELTA_CORRELATION_ID: ${{ parameters.correlationId }}
+    FORMS_DELTA_PREVIOUS_SOURCE_IDENTITY: ${{ parameters.previousSourceIdentity }}
+    FORMS_DELTA_PREVIOUS_SOURCE_REFERENCE: ${{ parameters.previousSourceReference }}
+    FORMS_DELTA_PREVIOUS_SOURCE_SHA256: ${{ parameters.previousSourceSha256 }}
+    FORMS_DELTA_CURRENT_SOURCE_IDENTITY: ${{ parameters.currentSourceIdentity }}
+    FORMS_DELTA_CURRENT_SOURCE_REFERENCE: ${{ parameters.currentSourceReference }}
+    FORMS_DELTA_CURRENT_SOURCE_SHA256: ${{ parameters.currentSourceSha256 }}
+    FORMS_DELTA_COUNTERPART_SOURCE_IDENTITY: ${{ parameters.counterpartSourceIdentity }}
+    FORMS_DELTA_COUNTERPART_SOURCE_REFERENCE: ${{ parameters.counterpartSourceReference }}
+    FORMS_DELTA_COUNTERPART_SOURCE_SHA256: ${{ parameters.counterpartSourceSha256 }}
+    FORMS_DELTA_APPROVED_BASELINE_SHA256: ${{ parameters.approvedBaselineSha256 }}
+    FORMS_DELTA_ALLOW_REVIEWED_CHANGES: ${{ parameters.allowReviewedChanges }}
+    FORMS_DELTA_WRITE_PACKAGE: ${{ parameters.writePackage }}
+    FORMS_DELTA_OVERWRITE: ${{ parameters.overwriteExisting }}
+    FORMS_SHAREPOINT_ACQUISITION_PROVIDER: $(FORMS_SHAREPOINT_ACQUISITION_PROVIDER)
+    FORMS_SHAREPOINT_TENANT_ID: $(FORMS_SHAREPOINT_TENANT_ID)
+    FORMS_SHAREPOINT_CLIENT_ID: $(FORMS_SHAREPOINT_CLIENT_ID)
+    FORMS_SHAREPOINT_FEDERATED_TOKEN_FILE: $(FORMS_SHAREPOINT_FEDERATED_TOKEN_FILE)
+    FORMS_SHAREPOINT_CERTIFICATE_THUMBPRINT: $(FORMS_SHAREPOINT_CERTIFICATE_THUMBPRINT)
+
+- task: PublishPipelineArtifact@1
+  displayName: "Publish Forms delta diagnostics"
+  condition: always()
+  inputs:
+    targetPath: "$(DELTA_RESULTS_ROOT)"
+    artifact: "FormsDeltaDiagnostics"
+
+- task: PublishPipelineArtifact@1
+  displayName: "Publish generated Forms delta review package"
+  condition: and(
+    succeeded(),
+    eq(variables['FormsDeltaStatus'], 'Generated'),
+    ${{ eq(parameters.allowReviewedChanges, true) }},
+    ${{ eq(parameters.writePackage, true) }})
+  inputs:
+    targetPath: "$(DELTA_RESULTS_ROOT)\\review-package"
+    artifact: "FormsDeltaReviewPackage"
+
+- powershell: |
+    $tempRoot = "$(Agent.TempDirectory)"
+    Get-ChildItem -LiteralPath $tempRoot -Directory -Filter "FormsDelta-*" `
+      -ErrorAction SilentlyContinue |
+      Remove-Item -Recurse -Force
+  displayName: "Clean Forms delta temporary files"
+  condition: always()

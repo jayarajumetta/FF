@@ -308,6 +308,11 @@ Feature: SFP Basic Policy
       | State       | StateAbbv | Address           | AddressLine2 | City    | Zip   | County  | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
       | Connecticut | CT        | 391 Old Post Road |          111 | Tolland | 06084 | Tolland |           |                    | 1%                 |                     |                   |
 
+    @Shard1 @DevOnly
+    Examples:
+      | State      | StateAbbv | Address          | AddressLine2 | City   | Zip   | County   | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | California | CA        | 3300 Glenwood St |          111 | Eureka | 95501 | Humboldt |           |                    | 1%                 |                     |                   |
+
     @Shard2 @Debug
     Examples:
       | State       | StateAbbv | Address             | AddressLine2 | City     | Zip   | County   | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
@@ -342,6 +347,11 @@ Feature: SFP Basic Policy
       | State      | StateAbbv | Address    | AddressLine2 | City       | Zip   | County    | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
       | New Jersey | NJ        | 27 West St |          111 | Bloomsbury | 08804 | Hunterdon |           |                    | 1%                 |                     |                   |
 
+    @Shard2 @DevOnly
+    Examples:
+      | State    | StateAbbv | Address            | AddressLine2 | City       | Zip   | County      | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Virginia | VA        | 15235 Whitehead Rd |          111 | Branchville | 23828 | Southampton |           |                    | 1%                 |                     |                   |
+
     @Shard3 @Debug
     Examples:
       | State | StateAbbv | Address            | AddressLine2 | City      | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
@@ -370,3 +380,8 @@ Feature: SFP Basic Policy
     Examples:
       | State        | StateAbbv | Address     | AddressLine2 | City       | Zip   | County     | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
       | Rhode Island | RI        | 160 Pine St |          111 | Providence | 02903 | Providence |           |                    | 1%                 |                     |                   |
+
+    @Shard3 @DevOnly
+    Examples:
+      | State         | StateAbbv | Address         | AddressLine2 | City      | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | West Virginia | WV        | 1001 Adairs Run |          111 | Princeton | 24739 | Mercer |           |                    | 1%                 |                     |                   |
