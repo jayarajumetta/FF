@@ -54,94 +54,6 @@ parameters:
   type: boolean
   default: true
 
-- name: sourceFamily
-  displayName: "FormsDelta only - changed source family"
-  type: string
-  default: SFP
-  values:
-  - SFP
-  - Common
-
-- name: eventId
-  displayName: "FormsDelta only - event ID"
-  type: string
-  default: not-used-for-regression
-
-- name: correlationId
-  displayName: "FormsDelta only - correlation ID"
-  type: string
-  default: not-used-for-regression
-
-- name: previousSourceIdentity
-  displayName: "FormsDelta only - previous changed-source identity"
-  type: string
-  default: not-used-for-regression
-
-- name: previousSourceReference
-  displayName: "FormsDelta only - previous SharePoint item/version reference"
-  type: string
-  default: not-used-for-regression
-
-- name: previousSourceSha256
-  displayName: "FormsDelta only - previous changed-source SHA-256"
-  type: string
-  default: not-used-for-regression
-
-- name: currentSourceIdentity
-  displayName: "FormsDelta only - current changed-source identity"
-  type: string
-  default: not-used-for-regression
-
-- name: currentSourceReference
-  displayName: "FormsDelta only - current SharePoint item/version reference"
-  type: string
-  default: not-used-for-regression
-
-- name: currentSourceSha256
-  displayName: "FormsDelta only - current changed-source SHA-256"
-  type: string
-  default: not-used-for-regression
-
-- name: counterpartSourceIdentity
-  displayName: "FormsDelta only - current counterpart identity"
-  type: string
-  default: not-used-for-regression
-
-- name: counterpartSourceReference
-  displayName: "FormsDelta only - counterpart SharePoint item/version reference"
-  type: string
-  default: not-used-for-regression
-
-- name: counterpartSourceSha256
-  displayName: "FormsDelta only - current counterpart SHA-256"
-  type: string
-  default: not-used-for-regression
-
-- name: approvedBaselineSha256
-  displayName: "FormsDelta only - approved baseline SHA-256"
-  type: string
-  default: not-used-for-regression
-
-- name: branch
-  displayName: "FormsDelta only - expected source branch"
-  type: string
-  default: Development
-
-- name: allowReviewedChanges
-  displayName: "FormsDelta only - allow reviewed changes"
-  type: boolean
-  default: false
-
-- name: writePackage
-  displayName: "FormsDelta only - write review package"
-  type: boolean
-  default: false
-
-- name: overwriteExisting
-  displayName: "FormsDelta only - overwrite existing output"
-  type: boolean
-  default: false
-
 variables:
 - group: "PnC_DC_TestAutomation"
 - name: DOTNET_VERSION
@@ -158,6 +70,12 @@ variables:
   value: "1.57.0"
 - name: DELTA_RESULTS_ROOT
   value: '$(Build.ArtifactStagingDirectory)\FormsDelta'
+- name: FORMS_DELTA_ALLOW_REVIEWED_CHANGES
+  value: "false"
+- name: FORMS_DELTA_WRITE_PACKAGE
+  value: "false"
+- name: FORMS_DELTA_OVERWRITE
+  value: "false"
 
 - ${{ if eq(parameters.suite, 'All') }}:
   - name: TEST_FILTER
@@ -573,7 +491,7 @@ stages:
         }
       displayName: "Validate queued branch"
       env:
-        EXPECTED_BRANCH: ${{ parameters.branch }}
+        EXPECTED_BRANCH: $(FORMS_DELTA_EXPECTED_BRANCH)
 
     - task: UseDotNet@2
       displayName: "Install .NET SDK"
@@ -607,22 +525,22 @@ stages:
           -ProjectRoot "$(Build.SourcesDirectory)"
           -ResultRoot "$(DELTA_RESULTS_ROOT)"
       env:
-        FORMS_DELTA_SOURCE_FAMILY: ${{ parameters.sourceFamily }}
-        FORMS_DELTA_EVENT_ID: ${{ parameters.eventId }}
-        FORMS_DELTA_CORRELATION_ID: ${{ parameters.correlationId }}
-        FORMS_DELTA_PREVIOUS_SOURCE_IDENTITY: ${{ parameters.previousSourceIdentity }}
-        FORMS_DELTA_PREVIOUS_SOURCE_REFERENCE: ${{ parameters.previousSourceReference }}
-        FORMS_DELTA_PREVIOUS_SOURCE_SHA256: ${{ parameters.previousSourceSha256 }}
-        FORMS_DELTA_CURRENT_SOURCE_IDENTITY: ${{ parameters.currentSourceIdentity }}
-        FORMS_DELTA_CURRENT_SOURCE_REFERENCE: ${{ parameters.currentSourceReference }}
-        FORMS_DELTA_CURRENT_SOURCE_SHA256: ${{ parameters.currentSourceSha256 }}
-        FORMS_DELTA_COUNTERPART_SOURCE_IDENTITY: ${{ parameters.counterpartSourceIdentity }}
-        FORMS_DELTA_COUNTERPART_SOURCE_REFERENCE: ${{ parameters.counterpartSourceReference }}
-        FORMS_DELTA_COUNTERPART_SOURCE_SHA256: ${{ parameters.counterpartSourceSha256 }}
-        FORMS_DELTA_APPROVED_BASELINE_SHA256: ${{ parameters.approvedBaselineSha256 }}
-        FORMS_DELTA_ALLOW_REVIEWED_CHANGES: ${{ parameters.allowReviewedChanges }}
-        FORMS_DELTA_WRITE_PACKAGE: ${{ parameters.writePackage }}
-        FORMS_DELTA_OVERWRITE: ${{ parameters.overwriteExisting }}
+        FORMS_DELTA_SOURCE_FAMILY: $(FORMS_DELTA_SOURCE_FAMILY)
+        FORMS_DELTA_EVENT_ID: $(FORMS_DELTA_EVENT_ID)
+        FORMS_DELTA_CORRELATION_ID: $(FORMS_DELTA_CORRELATION_ID)
+        FORMS_DELTA_PREVIOUS_SOURCE_IDENTITY: $(FORMS_DELTA_PREVIOUS_SOURCE_IDENTITY)
+        FORMS_DELTA_PREVIOUS_SOURCE_REFERENCE: $(FORMS_DELTA_PREVIOUS_SOURCE_REFERENCE)
+        FORMS_DELTA_PREVIOUS_SOURCE_SHA256: $(FORMS_DELTA_PREVIOUS_SOURCE_SHA256)
+        FORMS_DELTA_CURRENT_SOURCE_IDENTITY: $(FORMS_DELTA_CURRENT_SOURCE_IDENTITY)
+        FORMS_DELTA_CURRENT_SOURCE_REFERENCE: $(FORMS_DELTA_CURRENT_SOURCE_REFERENCE)
+        FORMS_DELTA_CURRENT_SOURCE_SHA256: $(FORMS_DELTA_CURRENT_SOURCE_SHA256)
+        FORMS_DELTA_COUNTERPART_SOURCE_IDENTITY: $(FORMS_DELTA_COUNTERPART_SOURCE_IDENTITY)
+        FORMS_DELTA_COUNTERPART_SOURCE_REFERENCE: $(FORMS_DELTA_COUNTERPART_SOURCE_REFERENCE)
+        FORMS_DELTA_COUNTERPART_SOURCE_SHA256: $(FORMS_DELTA_COUNTERPART_SOURCE_SHA256)
+        FORMS_DELTA_APPROVED_BASELINE_SHA256: $(FORMS_DELTA_APPROVED_BASELINE_SHA256)
+        FORMS_DELTA_ALLOW_REVIEWED_CHANGES: $(FORMS_DELTA_ALLOW_REVIEWED_CHANGES)
+        FORMS_DELTA_WRITE_PACKAGE: $(FORMS_DELTA_WRITE_PACKAGE)
+        FORMS_DELTA_OVERWRITE: $(FORMS_DELTA_OVERWRITE)
         FORMS_SHAREPOINT_ACQUISITION_PROVIDER: $(FORMS_SHAREPOINT_ACQUISITION_PROVIDER)
         FORMS_SHAREPOINT_TENANT_ID: $(FORMS_SHAREPOINT_TENANT_ID)
         FORMS_SHAREPOINT_CLIENT_ID: $(FORMS_SHAREPOINT_CLIENT_ID)
@@ -641,8 +559,8 @@ stages:
       condition: and(
         succeeded(),
         eq(variables['FormsDeltaStatus'], 'Generated'),
-        ${{ eq(parameters.allowReviewedChanges, true) }},
-        ${{ eq(parameters.writePackage, true) }})
+        eq(variables['FORMS_DELTA_ALLOW_REVIEWED_CHANGES'], 'true'),
+        eq(variables['FORMS_DELTA_WRITE_PACKAGE'], 'true'))
       inputs:
         targetPath: '$(DELTA_RESULTS_ROOT)\review-package'
         artifact: "FormsDeltaReviewPackage"

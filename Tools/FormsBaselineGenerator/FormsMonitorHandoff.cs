@@ -45,21 +45,26 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
         public static readonly IReadOnlyList<string> RequiredQueueParameters =
             new[]
             {
-                "pipelineMode",
-                "sourceFamily",
-                "eventId",
-                "correlationId",
-                "previousSourceIdentity",
-                "previousSourceReference",
-                "previousSourceSha256",
-                "currentSourceIdentity",
-                "currentSourceReference",
-                "currentSourceSha256",
-                "counterpartSourceIdentity",
-                "counterpartSourceReference",
-                "counterpartSourceSha256",
-                "approvedBaselineSha256",
-                "branch"
+                "pipelineMode"
+            };
+
+        public static readonly IReadOnlyList<string> RequiredQueueVariables =
+            new[]
+            {
+                "FORMS_DELTA_SOURCE_FAMILY",
+                "FORMS_DELTA_EVENT_ID",
+                "FORMS_DELTA_CORRELATION_ID",
+                "FORMS_DELTA_PREVIOUS_SOURCE_IDENTITY",
+                "FORMS_DELTA_PREVIOUS_SOURCE_REFERENCE",
+                "FORMS_DELTA_PREVIOUS_SOURCE_SHA256",
+                "FORMS_DELTA_CURRENT_SOURCE_IDENTITY",
+                "FORMS_DELTA_CURRENT_SOURCE_REFERENCE",
+                "FORMS_DELTA_CURRENT_SOURCE_SHA256",
+                "FORMS_DELTA_COUNTERPART_SOURCE_IDENTITY",
+                "FORMS_DELTA_COUNTERPART_SOURCE_REFERENCE",
+                "FORMS_DELTA_COUNTERPART_SOURCE_SHA256",
+                "FORMS_DELTA_APPROVED_BASELINE_SHA256",
+                "FORMS_DELTA_EXPECTED_BRANCH"
             };
 
         public static readonly IReadOnlyList<string> OutputVariables =

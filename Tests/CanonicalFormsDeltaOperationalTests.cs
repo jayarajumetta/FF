@@ -232,11 +232,16 @@ namespace PnCTestAutomation.Tests
                 Assert.That(yaml, Does.Contain(
                     "eq(parameters.pipelineMode, 'FormsDelta')"));
                 Assert.That(yaml, Does.Contain("name: \"Playwright\""));
-                Assert.That(yaml, Does.Contain("writePackage"));
-                Assert.That(yaml, Does.Contain("default: false"));
-                Assert.That(yaml, Does.Not.Contain("default: \"\""));
                 Assert.That(yaml, Does.Contain(
-                    "default: not-used-for-regression"));
+                    "FORMS_DELTA_WRITE_PACKAGE"));
+                Assert.That(yaml, Does.Contain("value: \"false\""));
+                Assert.That(yaml, Does.Not.Contain("default: \"\""));
+                Assert.That(yaml, Does.Not.Contain("- name: eventId"));
+                Assert.That(yaml, Does.Not.Contain("- name: correlationId"));
+                Assert.That(yaml, Does.Not.Contain(
+                    "- name: previousSourceIdentity"));
+                Assert.That(yaml, Does.Not.Contain(
+                    "- name: approvedBaselineSha256"));
                 Assert.That(formsStageStart, Is.GreaterThanOrEqualTo(0));
                 Assert.That(
                     formsStage,
@@ -256,6 +261,12 @@ namespace PnCTestAutomation.Tests
                     FormsDeltaPipelineContract.RequiredQueueParameters.All(
                         parameter => yaml.Contains(
                             $"- name: {parameter}",
+                            StringComparison.Ordinal)),
+                    Is.True);
+                Assert.That(
+                    FormsDeltaPipelineContract.RequiredQueueVariables.All(
+                        variable => formsStage.Contains(
+                            $"$({variable})",
                             StringComparison.Ordinal)),
                     Is.True);
             });
