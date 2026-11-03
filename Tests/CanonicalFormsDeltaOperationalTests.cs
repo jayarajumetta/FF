@@ -239,6 +239,9 @@ namespace PnCTestAutomation.Tests
                     formsStage,
                     Does.Not.Contain("clientSecret").IgnoreCase);
                 Assert.That(formsStage, Does.Not.Contain("sas").IgnoreCase);
+                Assert.That(formsStage, Does.Contain(
+                    "filePath: '$(Build.SourcesDirectory)" +
+                    "\\Scripts\\Invoke-FormsDeltaReview.ps1'"));
                 Assert.That(formsStage, Does.Not.Contain(
                     "-EventId \"${{ parameters.eventId }}\""));
                 Assert.That(script, Does.Contain("finally"));

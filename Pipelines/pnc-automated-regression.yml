@@ -602,7 +602,7 @@ stages:
       displayName: "Run Forms delta review"
       inputs:
         targetType: filePath
-        filePath: "$(Build.SourcesDirectory)\Scripts\Invoke-FormsDeltaReview.ps1"
+        filePath: '$(Build.SourcesDirectory)\Scripts\Invoke-FormsDeltaReview.ps1'
         arguments: >
           -ProjectRoot "$(Build.SourcesDirectory)"
           -ResultRoot "$(DELTA_RESULTS_ROOT)"
@@ -633,7 +633,7 @@ stages:
       displayName: "Publish Forms delta diagnostics"
       condition: always()
       inputs:
-        targetPath: "$(DELTA_RESULTS_ROOT)"
+        targetPath: '$(DELTA_RESULTS_ROOT)'
         artifact: "FormsDeltaDiagnostics"
 
     - task: PublishPipelineArtifact@1
@@ -644,7 +644,7 @@ stages:
         ${{ eq(parameters.allowReviewedChanges, true) }},
         ${{ eq(parameters.writePackage, true) }})
       inputs:
-        targetPath: "$(DELTA_RESULTS_ROOT)\review-package"
+        targetPath: '$(DELTA_RESULTS_ROOT)\review-package'
         artifact: "FormsDeltaReviewPackage"
 
     - powershell: |
