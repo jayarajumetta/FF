@@ -213,17 +213,33 @@ namespace PnCTestAutomation.Tests
                 root,
                 "Scripts",
                 "Invoke-FormsDeltaReview.ps1"));
+            var formsStageStart = yaml.IndexOf(
+                "- stage: FormsDeltaReview",
+                StringComparison.Ordinal);
+            var formsStage = formsStageStart >= 0
+                ? yaml[formsStageStart..]
+                : "";
 
             Assert.Multiple(() =>
             {
                 Assert.That(yaml, Does.Contain("trigger: none"));
                 Assert.That(yaml, Does.Contain("pr: none"));
+                Assert.That(yaml, Does.Contain("- name: pipelineMode"));
+                Assert.That(yaml, Does.Contain("- FormsDelta"));
+                Assert.That(yaml, Does.Contain("- stage: FormsDeltaReview"));
+                Assert.That(yaml, Does.Contain(
+                    "eq(parameters.pipelineMode, 'Regression')"));
+                Assert.That(yaml, Does.Contain(
+                    "eq(parameters.pipelineMode, 'FormsDelta')"));
                 Assert.That(yaml, Does.Contain("name: \"Playwright\""));
                 Assert.That(yaml, Does.Contain("writePackage"));
                 Assert.That(yaml, Does.Contain("default: false"));
-                Assert.That(yaml, Does.Not.Contain("clientSecret").IgnoreCase);
-                Assert.That(yaml, Does.Not.Contain("sas").IgnoreCase);
-                Assert.That(yaml, Does.Not.Contain(
+                Assert.That(formsStageStart, Is.GreaterThanOrEqualTo(0));
+                Assert.That(
+                    formsStage,
+                    Does.Not.Contain("clientSecret").IgnoreCase);
+                Assert.That(formsStage, Does.Not.Contain("sas").IgnoreCase);
+                Assert.That(formsStage, Does.Not.Contain(
                     "-EventId \"${{ parameters.eventId }}\""));
                 Assert.That(script, Does.Contain("finally"));
                 Assert.That(script, Does.Contain("Get-VerifiedHash"));

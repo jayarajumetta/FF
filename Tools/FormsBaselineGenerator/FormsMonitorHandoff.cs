@@ -38,12 +38,14 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
     public static class FormsDeltaPipelineContract
     {
         public const string ContractVersion = "1.0";
-        public const string PipelineYaml = "Pipelines/forms-delta-review.yml";
+        public const string PipelineYaml =
+            "Pipelines/pnc-automated-regression.yml";
         public const string ResultFileName = "forms-delta-result.json";
 
         public static readonly IReadOnlyList<string> RequiredQueueParameters =
             new[]
             {
+                "pipelineMode",
                 "sourceFamily",
                 "eventId",
                 "correlationId",
