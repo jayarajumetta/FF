@@ -234,6 +234,9 @@ namespace PnCTestAutomation.Tests
                 Assert.That(yaml, Does.Contain("name: \"Playwright\""));
                 Assert.That(yaml, Does.Contain("writePackage"));
                 Assert.That(yaml, Does.Contain("default: false"));
+                Assert.That(yaml, Does.Not.Contain("default: \"\""));
+                Assert.That(yaml, Does.Contain(
+                    "default: not-used-for-regression"));
                 Assert.That(formsStageStart, Is.GreaterThanOrEqualTo(0));
                 Assert.That(
                     formsStage,

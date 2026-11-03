@@ -55,7 +55,7 @@ parameters:
   default: true
 
 - name: sourceFamily
-  displayName: "Forms delta changed source family"
+  displayName: "FormsDelta only - changed source family"
   type: string
   default: SFP
   values:
@@ -63,82 +63,82 @@ parameters:
   - Common
 
 - name: eventId
-  displayName: "Forms delta event ID"
+  displayName: "FormsDelta only - event ID"
   type: string
-  default: ""
+  default: not-used-for-regression
 
 - name: correlationId
-  displayName: "Forms delta correlation ID"
+  displayName: "FormsDelta only - correlation ID"
   type: string
-  default: ""
+  default: not-used-for-regression
 
 - name: previousSourceIdentity
-  displayName: "Previous changed-source identity"
+  displayName: "FormsDelta only - previous changed-source identity"
   type: string
-  default: ""
+  default: not-used-for-regression
 
 - name: previousSourceReference
-  displayName: "Previous immutable SharePoint item/version reference"
+  displayName: "FormsDelta only - previous SharePoint item/version reference"
   type: string
-  default: ""
+  default: not-used-for-regression
 
 - name: previousSourceSha256
-  displayName: "Previous changed-source SHA-256"
+  displayName: "FormsDelta only - previous changed-source SHA-256"
   type: string
-  default: ""
+  default: not-used-for-regression
 
 - name: currentSourceIdentity
-  displayName: "Current changed-source identity"
+  displayName: "FormsDelta only - current changed-source identity"
   type: string
-  default: ""
+  default: not-used-for-regression
 
 - name: currentSourceReference
-  displayName: "Current immutable SharePoint item/version reference"
+  displayName: "FormsDelta only - current SharePoint item/version reference"
   type: string
-  default: ""
+  default: not-used-for-regression
 
 - name: currentSourceSha256
-  displayName: "Current changed-source SHA-256"
+  displayName: "FormsDelta only - current changed-source SHA-256"
   type: string
-  default: ""
+  default: not-used-for-regression
 
 - name: counterpartSourceIdentity
-  displayName: "Current counterpart identity"
+  displayName: "FormsDelta only - current counterpart identity"
   type: string
-  default: ""
+  default: not-used-for-regression
 
 - name: counterpartSourceReference
-  displayName: "Current counterpart SharePoint item/version reference"
+  displayName: "FormsDelta only - counterpart SharePoint item/version reference"
   type: string
-  default: ""
+  default: not-used-for-regression
 
 - name: counterpartSourceSha256
-  displayName: "Current counterpart SHA-256"
+  displayName: "FormsDelta only - current counterpart SHA-256"
   type: string
-  default: ""
+  default: not-used-for-regression
 
 - name: approvedBaselineSha256
-  displayName: "Approved Forms baseline SHA-256"
+  displayName: "FormsDelta only - approved baseline SHA-256"
   type: string
-  default: ""
+  default: not-used-for-regression
 
 - name: branch
-  displayName: "Expected Forms delta source branch"
+  displayName: "FormsDelta only - expected source branch"
   type: string
   default: Development
 
 - name: allowReviewedChanges
-  displayName: "Allow reviewed Forms changes"
+  displayName: "FormsDelta only - allow reviewed changes"
   type: boolean
   default: false
 
 - name: writePackage
-  displayName: "Write Forms delta review package"
+  displayName: "FormsDelta only - write review package"
   type: boolean
   default: false
 
 - name: overwriteExisting
-  displayName: "Overwrite existing Forms delta output"
+  displayName: "FormsDelta only - overwrite existing output"
   type: boolean
   default: false
 
