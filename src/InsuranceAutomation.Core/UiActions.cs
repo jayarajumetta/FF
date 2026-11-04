@@ -104,39 +104,41 @@ public sealed class UiActions
     private Task ClickCoreAsync(ILocator locator, ControlIntent intent) => ExecuteAsync(locator, intent, "click", x => ClickSemanticAsync(x));
     private async Task FillCoreAsync(ILocator locator, string value, ControlIntent intent)
     {
-        await ExecuteAsync(locator, intent, "fill", async x =>
-        {
-            var resolvedValue = value ?? string.Empty;
-            const int maxAttempts = 3;
-            const int delayMs = 1000;
+        //    await ExecuteAsync(locator, intent, "fill", async x =>
+        //    {
+        //        var resolvedValue = value ?? string.Empty;
+        //        const int maxAttempts = 3;
+        //        const int delayMs = 1000;
 
-            for (var attempt = 1; attempt <= maxAttempts; attempt++)
-            {
-                await ComponentAwareControlActions.SelectOrFillAsync(
-                    _browser.Page, x, resolvedValue, _config.Browser.ActionTimeoutMs,
-                    _config.Waits.DropdownOptionTimeoutMs, _config.Waits.DropdownPollIntervalMs);
+        //        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        //        {
+        //            await ComponentAwareControlActions.SelectOrFillAsync(
+        //                _browser.Page, x, resolvedValue, _config.Browser.ActionTimeoutMs,
+        //                _config.Waits.DropdownOptionTimeoutMs, _config.Waits.DropdownPollIntervalMs);
 
-                if (string.IsNullOrWhiteSpace(resolvedValue) || !await IsTextLikeInputAsync(x))
-                {
-                    return;
-                }
+        //            if (string.IsNullOrWhiteSpace(resolvedValue) || !await IsTextLikeInputAsync(x))
+        //            {
+        //                return;
+        //            }
 
-                await Task.Delay(delayMs);
-                var enteredValue = await TryGetInputValueAsync(x);
-                if (!string.IsNullOrWhiteSpace(enteredValue))
-                {
-                    return;
-                }
+        //            await Task.Delay(delayMs);
+        //            var enteredValue = await TryGetInputValueAsync(x);
+        //            if (!string.IsNullOrWhiteSpace(enteredValue))
+        //            {
+        //                return;
+        //            }
 
-                if (attempt < maxAttempts)
-                {
-                    _logger.Warn($"FILL RETRY: {intent}; value was empty after attempt {attempt}/{maxAttempts}.");
-                }
-            }
+        //            if (attempt < maxAttempts)
+        //            {
+        //                _logger.Warn($"FILL RETRY: {intent}; value was empty after attempt {attempt}/{maxAttempts}.");
+        //            }
+        //        }
 
-            throw new InvalidOperationException($"{intent} value is empty after {maxAttempts} fill attempts.");
-        });
-        _semanticallyCommittedControls.Add(IntentKey(intent));
+        //        throw new InvalidOperationException($"{intent} value is empty after {maxAttempts} fill attempts.");
+        //    });
+        //    _semanticallyCommittedControls.Add(IntentKey(intent));
+        await PressSequentiallyCoreAsync(locator, value, intent);
+
     }
 
     private async Task PressSequentiallyCoreAsync(ILocator locator, string value, ControlIntent intent, int delayMs = 20)
