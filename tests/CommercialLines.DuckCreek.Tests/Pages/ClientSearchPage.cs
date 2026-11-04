@@ -45,7 +45,7 @@ public sealed class ClientSearchPage
         _ui.WaitAsync(_locators.Address, expected, new ControlIntent("ClientSearch", "Address"));
 
     public Task EnterAddressAsync(string value) =>
-        _ui.FillAsync(_locators.Address, value, new ControlIntent("ClientSearch", "Address"));
+        _ui.PressSequentiallyAsync(_locators.Address, value, new ControlIntent("ClientSearch", "Address"));
 
     public Task<string> CaptureAddressAsync(string property = "") =>
         _ui.CaptureAsync(_locators.Address, property, new ControlIntent("ClientSearch", "Address"));
@@ -432,7 +432,7 @@ public sealed class ClientSearchPage
         _ui.CaptureAsync(_locators.LastName, property, new ControlIntent("ClientSearch", "LastName"));
 
     public Task EnterNamedInsuredIndividualEnterSSNAsync(string value) =>
-        _ui.FillAsync(_locators.NamedInsuredIndividualEnterSSN, value, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"));
+        _ui.PressSequentiallyAsync(_locators.NamedInsuredIndividualEnterSSN, value, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"));
 
     public Task WaitForPrimaryPhoneAsync(string expected) =>
         _ui.WaitAsync(_locators.PrimaryPhone, expected, new ControlIntent("ClientSearch", "PrimaryPhone"));

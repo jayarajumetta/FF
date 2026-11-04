@@ -134,17 +134,13 @@ public sealed class GLSmokeTestSteps
             await page.EnterGenderAsync(data.Resolve("{{data:gender_60}}"));
         }
         await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0069}}"));
-        await page.PauseAsync(1000);
         await page.EnterAddressAsync(data.Resolve("{{data:address1_64}}"));
         await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_65}}"));
         await page.ClickClientSearchAsync();
-        await page.PauseAsync(1000);
         await page.WaitForOKAsync("Exists");
         await page.ClickOKAsync();
         await page.WaitForOrderSSNAsync("Exists");
         await page.ClickOrderSSNAsync();
-        await page.PauseAsync(1000);
-
         await page.WaitForNamedInsuredIndividualEnterSSNAsync("Exists");
         await page.EnterNamedInsuredIndividualEnterSSNAsync(data.Resolve("{{runtime:InsuredSSN}}"));
         data.Set("Last4SSN", data.Get("InsuredSSN").Length >= 4 ? data.Get("InsuredSSN")[^4..] : data.Get("InsuredSSN"));
