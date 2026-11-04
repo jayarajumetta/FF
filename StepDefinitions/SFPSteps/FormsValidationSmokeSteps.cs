@@ -52,7 +52,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         public async Task WhenIExtractTheSessionViaCLASCookie()
         {
             (_sessionId, _clasApiCalls) = await _sessionService.GetDuckCreekSessionIdAndInterceptClasAsync(_quoteNumber);
-            Console.WriteLine($"DuckCreek_SessionId cookie: {_sessionId}");
+            Console.WriteLine("Retrieved the DuckCreek session after opening the requested quote.");
             Assert.That(_sessionId, Is.Not.Null.And.Not.Empty,
                 "DuckCreek_SessionId cookie was not set after opening the policy in CLAS.");
         }

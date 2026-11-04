@@ -214,7 +214,9 @@ namespace PnCTestAutomation.Hooks
         [AfterStep]
         public async Task AfterStepAsync()
         {
-            if (_scenarioContext.TestError != null && _context.Page != null)
+            if (_scenarioContext.TestError != null
+                && _scenarioContext.ScenarioExecutionStatus != ScenarioExecutionStatus.Skipped
+                && _context.Page != null)
             {
                 var scenarioFolder = GetScenarioResultsFolder();
                 Directory.CreateDirectory(scenarioFolder);
@@ -253,7 +255,8 @@ namespace PnCTestAutomation.Hooks
                 _context.ChecklistPage = null;
             }
             // Handle tracing and video on failure
-            var hasFailed = _scenarioContext.TestError != null;
+            var hasFailed = _scenarioContext.TestError != null
+                && _scenarioContext.ScenarioExecutionStatus != ScenarioExecutionStatus.Skipped;
 
             // Pause on failure only when a debugger is attached (i.e. Run > Debug in VS/Rider).
             // Normal CI / right-click "Run Test" runs are never blocked.
@@ -305,13 +308,16 @@ namespace PnCTestAutomation.Hooks
                         try { await _browserContext.Tracing.StopAsync(); } catch { /* ignore */ }
                     }
 
-                    // Write pass record for telemetry (time-to-resolution tracking)
+                    // Write pass records only for completed scenarios, not skipped outage runs.
                     try
                     {
-                        var passRecord = Path.Combine(_testResultsRunFolder, "pass-records.csv");
-                        var scenarioName = _scenarioContext.ScenarioInfo.Title;
-                        var line = $"{DateTime.UtcNow:O},{scenarioName}";
-                        File.AppendAllText(passRecord, line + Environment.NewLine);
+                        if (_scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.OK)
+                        {
+                            var passRecord = Path.Combine(_testResultsRunFolder, "pass-records.csv");
+                            var scenarioName = _scenarioContext.ScenarioInfo.Title;
+                            var line = $"{DateTime.UtcNow:O},{scenarioName}";
+                            File.AppendAllText(passRecord, line + Environment.NewLine);
+                        }
                     }
                     catch { /* ignore — telemetry must never block test execution */ }
                 }

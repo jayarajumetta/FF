@@ -46,8 +46,6 @@ namespace PnCTestAutomation.Clients
             var url = $"{_config.ServerBaseUrl.TrimEnd('/')}{_config.Endpoint}";
 
             Console.WriteLine($"[DuckCreekFormsClient] POST {url}");
-            Console.WriteLine($"[DuckCreekFormsClient] SessionID: {sessionId}");
-
             var content = new StringContent(xmlPayload, Encoding.UTF8, "text/xml");
             var response = await _httpClient.PostAsync(url, content);
 
@@ -60,10 +58,6 @@ namespace PnCTestAutomation.Clients
                 throw new HttpRequestException($"DuckCreek returned 403 Forbidden — API user {_config.Username} lacks permission");
 
             Console.WriteLine($"[DuckCreekFormsClient] Response: HTTP {statusCode}, {responseBody.Length} chars");
-
-            // Log first part of response for diagnostics
-            if (statusCode != 200 || !responseBody.Contains("form name="))
-                Console.WriteLine($"[DuckCreekFormsClient] Response body (first 600): {responseBody[..Math.Min(600, responseBody.Length)]}");
 
             if (string.IsNullOrWhiteSpace(responseBody) || responseBody.Length <= 8)
                 throw new InvalidOperationException(

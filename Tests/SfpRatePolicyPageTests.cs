@@ -61,10 +61,42 @@ namespace PnCTestAutomation.Tests
                       <input id="quickSearchTextId-inputEl"
                              name="quickSearchText"
                              data-componentid="quickSearchTextId">
-                      <a id="id_quickSearch" name="name_quickSearch" href="#">Search</a>`;
+                      <a id="id_quickSearch" name="name_quickSearch" href="#">Search</a>
+                      <button title="Search other records" onclick="window.oldSearchClicked=true">Other</button>`;
                     document.querySelector('#id_quickSearch').addEventListener('click', searchEvent => {
                       searchEvent.preventDefault();
                       window.searchedQuote = document.querySelector('[name="quickSearchText"]').value;
+                    });
+                  });
+                </script>
+                """);
+
+            await new ExpressLoginPage(_page).ExpressLoginAsync("user", "password");
+
+            var homePage = new ExpressHomePage(_page);
+            await homePage.EnterQuoteNumber("02103852");
+            await homePage.ClickSearchButtonAsync();
+
+            Assert.That(await _page.EvaluateAsync<string>("window.searchedQuote"), Is.EqualTo("02103852"));
+            Assert.That(await _page.EvaluateAsync<bool>("window.oldSearchClicked === true"), Is.False);
+        }
+
+        [Test]
+        public async Task ClasExpress_UsesLegacyQuickSearchControls()
+        {
+            await _page.SetContentAsync("""
+                <input name="_username">
+                <input name="_password">
+                <div id="home"><a href="#">Log In</a></div>
+                <script>
+                  document.querySelector('#home a').addEventListener('click', event => {
+                    event.preventDefault();
+                    document.body.innerHTML = `
+                      <input fieldref="PolicyHeaderInput.SearchText">
+                      <a id="id_quickSearch" style="display:none" href="#">Search</a>
+                      <button title="Search">Search</button>`;
+                    document.querySelector('button').addEventListener('click', () => {
+                      window.searchedQuote = document.querySelector('[fieldref="PolicyHeaderInput.SearchText"]').value;
                     });
                   });
                 </script>

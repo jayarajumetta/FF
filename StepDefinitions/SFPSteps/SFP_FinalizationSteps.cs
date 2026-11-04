@@ -27,6 +27,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         private readonly PlaywrightContext _context;
         private readonly ScenarioContextData _contextData;
         private readonly ScenarioContext _scenarioContext;
+        private readonly FeatureContext _featureContext;
         private readonly SessionService _sessionService;
         private readonly DuckCreekFormsClient _formsClient;
         private readonly FormsValidationService _validationService;
@@ -35,6 +36,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         public SFP_FinalizationSteps(
             PlaywrightContext context,
             ScenarioContext scenarioContext,
+            FeatureContext featureContext,
             SessionService sessionService,
             DuckCreekFormsClient formsClient,
             FormsValidationService validationService,
@@ -42,6 +44,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         {
             _context = context;
             _scenarioContext = scenarioContext;
+            _featureContext = featureContext;
             _contextData = _scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
                 ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it.");
             _sessionService = sessionService;
@@ -49,6 +52,10 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             _validationService = validationService;
             _configuration = configuration;
         }
+
+        private bool IsChecklistOutageFormsOnly() =>
+            SfpChecklistOutageMode.IsEnabled(
+                _configuration[SfpChecklistOutageMode.Setting], _featureContext.FeatureInfo.Title);
 
         [When("user runs Insurance Score")]
         public async Task UserRunsInsuranceScore(Table table)
@@ -475,6 +482,12 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         {
             var page = _context.Page;
             var quoteId = _contextData.QuoteNumber;
+            var outageFormsOnly = IsChecklistOutageFormsOnly();
+            var recordBaseline = string.Equals(
+                _configuration["Debugging:RecordBaseline"], "true",
+                StringComparison.OrdinalIgnoreCase);
+            if (outageFormsOnly)
+                SfpChecklistOutageMode.RequireComparisonMode(recordBaseline);
 
             Console.WriteLine($"[FormsValidation] Quote ID: '{quoteId}' (state={state})");
 
@@ -487,7 +500,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
             try
             {
-                // 1. Open CLAS Express in a second tab, log in, and extract DCT.sessionID
+                // 1. Open the quote in CLAS and retrieve its session cookie.
                 var sessionId = await _sessionService.GetDuckCreekSessionIdViaCLASAsync(quoteId);
 
                 // 2. Call the DuckCreek Forms Engine API
@@ -498,10 +511,10 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 // 3. Parse XML response into typed form entries
                 var actualForms = FormsXmlParser.Parse(responseXml);
                 Console.WriteLine($"DuckCreek returned {actualForms.Count} forms for {lob}/{state}/{quoteId}");
+                if (outageFormsOnly)
+                    SfpChecklistOutageMode.RequireReturnedForms(actualForms.Count);
 
                 // Parse response metadata (non-printDoc elements).
-                // NOTE: XML "failure" status is EXPECTED because the API user (PA3402)
-                // differs from the UI login that created the session. This is by design.
                 var metadata = FormsXmlParser.ParseMetadata(responseXml);
                 foreach (var w in metadata.Warnings)
                     Console.WriteLine($"  [META INFO] {w}");
@@ -509,10 +522,6 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                                   $"RoleBasedSecurity={metadata.HasRoleBasedSecurity}, ReturnSuccess={metadata.ReturnSuccessStatus}");
 
                 // 4a. Record mode: capture actual forms as proposed baseline and skip comparison
-                var recordBaseline = string.Equals(
-                    _configuration["Debugging:RecordBaseline"], "true",
-                    StringComparison.OrdinalIgnoreCase);
-
                 if (recordBaseline)
                 {
                     if (IsRatePolicyScenario())
@@ -528,6 +537,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
                 // 4b. Normal mode: load expected forms and validate (ANPAC filtering applied inside Validate)
                 var expected = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
+                if (outageFormsOnly)
+                    SfpChecklistOutageMode.RequireComparableBaseline(expected);
                 var summary = _validationService.Validate(expected, actualForms, lob, state, quoteId);
                 summary.ResponseMetadata = metadata;
                 summary.TestCaseName = $"{lob}_{testCase}";
@@ -549,26 +560,37 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 Console.WriteLine($"[FormsValidation] HTML report saved: {absoluteHtmlPath}");
                 FormsReportGenerator.WritePipelineSummary(summary, Path.GetDirectoryName(absoluteHtmlPath)!);
                 FormsReportGenerator.WriteTrxResults(summary, Path.GetDirectoryName(absoluteHtmlPath)!);
-                MaybeOpenFormsReport(absoluteHtmlPath, summary.Failed > 0);
+                if (outageFormsOnly)
+                {
+                    var resultsRoot = _configuration["SfpChecklistOutage:ResultsRoot"]
+                        ?? Environment.GetEnvironmentVariable("TEST_RESULTS_ROOT");
+                    if (string.IsNullOrWhiteSpace(resultsRoot))
+                        resultsRoot = Path.Combine(Directory.GetCurrentDirectory(), "TestResults");
+                    FormsReportGenerator.WriteTrxResults(
+                        summary, Path.Combine(resultsRoot, SfpChecklistOutageMode.ResultsFolder),
+                        checklistOutageFormsOnly: true);
+                }
+                MaybeOpenFormsReport(absoluteHtmlPath,
+                    summary.Failed > 0 || (outageFormsOnly && summary.Issues > 0));
 
                 // 8. Log outcome; assert when FailOnFormsValidationError=true so failures surface in ADO
-                if (summary.Failed > 0)
+                if (summary.Failed > 0 || (outageFormsOnly && summary.Issues > 0))
                 {
                     var failures = string.Join("\n", summary.Results
-                        .Where(r => r.Result == "FAIL")
+                        .Where(r => r.Result == "FAIL" || (outageFormsOnly && r.Result == "ISSUE"))
                         .Select(r => $"    {r.FormName}: {r.Message}"));
-                    var message = $"[FormsValidation] {summary.Failed} failure(s) — see report: {absoluteHtmlPath}\n{failures}";
+                    var message = $"[FormsValidation] {summary.Failed} failure(s), {summary.Issues} issue(s) — see report: {absoluteHtmlPath}\n{failures}";
                     Console.WriteLine(message);
 
                     var failOnFormsValidationError = string.Equals(
                         _configuration["Debugging:FailOnFormsValidationError"],
                         "true",
                         StringComparison.OrdinalIgnoreCase);
-                    if (failOnFormsValidationError || IsRatePolicyScenario())
+                    if (failOnFormsValidationError || IsRatePolicyScenario() || outageFormsOnly)
                         Assert.Fail(message);
                 }
             }
-            catch (Exception ex) when (!IsRatePolicyScenario())
+            catch (Exception ex) when (!IsRatePolicyScenario() && !outageFormsOnly)
             {
                 // Forms validation is non-blocking — a server error or unavailable DuckCreek
                 // instance should not fail a scenario that has already passed all business steps.
@@ -583,6 +605,9 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 if (failOnFormsValidationError)
                     throw;
             }
+
+            if (outageFormsOnly)
+                SfpChecklistOutageMode.MarkWorkflowIncomplete();
         }
 
         private void MaybeOpenFormsReport(string absoluteHtmlPath, bool hasFailures)
@@ -734,6 +759,15 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             var sideMenu = new SideMenuNavigation(_context.Page);
             await sideMenu.GoToSubmissionAsync();
 
+            if (IsChecklistOutageFormsOnly())
+            {
+                var submissionPage = new SubmissionPage(_context.Page);
+                await submissionPage.WaitForSpinnerAsync();
+                await SFP_ChecklistPage.EnsureSubmissionReadyAsync(_context.Page);
+                Console.WriteLine("[Checklist outage] Submission opened; Checklist and Transmit will not be tested.");
+                return;
+            }
+
             // Checklist opens in a new popup window — capture it and store in context
             _context.ChecklistPage = await SFP_ChecklistPage.OpenChecklistAsync(_context.Page);
 
@@ -774,6 +808,12 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         [When("user completes Checklist item")]
         public async Task UserCompletesChecklistItem(Table table)
         {
+            if (IsChecklistOutageFormsOnly())
+            {
+                Console.WriteLine("[Checklist outage] Checklist item not tested.");
+                return;
+            }
+
             TableMappingHelpers.ChecklistItemFields(table, _contextData);
 
             var optional = table.Rows.Any(r => r["Question"].Equals("Optional", StringComparison.OrdinalIgnoreCase)
@@ -793,6 +833,12 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         [When("user closes Checklist and confirms Update")]
         public async Task UserClosesChecklistAndConfirmsUpdate()
         {
+            if (IsChecklistOutageFormsOnly())
+            {
+                Console.WriteLine("[Checklist outage] Checklist update not tested.");
+                return;
+            }
+
             // 1. Close the checklist popup tab
             var checklistPage = new SFP_ChecklistPage(_context.ChecklistPage);
             await checklistPage.CloseAsync();
@@ -839,6 +885,12 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         [Then("user verifies Transmit control is present for verification only")]
         public async Task UserVerifiesExpectedTransmitAvailability()
         {
+            if (IsChecklistOutageFormsOnly())
+            {
+                Console.WriteLine("[Checklist outage] Transmit availability not tested.");
+                return;
+            }
+
             // Navigate to Submission explicitly — EQ may have moved after the Ok dialog
             var sideMenu = new SideMenuNavigation(_context.Page);
             await sideMenu.GoToSubmissionAsync();

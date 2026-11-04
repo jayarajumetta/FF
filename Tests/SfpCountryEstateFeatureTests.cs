@@ -164,7 +164,7 @@ namespace PnCTestAutomation.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.That(filterDefinitions, Has.Count.EqualTo(5));
+                Assert.That(filterDefinitions, Has.Count.EqualTo(6));
                 Assert.That(
                     filterDefinitions
                         .Cast<System.Text.RegularExpressions.Match>()
@@ -173,6 +173,9 @@ namespace PnCTestAutomation.Tests
                 Assert.That(
                     pipeline,
                     Does.Contain("TestCategory=PipelineSmoke&TestCategory!=DevOnly"));
+                Assert.That(
+                    pipeline,
+                    Does.Contain("TestCategory=RatePolicy&TestCategory!=DevOnly"));
                 Assert.That(
                     pipeline,
                     Does.Contain("parallel: ${{ parameters.agentCount }}"));

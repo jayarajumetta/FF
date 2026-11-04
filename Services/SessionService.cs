@@ -13,17 +13,15 @@ using PnCTestAutomation.Pages.ExpressPages;
 namespace PnCTestAutomation.Services
 {
     /// <summary>
-    /// Opens CLAS Express in a second tab, logs in, opens a quote, and extracts
-    /// the DuckCreek_SessionId cookie — the colon-separated session ID that
-    /// Session.resumeRq expects.
+    /// Opens CLAS Express, opens a quote, and extracts the session used for Forms.
     /// </summary>
     public class SessionService
     {
         private readonly PlaywrightContext _context;
         private readonly DuckCreekFormsConfig _formsConfig;
         private readonly IConfiguration _configuration;
-
-        public SessionService(PlaywrightContext context, DuckCreekFormsConfig formsConfig, IConfiguration configuration)
+        public SessionService(PlaywrightContext context, DuckCreekFormsConfig formsConfig,
+            IConfiguration configuration)
         {
             _context = context;
             _formsConfig = formsConfig;
@@ -148,55 +146,57 @@ namespace PnCTestAutomation.Services
                 await homePage.EnterQuoteNumber(quoteNumber);
                 await homePage.ClickSearchButtonAsync();
 
-                // 4. Validate the quote number appears in the results grid
-                var quoteCell = page.Locator($"p[fieldref='PolicyInput.PolicyNumber']:has-text('{quoteNumber}')");
-                await quoteCell.WaitForAsync(new() { Timeout = 30000 });
-                var displayedNumber = (await quoteCell.TextContentAsync())?.Trim();
-                Console.WriteLine($"[SessionService] Found quote in grid: {displayedNumber}");
+                await new ExpressSearchResultsPage(page).OpenExactQuoteAsync(quoteNumber);
+                Console.WriteLine($"[SessionService] Requested CLAS quote: {quoteNumber}; waiting for navigation.");
 
-                if (displayedNumber != quoteNumber)
-                    throw new InvalidOperationException(
-                        $"Quote mismatch: searched for '{quoteNumber}' but grid shows '{displayedNumber}'");
-
-                // 5. Click "View Policy" to open the policy and establish the DuckCreek session
-                var viewPolicyButton = page.Locator("button[title='View Policy']").First;
-                await viewPolicyButton.ClickAsync();
                 await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 60000 });
 
-                // 6. Extract DuckCreek_SessionId from cookies
-                var cookies = await page.Context.CookiesAsync(new[] { _formsConfig.CLASBaseUrl });
-                var dckCookie = cookies.FirstOrDefault(c =>
-                    c.Name.Equals("DuckCreek_SessionId", StringComparison.OrdinalIgnoreCase));
-
-                if (dckCookie != null && !string.IsNullOrWhiteSpace(dckCookie.Value))
+                async Task<string> ReadSessionCookieAsync()
                 {
-                    Console.WriteLine($"[SessionService] DuckCreek_SessionId cookie: {dckCookie.Value}");
-
-                    // 7. Click Save For Later to release the edit lock before leaving CLAS.
-                    //    The next step will navigate back to EQ and search for the quote.
-                    try
-                    {
-                        var saveForLaterBtn = page.Locator("[actionref='SaveForLater']");
-                        await saveForLaterBtn.WaitForAsync(new() { Timeout = 5000 });
-                        await saveForLaterBtn.ClickAsync();
-                        await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 15000 });
-                        Console.WriteLine("[SessionService] Clicked Save For Later — quote lock released. Page will return to EQ via next step.");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"[SessionService] Save For Later not found on CLAS page (non-fatal): {ex.Message}");
-                    }
-
-                    return dckCookie.Value;
+                    var cookies = await page.Context.CookiesAsync(new[] { _formsConfig.CLASBaseUrl });
+                    var values = cookies
+                        .Where(c => c.Name.Equals("DuckCreek_SessionId", StringComparison.OrdinalIgnoreCase)
+                            && !string.IsNullOrWhiteSpace(c.Value))
+                        .Select(c => c.Value).Distinct(StringComparer.Ordinal).ToArray();
+                    if (values.Length > 1)
+                        throw new InvalidOperationException("Multiple different DuckCreek session cookies apply to CLAS; cannot identify the quote session safely.");
+                    return values.SingleOrDefault();
                 }
 
-                Console.WriteLine("[SessionService] DuckCreek_SessionId cookie not found. All cookies:");
-                foreach (var c in cookies)
-                    Console.WriteLine($"  {c.Name} = {c.Value[..Math.Min(60, c.Value.Length)]}...");
+                var sessionId = await ReadSessionCookieAsync();
+                if (string.IsNullOrWhiteSpace(sessionId))
+                    throw new InvalidOperationException(
+                        $"Opened quote {quoteNumber} in CLAS but DuckCreek_SessionId was not set. Forms were not requested.");
 
-                throw new InvalidOperationException(
-                    $"Opened quote {quoteNumber} in CLAS but DuckCreek_SessionId cookie was not set.");
+                var saveForLaterBtn = page.Locator("[actionref='SaveForLater']");
+                var saveForLaterAvailable = true;
+                try
+                {
+                    await saveForLaterBtn.WaitForAsync(new() { Timeout = 5000 });
+                }
+                catch (TimeoutException)
+                {
+                    saveForLaterAvailable = false;
+                    Console.WriteLine("[SessionService] Save For Later is not available on the CLAS page; quote lock release was not confirmed.");
+                }
+
+                if (saveForLaterAvailable)
+                {
+                    await saveForLaterBtn.ClickAsync();
+                    try
+                    {
+                        await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 15000 });
+                    }
+                    catch (TimeoutException)
+                    {
+                        Console.WriteLine("[SessionService] CLAS did not reach network idle after Save For Later; quote lock release was not confirmed.");
+                    }
+                    Console.WriteLine("[SessionService] Clicked Save For Later; lock release is not independently verified.");
+                }
+
+                return sessionId;
             }
+
             finally
             {
                 if (traceEnabled)

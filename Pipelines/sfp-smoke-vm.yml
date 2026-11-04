@@ -32,13 +32,22 @@ parameters:
   type: boolean
   default: false
 
+- name: checklistOutageFormsOnly
+  displayName: "Checklist outage: Forms-only (full workflow not tested)"
+  type: boolean
+  default: false
+
 pool:
   name: "Playwright"
 
 variables:
-  DOTNET_VERSION: "8.x"
-  BUILD_CONFIGURATION: "Release"
-  NUGET_PACKAGES: "$(Pipeline.Workspace)/.nuget/packages"
+- group: "PnC_DC_TestAutomation"
+- name: DOTNET_VERSION
+  value: "8.x"
+- name: BUILD_CONFIGURATION
+  value: "Release"
+- name: NUGET_PACKAGES
+  value: "$(Pipeline.Workspace)/.nuget/packages"
 
 # ── Stage 1: Build ─────────────────────────────────────────────────────────────
 stages:
@@ -51,6 +60,12 @@ stages:
     timeoutInMinutes: 20
 
     steps:
+
+    - powershell: |
+        Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber)-FORMS-ONLY-NO-FULL-WORKFLOW"
+        Write-Host "##vso[build.addbuildtag]Forms-only-no-full-workflow"
+      displayName: "Label Forms-only run (full workflow not tested)"
+      condition: ${{ eq(parameters.checklistOutageFormsOnly, true) }}
 
     - checkout: self
 
@@ -201,6 +216,18 @@ stages:
         $filter = if ($smokeMode) { $env:SHARD_FILTER_SMOKE } else { $env:SHARD_FILTER_FULL }
         $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
 
+        foreach ($name in @(
+          "Credentials__Username", "Credentials__Password",
+          "DuckCreekForms__Username", "DUCKCREEK_PASSWORD",
+          "DuckCreekForms__CLASUsername", "DuckCreekForms__CLASPassword"
+        )) {
+          $value = [Environment]::GetEnvironmentVariable($name)
+          if ([string]::IsNullOrWhiteSpace($value) -or $value -match '^\$\(.+\)$') {
+            Write-Error "Required pipeline secret '$name' is unavailable. Authorize the PnC_DC_TestAutomation variable group for this pipeline."
+            exit 1
+          }
+        }
+
         Write-Host "===================================="
         Write-Host "Running Shard $($env:SHARD_NUMBER)"
         Write-Host "Mode:   $(if ($smokeMode) { 'SMOKE (debug)' } else { 'FULL' })"
@@ -221,6 +248,9 @@ stages:
 
         $firstRunExit = $LASTEXITCODE
         Write-Host "First run exit code: $firstRunExit"
+        if ($env:SfpChecklistOutage__FormsOnly -eq "True" -and $firstRunExit -ne 0) {
+          exit $firstRunExit
+        }
         $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
         if ($firstRunExit -ne 0 -and !(Test-Path $trxPath)) {
           Write-Error "dotnet test failed before producing a TRX result."
@@ -229,7 +259,8 @@ stages:
         if (Test-Path $trxPath) {
           [xml]$trx = Get-Content $trxPath
           $executed = [int]$trx.TestRun.ResultSummary.Counters.executed
-          if ($executed -eq 0) {
+          $outageResults = @(Get-ChildItem -LiteralPath "$(Build.ArtifactStagingDirectory)/TestResults/ChecklistOutageForms" -Filter "FormsValidation_*.trx" -ErrorAction SilentlyContinue)
+          if ($executed -eq 0 -and ($env:SfpChecklistOutage__FormsOnly -ne "True" -or $outageResults.Count -eq 0)) {
             Write-Error "The shard filter executed no tests."
             exit 1
           }
@@ -241,12 +272,20 @@ stages:
         Playwright__Headless: "true"
         Playwright__BrowserType: "chromium"
         TEST_ENVIRONMENT: "qa"
+        SfpChecklistOutage__FormsOnly: "${{ parameters.checklistOutageFormsOnly }}"
+        SfpChecklistOutage__ResultsRoot: "$(Build.ArtifactStagingDirectory)/TestResults"
         CI: "true"
         PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
         SMOKE_MODE: ${{ parameters.smokeMode }}
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
         SHARD_FILTER_SMOKE: $(SHARD_FILTER_SMOKE)
         DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
+        Credentials__Username: "$(CL_EQ_USERNAME)"
+        Credentials__Password: "$(CL_EQ_PASSWORD)"
+        DuckCreekForms__Username: "$(CL_DC_USERNAME)"
+        DUCKCREEK_PASSWORD: "$(CL_DC_PASSWORD)"
+        DuckCreekForms__CLASUsername: "$(CL_DC_USERNAME)"
+        DuckCreekForms__CLASPassword: "$(CL_DC_PASSWORD)"
 
     # ✅ DEBUG: verify trx files exist
     - powershell: |
@@ -326,6 +365,17 @@ stages:
         failTaskOnMissingResultsFile: true
         failTaskOnFailureToPublishResults: true
         testRunTitle: "SFP Smoke — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
+
+    - task: PublishTestResults@2
+      displayName: "Publish Checklist outage Forms results"
+      condition: and(always(), ${{ eq(parameters.checklistOutageFormsOnly, true) }})
+      inputs:
+        testResultsFormat: VSTest
+        searchFolder: "$(Build.ArtifactStagingDirectory)/TestResults/ChecklistOutageForms"
+        testResultsFiles: "FormsValidation_*.trx"
+        mergeTestResults: true
+        failTaskOnFailedTests: true
+        testRunTitle: "Forms only - Checklist outage - Shard $(SHARD_NUMBER)"
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish Shard Artifacts"

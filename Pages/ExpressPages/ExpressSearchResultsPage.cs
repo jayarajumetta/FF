@@ -1,4 +1,6 @@
 ﻿using Microsoft.Playwright;
+using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Pages;
@@ -85,6 +87,28 @@ namespace PnCTestAutomation.Pages.ExpressPages
         public async Task ClickSearchButtonAsync()
         {
             await SearchButton.ClickAsync();
+        }
+
+        public async Task OpenExactQuoteAsync(string quoteNumber, float timeoutMs = 30000)
+        {
+            if (string.IsNullOrWhiteSpace(quoteNumber))
+                throw new ArgumentException("A quote number is required.", nameof(quoteNumber));
+
+            var quoteCell = _page.Locator(
+                    "[columnref='quoteList_policyNumber'], p[fieldref='PolicyInput.PolicyNumber']")
+                .Filter(new() { HasTextRegex = new Regex(@"^\s*" + Regex.Escape(quoteNumber.Trim()) + @"\s*$") });
+            var rows = _page.Locator("tr:visible, [role='row']:visible, dc-hypergrid-row:visible")
+                .Filter(new() { Has = quoteCell });
+
+            await rows.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs });
+            var count = await rows.CountAsync();
+            if (count != 1)
+                throw new InvalidOperationException(
+                    $"Expected one visible CLAS search row for quote '{quoteNumber}', but found {count}.");
+
+            var viewPolicy = rows.Locator(
+                "a#quoteListLoadQuoteA:has(img[title='View Policy']), button[title='View Policy']");
+            await viewPolicy.ClickAsync(new() { Timeout = timeoutMs });
         }
 
         public async Task SelectPolicyOrQuoteNumberFromTable(string policyOrQuoteNumber)

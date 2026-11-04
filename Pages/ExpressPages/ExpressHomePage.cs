@@ -11,8 +11,10 @@ namespace PnCTestAutomation.Pages.ExpressPages
 
         #region Locators
         private ILocator ExpandSearchTypeDropDown => _page.Locator("button[data-toggle*='SearchType']");
-        private ILocator SearchBarInput => _page.Locator("input[name='quickSearchText']");
+        internal static ILocator SearchBarInput(IPage page) => page.Locator(
+            "input[name='quickSearchText']:visible, input[fieldref='PolicyHeaderInput.SearchText']:visible");
         private ILocator SearchButton => _page.Locator("a#id_quickSearch");
+        private ILocator LegacySearchButton => _page.Locator("button[title*='Search']:visible");
 
         private ILocator GetSearchTypeOption(string searchType) => _page.Locator($"a:has-text('{searchType}')");
         #endregion
@@ -27,14 +29,16 @@ namespace PnCTestAutomation.Pages.ExpressPages
 
         public async Task EnterQuoteNumber(string quoteNumber)
         {
-            await SearchBarInput.FillAsync(quoteNumber);
+            await SearchBarInput(_page).FillAsync(quoteNumber);
         }
 
         public async Task ClickSearchButtonAsync()
         {
-            await SearchButton.ClickAsync();
+            if (await SearchButton.IsVisibleAsync())
+                await SearchButton.ClickAsync();
+            else
+                await LegacySearchButton.ClickAsync();
         }
     }
 }
-
 

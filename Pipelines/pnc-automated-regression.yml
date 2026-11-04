@@ -38,7 +38,13 @@ parameters:
   - SingleExample
   - BasicPolicy
   - CountryEstate
+  - RatePolicy
   - Smoke
+
+- name: checklistOutageFormsOnly
+  displayName: "Checklist outage: Forms-only (full workflow not tested)"
+  type: boolean
+  default: false
 
 - name: agentCount
   displayName: "Independent test agents"
@@ -76,6 +82,12 @@ variables:
   value: "false"
 - name: FORMS_DELTA_OVERWRITE
   value: "false"
+- ${{ if eq(parameters.checklistOutageFormsOnly, true) }}:
+  - name: RUN_SCOPE
+    value: "FORMS-ONLY - full workflow not tested"
+- ${{ else }}:
+  - name: RUN_SCOPE
+    value: "Normal workflow"
 
 - ${{ if eq(parameters.suite, 'All') }}:
   - name: TEST_FILTER
@@ -89,6 +101,9 @@ variables:
 - ${{ if eq(parameters.suite, 'CountryEstate') }}:
   - name: TEST_FILTER
     value: "TestCategory=CE&TestCategory!=DevOnly"
+- ${{ if eq(parameters.suite, 'RatePolicy') }}:
+  - name: TEST_FILTER
+    value: "TestCategory=RatePolicy&TestCategory!=DevOnly"
 - ${{ if eq(parameters.suite, 'Smoke') }}:
   - name: TEST_FILTER
     value: "TestCategory=Smoke&TestCategory!=DevOnly"
@@ -104,6 +119,12 @@ stages:
     displayName: "Restore, build, and package"
     timeoutInMinutes: 20
     steps:
+    - powershell: |
+        Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber)-FORMS-ONLY-NO-FULL-WORKFLOW"
+        Write-Host "##vso[build.addbuildtag]Forms-only-no-full-workflow"
+      displayName: "Label Forms-only run (full workflow not tested)"
+      condition: ${{ eq(parameters.checklistOutageFormsOnly, true) }}
+
     - checkout: self
       clean: true
 
@@ -389,13 +410,14 @@ stages:
         collectDumpOn: onAbortOnly
         rerunFailedTests: false
         publishRunAttachments: true
-        failOnMinTestsNotRun: true
+        failOnMinTestsNotRun: ${{ not(parameters.checklistOutageFormsOnly) }}
         minimumExpectedTests: "1"
-        testRunTitle: "PnC ${{ parameters.suite }} ${{ parameters.environment }} $(Build.BuildNumber)"
+        testRunTitle: "PnC $(RUN_SCOPE) ${{ parameters.suite }} ${{ parameters.environment }} $(Build.BuildNumber)"
       env:
         CI: "true"
         TEST_ENVIRONMENT: "${{ parameters.environment }}"
         TEST_RESULTS_ROOT: "$(TEST_RESULTS_ROOT)"
+        SfpChecklistOutage__FormsOnly: "${{ parameters.checklistOutageFormsOnly }}"
         PLAYWRIGHT_BROWSERS_PATH: "$(PLAYWRIGHT_BROWSERS_PATH)"
         Playwright__Headless: "true"
         Playwright__BrowserType: "chromium"
@@ -409,6 +431,17 @@ stages:
         DUCKCREEK_PASSWORD: "$(CL_DC_PASSWORD)"
         DuckCreekForms__CLASUsername: "$(CL_DC_USERNAME)"
         DuckCreekForms__CLASPassword: "$(CL_DC_PASSWORD)"
+
+    - task: PublishTestResults@2
+      displayName: "Publish Checklist outage Forms results"
+      condition: and(always(), ${{ eq(parameters.checklistOutageFormsOnly, true) }})
+      inputs:
+        testResultsFormat: VSTest
+        searchFolder: '$(TEST_RESULTS_ROOT)\ChecklistOutageForms'
+        testResultsFiles: 'FormsValidation_*.trx'
+        mergeTestResults: true
+        failTaskOnFailedTests: true
+        testRunTitle: "Forms only - Checklist outage - ${{ parameters.environment }} $(Build.BuildNumber)"
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish this agent's evidence"
@@ -442,6 +475,16 @@ stages:
         buildType: current
         itemPattern: "evidence-*/**"
         targetPath: '$(Pipeline.Workspace)\consolidated-evidence'
+
+    - powershell: |
+        $files = @(Get-ChildItem -LiteralPath "$(Pipeline.Workspace)\consolidated-evidence" -Recurse -Filter "FormsValidation_*.trx" -File -ErrorAction SilentlyContinue |
+          Where-Object { $_.Directory.Name -eq "ChecklistOutageForms" })
+        if ($files.Count -eq 0) {
+          Write-Error "No Forms-only result was produced; check the selected suite and any earlier scenario failures."
+          exit 1
+        }
+      displayName: "Require a Checklist outage Forms result"
+      condition: and(always(), ${{ eq(parameters.checklistOutageFormsOnly, true) }})
 
     - powershell: |
         $root = "$(Pipeline.Workspace)\consolidated-evidence"

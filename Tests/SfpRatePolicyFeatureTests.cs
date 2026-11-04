@@ -349,7 +349,7 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
-        public void QualityDuckCreekForms_UsesDedicatedClas23AutomationHost()
+        public void QualityDuckCreekForms_UsesPreviousQaEndpoints()
         {
             var file = Path.Combine(TestContext.CurrentContext.TestDirectory, "appsettings.json");
             using var document = JsonDocument.Parse(File.ReadAllText(file));
@@ -359,10 +359,16 @@ namespace PnCTestAutomation.Tests
             {
                 Assert.That(
                     forms.GetProperty("ServerBaseUrl").GetString(),
-                    Is.EqualTo("http://svqw-clas23:8080"));
+                    Is.EqualTo("http://svqw-clas21:8080"));
                 Assert.That(
                     forms.GetProperty("CLASBaseUrl").GetString(),
-                    Is.EqualTo("http://svqw-clas23:8080/express/"));
+                    Is.EqualTo("https://clasq.anico.com/express/express.aspx"));
+                Assert.That(
+                    forms.GetProperty("ServerBaseUrlDev").GetString(),
+                    Is.EqualTo("http://svdw-clas03:8080"));
+                Assert.That(
+                    forms.GetProperty("CLASBaseUrlDev").GetString(),
+                    Is.EqualTo("http://svdw-clas03:8080/express/express.aspx"));
             });
         }
 

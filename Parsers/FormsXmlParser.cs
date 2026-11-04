@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using PnCTestAutomation.Models;
@@ -20,6 +21,20 @@ namespace PnCTestAutomation.Parsers
         {
             var doc = XDocument.Parse(xmlContent);
             var forms = new List<ActualFormEntry>();
+
+            var resume = doc.Descendants("Session.resumeRs").FirstOrDefault();
+            if (string.Equals((string)resume?.Attribute("status"), "failure", StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("DuckCreek failed to resume the quote session for the Forms request.");
+
+            var response = doc.Descendants("FormsEngine.initPrintJobRs").FirstOrDefault();
+            if (string.Equals((string)response?.Attribute("status"), "failure", StringComparison.OrdinalIgnoreCase))
+            {
+                var message = response.Value.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                    .FirstOrDefault()?.Trim() ?? "No error details were returned.";
+                if (message.Length > 300)
+                    message = message[..300] + "...";
+                throw new InvalidOperationException($"DuckCreek Forms Engine returned status='failure': {message}");
+            }
 
             // Path: server > responses > FormsEngine.initPrintJobRs > printJob > printDoc
             var printDocs = doc.Descendants("printDoc");
@@ -44,22 +59,19 @@ namespace PnCTestAutomation.Parsers
 
         /// <summary>
         /// Extracts response envelope metadata.
-        /// DuckCreek XML will contain "failure" status nodes because the API user differs
-        /// from the UI session user — this is expected and does not mean the request failed.
+        /// Captures session and print-job metadata for diagnostics.
         /// </summary>
         public static FormsResponseMetadata ParseMetadata(string xmlContent)
         {
             var doc = XDocument.Parse(xmlContent);
             var meta = new FormsResponseMetadata();
 
-            // Session.resumeRs — capture status but DO NOT treat 'failure' as a warning.
-            // The API user ≠ UI session user, so DuckCreek always reports this as failure.
             var resumeEl = doc.Descendants("Session.resumeRs").FirstOrDefault();
             if (resumeEl != null)
             {
                 var resumeStatus = resumeEl.Attribute("status")?.Value ?? "";
                 if (resumeStatus.Equals("failure", System.StringComparison.OrdinalIgnoreCase))
-                    meta.Warnings.Add($"Session.resumeRs status='failure' (expected — API user ≠ session user)");
+                    meta.Warnings.Add("Session.resumeRs status='failure'");
             }
 
             // FormsEngine.initPrintJobRs element
@@ -67,7 +79,6 @@ namespace PnCTestAutomation.Parsers
             if (responseEl != null)
             {
                 meta.ReturnSuccessStatus = responseEl.Attribute("returnSuccessStatus")?.Value ?? "";
-                // returnSuccessStatus may be missing or '0' due to user mismatch — this is informational only
             }
 
             // printJob element

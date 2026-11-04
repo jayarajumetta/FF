@@ -204,6 +204,33 @@ The supplied machinery `SpecialUse=No` selects the native `None` option (value `
 
 **Rate Policy Baseline** is `Resources\ExpectedForms\SFP\SFP_RATEPOLICY.json`, scoped to MN/NE/SD/WI. The requested scaffold exists but is **unpopulated**: no expected forms have been supplied or approved. Populate its `BASE` and/or `RATEPOLICY` objects only from independently approved Rate Policy expectations using the existing SFP JSON status conventions. Empty, exclusion-only, and not-yet-populated states fail explicitly; the loader never falls back to the unchanged BASIC/CE baseline in `SFP.json`. The scenario cannot pass in recording mode or suppress forms failures. Premium must be positive; an exact rate comparison additionally requires `ExpectedPremiums:SFP_RATEPOLICY:<state>:Amount`. Captured forms or premiums are not automatically approved baselines. Offline helper checks do not establish a live end-to-end pass.
 
+### Temporary Checklist outage: Forms-only
+
+`SfpChecklistOutage:FormsOnly` defaults to **false** in `appsettings.json`, and the `checklistOutageFormsOnly` queue-time parameter defaults to **false** on the PnC Automated Regression and SFP Smoke pipelines. Explicitly opt in only during the outage. This applies only to SFP Basic, Country Estate, and Rate Policy. The normal quote, pricing, billing, Submission navigation, and referral checks still run; Checklist and Transmit are not tested. Forms uses the existing CLAS session and Duck Creek Forms Engine, with the appropriate BASIC, CE, or RATEPOLICY baseline. Missing/empty forms, retrieval errors, comparison failures, and issues fail the run; baseline-recording mode is not accepted.
+
+Before requesting Forms, the automation selects the exact quote in CLAS, waits for navigation, and retrieves the CLAS session cookie. This restores the previously used request sequence, but the cookie alone does not prove that the resumed session contains the requested quote or current transaction. A Forms Engine failure is not accepted as a Forms pass; the saved Forms XML contains the server response when a Forms request was made. Save For Later remains best-effort, and the log states when release of the quote lock was not confirmed.
+
+The QA CLAS browser defaults to `https://clasq.anico.com/express/express.aspx` and the Forms Engine to `svqw-clas21`, matching a retained successful Forms run. The Dev-specific endpoints are unchanged; environment variables can override the default endpoint settings.
+
+Passwords and client secrets are not supplied in the committed `appsettings.json`. For local runs, supply `Credentials__Password`, `DuckCreekForms__CLASPassword`, and `DUCKCREEK_PASSWORD` through environment variables; other workflows may also require `QAExpressCreds__Password` or Ping credentials. Both pipelines obtain the SFP credentials from the authorized `PnC_DC_TestAutomation` variable group. The SFP Smoke pipeline must be authorized to use that group before it is run.
+
+Each completed Forms comparison produces a separate `Forms Only (Checklist outage)` TRX result identifying the state, variant, and quote. If Forms passes, the original workflow is reported **skipped**, not passed, because Checklist and Transmit remain untested. Failures before or during Forms remain failures and might not produce a separate Forms result. Reports and logs can contain quote or session information; handle them as sensitive. The standalone `FormsValidationSmoke.feature` is BASIC-only and is not the outage path for CE or Rate Policy.
+
+For a local Forms-only run, rebuild the project and opt in within the same PowerShell process:
+
+```powershell
+$env:SfpChecklistOutage__FormsOnly = "true"
+try {
+    dotnet test .\TestAutomation.csproj --filter "FullyQualifiedName~SFPBasicPolicyFeature"
+} finally {
+    Remove-Item Env:SfpChecklistOutage__FormsOnly -ErrorAction SilentlyContinue
+}
+```
+
+Choose `SFPCountryEstatePolicyFeature` or `SFPRatePolicyFeature` instead for the other workflows. In the pipelines, check the outage parameter to opt in; Forms-only runs are labelled and tagged as not testing the full workflow. Removing the local environment override restores the configured default of false. Local Forms-only TRX files are written under `TestResults\ChecklistOutageForms`, or under `TEST_RESULTS_ROOT\ChecklistOutageForms` when that variable is set. Use a fresh results directory per run. Forms access still depends on the environment and quote state; this mode does not bypass Duck Creek business rules or create Checklist completion. After SSO recovery, run the normal workflow with the flag off and remove this temporary mode.
+
+Pricing runs before Checklist in all three features. Existing Basic/CE premium extraction and configured comparisons are unchanged; where extraction or a usable baseline is missing, an exact premium comparison is not guaranteed. Rate Policy requires a positive premium and compares an exact amount only when its own approved state baseline is configured.
+
 ### Using `.runsettings` Files
 
 | File | Purpose |

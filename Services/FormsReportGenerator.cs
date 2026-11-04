@@ -203,13 +203,19 @@ namespace PnCTestAutomation.Services
         /// Writes a TRX file so ADO's Tests tab and Test Results Trend dashboard widget reflect forms health over time.
         /// One test entry per state run: pass if AllPassed, fail otherwise.
         /// </summary>
-        public static void WriteTrxResults(FormsValidationSummary summary, string outputDirectory)
+        public static void WriteTrxResults(
+            FormsValidationSummary summary, string outputDirectory, bool checklistOutageFormsOnly = false)
         {
             var runId = Guid.NewGuid().ToString();
             var testId = Guid.NewGuid().ToString();
             var execId = Guid.NewGuid().ToString();
             var listId = "8c84fa94-04c1-424b-9868-57a2d4851a1d"; // ADO default list GUID
-            var testName = $"Forms Validation - {summary.LOB} - {summary.State} - {summary.PolicyTypeLabel}";
+            var prefix = checklistOutageFormsOnly ? "Forms Only (Checklist outage)" : "Forms Validation";
+            var quote = checklistOutageFormsOnly ? $" - Quote {summary.QuoteId}" : string.Empty;
+            var testName = System.Security.SecurityElement.Escape(
+                $"{prefix} - {summary.LOB} - {summary.State} - {summary.PolicyTypeLabel}{quote}");
+            var runName = System.Security.SecurityElement.Escape(
+                $"{prefix} — {summary.LOB}/{summary.State}");
             var outcome = summary.AllPassed ? "Passed" : "Failed";
             var now = summary.Timestamp.ToString("O");
             var duration = "00:00:00.001";
@@ -229,7 +235,7 @@ namespace PnCTestAutomation.Services
             }
 
             var trx = $@"<?xml version=""1.0"" encoding=""UTF-8""?>
-<TestRun id=""{runId}"" name=""Forms Validation — {summary.LOB}/{summary.State}"" xmlns=""http://microsoft.com/schemas/VisualStudio/TeamTest/2010"">
+<TestRun id=""{runId}"" name=""{runName}"" xmlns=""http://microsoft.com/schemas/VisualStudio/TeamTest/2010"">
   <TestDefinitions>
     <UnitTest name=""{testName}"" id=""{testId}"">
       <TestMethod className=""FormsValidation"" name=""{testName}"" />

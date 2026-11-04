@@ -21,7 +21,7 @@ namespace PnCTestAutomation.Pages.ExpressPages
         private ILocator DctUsernameInput => _page.Locator("input[name='_username']");
         private ILocator DctPasswordInput => _page.Locator("input[name='_password']");
         private ILocator DctLoginButton => _page.Locator("#home a");
-        private ILocator SearchBarInput => _page.Locator("input[name='quickSearchText']");
+        private ILocator SearchBarInput => ExpressHomePage.SearchBarInput(_page);
         #endregion
 
         /// <summary>
