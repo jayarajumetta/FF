@@ -33,6 +33,7 @@ namespace PnCTestAutomation.Hooks
         private IBrowserContext _browserContext;
         private IPage _page;
         private bool _tracingStarted;
+        private RetryDiagnostics _retryDiagnostics;
 
         private readonly ScenarioContext _scenarioContext;
         private readonly FeatureContext _featureContext;
@@ -196,6 +197,13 @@ namespace PnCTestAutomation.Hooks
 
                 _page = await _browserContext.NewPageAsync();
 
+                if (string.Equals(_configuration["Debugging:RetryDiagnostics"], "true",
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    _retryDiagnostics = RetryDiagnostics.Start(
+                        _page, _configuration["DuckCreekForms:CLASBaseUrl"]);
+                }
+
                 // Timeouts: 30s element / 90s navigation (SSO redirect chains can exceed 60s)
                 _page.SetDefaultTimeout(30000);
                 _page.SetDefaultNavigationTimeout(90000);
@@ -283,31 +291,32 @@ namespace PnCTestAutomation.Hooks
             {
                 var scenarioFolder = GetScenarioResultsFolder();
 
-                if (hasFailed)
+                var saveTrace = ShouldSaveTrace(hasFailed,
+                    _scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.OK,
+                    string.Equals(_configuration["Playwright:SaveTraceOnSuccess"], "true",
+                        StringComparison.OrdinalIgnoreCase));
+                if (saveTrace && _tracingStarted)
                 {
                     Directory.CreateDirectory(scenarioFolder);
 
-                    if (_tracingStarted)
+                    var traceFile = Path.Combine(scenarioFolder, "trace.zip");
+                    try
                     {
-                        var traceFile = Path.Combine(scenarioFolder, "trace.zip");
-                        try
-                        {
-                            await _browserContext.Tracing.StopAsync(new TracingStopOptions { Path = traceFile });
-                            NUnitTestContext.WriteLine($"[trace] {traceFile}");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"[Warning] Failed to save trace: {ex.Message}");
-                        }
+                        await _browserContext.Tracing.StopAsync(new TracingStopOptions { Path = traceFile });
+                        NUnitTestContext.WriteLine($"[trace] {traceFile}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[Warning] Failed to save trace: {ex.Message}");
                     }
                 }
-                else
+                else if (_tracingStarted)
                 {
-                    if (_tracingStarted)
-                    {
-                        try { await _browserContext.Tracing.StopAsync(); } catch { /* ignore */ }
-                    }
+                    try { await _browserContext.Tracing.StopAsync(); } catch { /* ignore */ }
+                }
 
+                if (!hasFailed)
+                {
                     // Write pass records only for completed scenarios, not skipped outage runs.
                     try
                     {
@@ -322,6 +331,8 @@ namespace PnCTestAutomation.Hooks
                     catch { /* ignore — telemetry must never block test execution */ }
                 }
             }
+
+            _retryDiagnostics?.Dispose();
 
             // Close Playwright resources safely. Grab the video handle first — it hangs off the
             // page and we need it after both the page and the context are gone.
@@ -413,6 +424,9 @@ namespace PnCTestAutomation.Hooks
         }
 
         // ------------ Helpers ------------
+
+        internal static bool ShouldSaveTrace(bool hasFailed, bool completed, bool saveTraceOnSuccess) =>
+            hasFailed || (completed && saveTraceOnSuccess);
 
         private bool IsApiScenario()
         {

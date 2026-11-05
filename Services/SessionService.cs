@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.Models;
 using PnCTestAutomation.Pages.ExpressPages;
+using PnCTestAutomation.Helpers;
 
 namespace PnCTestAutomation.Services
 {
@@ -144,6 +145,7 @@ namespace PnCTestAutomation.Services
                 Console.WriteLine($"[SessionService] Searching for quote: {quoteNumber}");
                 var homePage = new ExpressHomePage(page);
                 await homePage.EnterQuoteNumber(quoteNumber);
+                RetryDiagnostics.For(page)?.Mark("clas-search action=click-search");
                 await homePage.ClickSearchButtonAsync();
 
                 await new ExpressSearchResultsPage(page).OpenExactQuoteAsync(quoteNumber);

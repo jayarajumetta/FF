@@ -93,19 +93,24 @@ namespace PnCTestAutomation.Pages
             string controlName)
         {
             await locator.ScrollIntoViewIfNeededAsync();
+            var diagnostics = RetryDiagnostics.For(_page);
 
+            diagnostics?.Mark($"insurance-score control={controlName} action=trusted-click-start");
             var request = await TryClickAndWaitForRequestAsync(
                 () => locator.ClickAsync(),
                 timeoutMs: 1500);
+            diagnostics?.Mark($"insurance-score control={controlName} action=trusted-click-observation matched={request != null}");
 
             if (request == null)
             {
                 Console.WriteLine(
                     $"[InsuranceScore] {controlName} received a trusted Playwright click but dispatched no Duck Creek request; retrying once with the element's DOM click.");
 
+                diagnostics?.Mark($"insurance-score control={controlName} action=dom-click-start");
                 request = await TryClickAndWaitForRequestAsync(
                     () => locator.EvaluateAsync("element => element.click()"),
                     timeoutMs: 5000);
+                diagnostics?.Mark($"insurance-score control={controlName} action=dom-click-observation matched={request != null}");
             }
 
             if (request == null)
@@ -115,6 +120,7 @@ namespace PnCTestAutomation.Pages
             }
 
             var response = await request.ResponseAsync().WaitAsync(TimeSpan.FromSeconds(8));
+            diagnostics?.Mark($"insurance-score control={controlName} action=matched-response status={response?.Status.ToString() ?? "none"}");
             if (response == null)
                 throw new PlaywrightException($"{controlName} request completed without an application response.");
 

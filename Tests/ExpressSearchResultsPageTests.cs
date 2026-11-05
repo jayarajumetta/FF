@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using NUnit.Framework;
+using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Pages.ExpressPages;
 
 namespace PnCTestAutomation.Tests
@@ -59,6 +61,21 @@ namespace PnCTestAutomation.Tests
 
             await new ExpressSearchResultsPage(_page).OpenExactQuoteAsync("02107397");
             Assert.That(await _page.EvaluateAsync<string>("window.openedQuote"), Is.EqualTo("correct"));
+        }
+
+        [Test]
+        public async Task LogsRedactedVisibleCountsWhenExactQuoteTimesOut()
+        {
+            await _page.SetContentAsync("""
+                <table><tr><td><div columnref="quoteList_policyNumber">private-other-quote</div></td></tr></table>
+                """);
+            var events = new List<string>();
+            using var diagnostics = RetryDiagnostics.Start(_page, "https://clas.example/", events.Add);
+
+            Assert.ThrowsAsync<TimeoutException>(async () =>
+                await new ExpressSearchResultsPage(_page).OpenExactQuoteAsync("private-missing-quote", 100));
+            Assert.That(events, Has.Some.Contains("visibleRows=1 visibleQuoteCells=1 exactRows=0"));
+            Assert.That(string.Join("\n", events), Does.Not.Contain("private"));
         }
 
         [Test]

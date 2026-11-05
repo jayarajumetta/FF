@@ -100,8 +100,31 @@ namespace PnCTestAutomation.Pages.ExpressPages
             var rows = _page.Locator("tr:visible, [role='row']:visible, dc-hypergrid-row:visible")
                 .Filter(new() { Has = quoteCell });
 
-            await rows.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs });
+            var diagnostics = RetryDiagnostics.For(_page);
+            diagnostics?.Mark("clas-search action=wait-for-exact-row");
+            try
+            {
+                await rows.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs });
+            }
+            catch (TimeoutException)
+            {
+                if (diagnostics != null)
+                {
+                    try
+                    {
+                        var visibleRows = await _page.Locator("tr:visible, [role='row']:visible, dc-hypergrid-row:visible").CountAsync();
+                        var visibleCells = await _page.Locator("[columnref='quoteList_policyNumber']:visible, p[fieldref='PolicyInput.PolicyNumber']:visible").CountAsync();
+                        diagnostics.Mark($"clas-search action=row-timeout visibleRows={visibleRows} visibleQuoteCells={visibleCells} exactRows={await rows.CountAsync()}");
+                    }
+                    catch (PlaywrightException)
+                    {
+                        diagnostics.Mark("clas-search action=row-timeout diagnostics-unavailable");
+                    }
+                }
+                throw;
+            }
             var count = await rows.CountAsync();
+            diagnostics?.Mark($"clas-search action=exact-row-found count={count}");
             if (count != 1)
                 throw new InvalidOperationException(
                     $"Expected one visible CLAS search row for quote '{quoteNumber}', but found {count}.");

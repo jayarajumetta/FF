@@ -97,6 +97,17 @@ PnC-TestAutomation/
 > `npm`/`npx`; it is not compatible with the current .NET project and should not be
 > used as the framework's execution entry point.
 
+For a controlled retry investigation, run PnC Automated Regression with
+`pipelineMode=Regression`, `environment=QA`, `suite=SingleExample`, `agentCount=1`,
+`checklistOutageFormsOnly=false`, and `retryDiagnostics=true`. This runs one
+scenario and creates a QA quote. The option makes Forms lookup errors fail the
+scenario and retains the Playwright trace even on success. Request events and
+CLAS visible-row counts in `[RetryDiagnostics]` output are sanitized; a matching
+proxy request is not proof of which action caused it, and visible rows do not
+establish what the server returned. Traces, screenshots, and other existing test
+artifacts can contain sensitive data: restrict artifact access and retention,
+and do not share raw evidence. The option is off by default.
+
 ---
 
 ## Prerequisites

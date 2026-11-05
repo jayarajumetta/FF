@@ -2,6 +2,7 @@
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PnCTestAutomation.Helpers;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
@@ -164,34 +165,52 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
             var itemVisibilityTimeoutMs = skipIfNotFound ? 12000 : 60000;
             var retryVisibilityTimeoutMs = skipIfNotFound ? 8000 : 30000;
+            var diagnostics = RetryDiagnostics.For(_page);
+            var itemCategory = string.Equals(itemName, "Easy Pay", StringComparison.OrdinalIgnoreCase)
+                ? "easy-pay" : "other";
 
             // Ensure we're not on an SSO page before starting — SSO may have been triggered
             // by the previous step's reload or by session expiry mid-flow.
+            diagnostics?.Mark($"checklist item={itemCategory} action=initial-ready-start");
             await WaitForSsoRedirectAsync(_page, timeoutMs: 60000);
             await ThrowIfChecklistApplicationErrorAsync(_page);
             await _page.WaitForLoadStateAsync(LoadState.Load, new() { Timeout = 30000 });
+            diagnostics?.Mark($"checklist item={itemCategory} action=initial-ready-end");
 
             // 1. Click the item row in the accordion.
             // Use a generous timeout (60 s) so that if SSO fires during the wait the
             // page has time to complete the redirect and reload the checklist.
             var row = ItemRow(itemName);
+            diagnostics?.Mark($"checklist item={itemCategory} action=first-wait-start optional={skipIfNotFound}");
             try
             {
                 await row.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = itemVisibilityTimeoutMs });
+                diagnostics?.Mark($"checklist item={itemCategory} action=first-wait-visible");
             }
             catch (TimeoutException)
             {
+                diagnostics?.Mark($"checklist item={itemCategory} action=first-wait-timeout");
                 // SSO may have occurred during the wait — handle redirect and retry once.
                 Console.WriteLine($"[Checklist] Item '{itemName}' not visible — handling possible SSO redirect and retrying.");
+                if (diagnostics != null)
+                {
+                    var ssoAtRetry = _page.Url.Contains("ssoqa.anico.com", StringComparison.OrdinalIgnoreCase) ||
+                        _page.Url.Contains("/idp/SSO", StringComparison.OrdinalIgnoreCase) ||
+                        _page.Url.Contains("/ACS.saml2", StringComparison.OrdinalIgnoreCase);
+                    diagnostics.Mark($"checklist item={itemCategory} action=retry-ready-start ssoAtStart={ssoAtRetry}");
+                }
                 await WaitForSsoRedirectAsync(_page, timeoutMs: 60000);
                 await ThrowIfChecklistApplicationErrorAsync(_page);
                 await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
+                diagnostics?.Mark($"checklist item={itemCategory} action=retry-wait-start");
                 try
                 {
                     await row.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = retryVisibilityTimeoutMs });
+                    diagnostics?.Mark($"checklist item={itemCategory} action=retry-wait-visible");
                 }
                 catch (TimeoutException) when (skipIfNotFound)
                 {
+                    diagnostics?.Mark($"checklist item={itemCategory} action=retry-wait-timeout-skipped");
                     Console.WriteLine($"[Checklist] Item '{itemName}' not found on checklist (optional) — skipping.");
                     return;
                 }

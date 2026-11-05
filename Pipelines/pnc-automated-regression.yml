@@ -60,6 +60,13 @@ parameters:
   type: boolean
   default: true
 
+# Opt in for a QA SingleExample run on one agent. Forms lookup errors fail the run.
+# Review evidence in restricted storage: traces contain screenshots and network data.
+- name: retryDiagnostics
+  displayName: "Capture retry and CLAS search diagnostics"
+  type: boolean
+  default: false
+
 variables:
 - group: "PnC_DC_TestAutomation"
 - name: DOTNET_VERSION
@@ -119,6 +126,11 @@ stages:
     displayName: "Restore, build, and package"
     timeoutInMinutes: 20
     steps:
+    - ${{ if and(eq(parameters.retryDiagnostics, true), or(ne(parameters.environment, 'QA'), ne(parameters.suite, 'SingleExample'), ne(parameters.agentCount, 1), eq(parameters.checklistOutageFormsOnly, true))) }}:
+      - powershell: |
+          throw "Retry diagnostics requires QA, SingleExample, one agent, and the normal workflow."
+        displayName: "Validate retry diagnostics scope"
+
     - powershell: |
         Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber)-FORMS-ONLY-NO-FULL-WORKFLOW"
         Write-Host "##vso[build.addbuildtag]Forms-only-no-full-workflow"
@@ -422,6 +434,10 @@ stages:
         Playwright__Headless: "true"
         Playwright__BrowserType: "chromium"
         Playwright__TraceEnabled: "true"
+        ${{ if eq(parameters.retryDiagnostics, true) }}:
+          Debugging__RetryDiagnostics: "true"
+          Debugging__FailOnFormsValidationError: "true"
+          Playwright__SaveTraceOnSuccess: "true"
         DataPool__BaseUrl: "$(DATA_POOL_URL)"
         DataPool__AutoStart: "false"
         DuckCreekForms__ResultsBasePath: '$(TEST_RESULTS_ROOT)\FormsCheck'

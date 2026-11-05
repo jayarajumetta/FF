@@ -285,9 +285,12 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         {
             var button = GetThermostatButton(answer);
             var selectedState = button.Locator(".chip-wrapper-selected");
+            var diagnostics = RetryDiagnostics.For(_page);
 
             for (var attempt = 1; attempt <= 2; attempt++)
             {
+                if (diagnostics != null)
+                    diagnostics.Mark($"thermostat attempt={attempt} action=before-click selected={await selectedState.IsVisibleAsync()}");
                 await button.ClickAsync();
 
                 try
@@ -297,10 +300,12 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                         State = WaitForSelectorState.Visible,
                         Timeout = 1500
                     });
+                    diagnostics?.Mark($"thermostat attempt={attempt} action=selected");
                     return;
                 }
                 catch (TimeoutException)
                 {
+                    diagnostics?.Mark($"thermostat attempt={attempt} action=selection-timeout");
                     if (attempt == 1)
                     {
                         Console.WriteLine(
