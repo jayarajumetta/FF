@@ -651,11 +651,13 @@ public sealed class UiActions
         if (!_config.Waits.WaitForDomContentLoadedBeforeActions || !_browser.IsStarted) return;
         try
         {
-            await _browser.Page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions
+
+            await _browser.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded, new PageWaitForLoadStateOptions
             {
                 Timeout = _config.Waits.PageReadyTimeoutMs
             });
-            await _browser.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded, new PageWaitForLoadStateOptions
+
+            await _browser.Page.WaitForLoadStateAsync(LoadState.Load, new PageWaitForLoadStateOptions
             {
                 Timeout = _config.Waits.PageReadyTimeoutMs
             });
