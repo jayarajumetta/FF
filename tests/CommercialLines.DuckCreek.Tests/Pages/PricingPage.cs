@@ -36,6 +36,10 @@ public sealed class PricingPage
     public Task VerifyPremiumAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.Premium, expected, property, new ControlIntent("Pricing", "Premium"));
 
+
+    public Task ClickPolicyFormAsync() =>
+       _ui.ClickAsync(_locators.PolicyForms, new ControlIntent("Proposal", "NewQuote"));
+
     public Task VerifyPremiumChangeAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.PremiumChange, expected, property, new ControlIntent("Pricing", "PremiumChange"));
 

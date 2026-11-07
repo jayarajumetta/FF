@@ -18,13 +18,15 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForNewQuoteAsync("Exists");
         await page.VerifyNewQuoteAsync(data.Resolve("{{data:expected_btn_new_quote_2}}"), "");
         await page.ClickNewQuoteAsync();
-
     }
+
+
+
+
 
     [Given(@"^I select or create the policy client$")]
     [When(@"^I select or create the policy client$")]
@@ -32,14 +34,12 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
     public async Task SelectOrCreateThePolicyClientAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForLblClientInfoAsync("Exists");
         await page.VerifyLblClientInfoAsync(data.Resolve("{{data:expected_lbl_client_info_5}}"), "");
-        await page.EnterTxtFirstAsync(data.Get("First Name"));
-        await page.EnterTxtLastAsync(data.Get("Last Name"));
+        await page.EnterTxtFirstAsync(data.Get("AL_ClientData.First Name"));
+        await page.EnterTxtLastAsync(data.Get("AL_ClientData.Last Name"));
         await page.WaitForAddEditAdditionalInterestFirstMortgageeSearchAsync("Exists");
         await page.ClickAddEditAdditionalInterestFirstMortgageeSearchAsync();
         await page.WaitForBtnCreateNewClientAsync("Exists");
@@ -47,8 +47,10 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         await page.ClickPricingDetailsNextAsync();
         data.Set("StateName", data.Resolve("{{data:statename}}"));
         data.Set("State", data.Get("State Abbreviation"));
-
     }
+
+
+
 
     [Given(@"^I enter account details$")]
     [When(@"^I enter account details$")]
@@ -56,13 +58,11 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
     public async Task EnterAccountDetailsAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForAccountInformationAsync("Exists");
         await page.VerifyFirstNameAccountOwnerAsync("Exists", "");
-        await page.EnterDOBAsync(data.Get("DOB"));
+        await page.EnterDOBAsync(data.Get("AL_ClientData.DOB"));
         await page.EnterBestPhoneAccountOwnerAsync(data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
         await page.EnterEmailAccountOwnerAsync(data.Resolve("{{data:txt_email_account_owner_19}}"));
         await page.WaitForMaritalStatusAsync("Exists");
@@ -81,7 +81,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         await page.EnterEnterALocationAsync(data.Get("AL_ClientData.Street Address"));
         await page.EnterOwnerAddressLine2Async(data.Get("AL_ClientData.Apartment"));
         await page.EnterOwnerAddressCityNewAsync(data.Get("AL_ClientData.City"));
-        await page.SelectDrpdwnStateAsync("");
+        //await page.SelectDrpdwnStateAsync("");
         await page.SelectStateNameAsync("");
         await page.EnterOwnerAddressZipAsync(data.Get("AL_ClientData.ZIP"));
         await page.WaitForSatelliteAsync("Visible");
@@ -91,8 +91,9 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         await page.SelectYesClientResidesAsync("");
         await page.ClickAccountDetailsNextAsync();
         data.Set("EffectiveDate", "{Date[08.08.2024][][MM/dd/yyyy]}");
-
     }
+
+
 
     [Given(@"^I start the policy proposal$")]
     [When(@"^I start the policy proposal$")]
@@ -100,30 +101,30 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
     public async Task StartThePolicyProposalAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.PressEffectiveDateAsync("Scroll[-2]");
         if (data.Condition("LOB == \"PersonalAuto\""))
         {
-                    await page.ClickPersonalAutoAsync();
+              await page.ClickPersonalAutoAsync();
         }
         if (data.Condition("LOB == \"Cycle\""))
         {
-                    await page.ClickMotorcycleAsync();
+             await page.ClickMotorcycleAsync();
         }
         if (data.Condition("LOB == \"RecreationalVehicle\""))
         {
-                    await page.ClickRecreationalVehicleAsync();
+            await page.ClickRecreationalVehicleAsync();
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    await page.EnterEffectiveDateAsync(data.Resolve("{{runtime:EffectiveDate}}"));
+             await page.EnterEffectiveDateAsync(data.Resolve("{{runtime:EffectiveDate}}"));
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    await page.EnterAgentCodeAsync(data.Resolve("{{data:agentcode_42}}"));
+             await page.EnterAgentCodeAsync(data.Resolve("{{data:agentcode_42}}"));
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
@@ -220,11 +221,11 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
         // Field-level orchestration derived from the canonical Tosca method sequence.
         data.Set("QuoteNumber", data.Resolve("{STRINGREPLACE[{B[QNum]}][\"\\)\"][\"\"]}"));
-
     }
+
+
 
     [Given(@"^I complete driver information$")]
     [When(@"^I complete driver information$")]
@@ -741,6 +742,8 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
 
     }
 
+
+
     [Given(@"^I review household\-driver prefill results$")]
     [When(@"^I review household\-driver prefill results$")]
     [Then(@"^I review household\-driver prefill results$")]
@@ -783,6 +786,9 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         data.Set("State", data.Get("State"));
 
     }
+
+
+
 
     [Given(@"^I complete vehicle Summary Automobile Rate Filing$")]
     [When(@"^I complete vehicle Summary Automobile Rate Filing$")]

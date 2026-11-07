@@ -134,7 +134,31 @@ public sealed class UiActions
                 }
             }
 
-            throw new InvalidOperationException($"{intent} value is empty after {maxAttempts} fill attempts.");
+            if (!string.IsNullOrWhiteSpace(resolvedValue) && await IsTextLikeInputAsync(x))
+            {
+                _logger.Warn($"FILL FALLBACK: {intent}; switching to keyboard sequential entry.");
+
+                await x.ClickAsync();
+                try { await x.FillAsync(string.Empty); } catch { }
+
+                try
+                {
+                    await x.PressAsync("Control+A");
+                    await x.PressAsync("Delete");
+                }
+                catch { }
+
+                await x.PressSequentiallyAsync(resolvedValue, new LocatorPressSequentiallyOptions { Delay = 20 });
+                await Task.Delay(500);
+
+                var fallbackValue = await TryGetInputValueAsync(x);
+                if (!string.IsNullOrWhiteSpace(fallbackValue))
+                {
+                    return;
+                }
+            }
+
+            throw new InvalidOperationException($"{intent} value is empty after {maxAttempts} fill attempts and sequential fallback.");
         });
         _semanticallyCommittedControls.Add(IntentKey(intent));
     }

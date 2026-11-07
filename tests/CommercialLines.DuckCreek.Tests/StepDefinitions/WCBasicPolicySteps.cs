@@ -538,16 +538,11 @@ public sealed class WCBasicPolicySteps
 
         if (data.Condition("State ==\"NH\""))
         {
-
             await page.ClickWorksheetAsync();
             await page.EnterEmployerSafetyDevices(data.Resolve("{{data:wc_employer_safety_devices_pricing}}"));
-
             await page.PauseAsync(1000);
             await page.EnterEmployerSafetyDevicesComments(data.Resolve("{{data:wc_employer_safety_devices_comments}}"));
-
             await page.ClickOKAsync();
-
-
         }
 
 
@@ -601,25 +596,37 @@ public sealed class WCBasicPolicySteps
             await page.ClickWorksheetAsync();
             await page.EnterPremisesCredit(data.Resolve("{{data:worksheet_pa_nj_premises_credit_255}}"));
             await page.PauseAsync(1000);
+
             await page.EnterPremisesComments(data.Resolve("{{data:worksheet_pa_nj_premises_comments_256}}"));
             await page.PauseAsync(1000);
+            
             await page.EnterClassificationPecularities(data.Resolve("{{data:worksheet_pa_nj_classification_pecularities_257}}"));
             await page.PauseAsync(1000);
+
             await page.EnterClassificationPecularitiesComments(data.Resolve("{{data:worksheet_pa_nj_classification_comments_258}}"));
             await page.PauseAsync(1000);
+
             await page.EnterMedicalFacilities(data.Resolve("{{data:worksheet_pa_nj_medical_facilities_259}}"));
             await page.PauseAsync(1000);
+
+
             await page.EnterMedicalFacilitiesComments(data.Resolve("{{data:worksheet_pa_nj_medical_comments_260}}"));
             await page.PauseAsync(1000);
+
             await page.EnterSafetyDevices(data.Resolve("{{data:worksheet_pa_nj_safety_devices_264}}"));
             await page.PauseAsync(1000);
+
             await page.EnterSafetyDevicesComments(data.Resolve("{{data:worksheet_pa_nj_safety_comments_265}}"));
             await page.PauseAsync(1000);
+
             await page.EnterEmployeesSelection(data.Resolve("{{data:worksheet_pa_nj_employees_selection_267}}"));
             await page.EnterEmployeeselectionComments(data.Resolve("{{data:worksheet_pa_nj_employees_comments_268}}"));
             await page.PauseAsync(1000);
+
             await page.ClickOKAsync();
         }
+
+
 
         if (data.Condition("State ==\"PA\""))
         {

@@ -22,6 +22,8 @@ public sealed class PricingLocators
     public ILocator PriorPremium => _page.Locator("//div[@fieldref='PolicyOutput.PremiumPrior']");
     public ILocator PremiumChange => _page.Locator("div[fieldref=\"PolicyOutput.PremiumChange\"]");
 
+    public ILocator PolicyForms => _page.GetByText("Policy Forms");
+
     public ILocator Result => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Result']/@for] | //label[normalize-space(string(.))='Result']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Result']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
     public ILocator Title => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Title']/@for] | //label[normalize-space(string(.))='Title']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Title']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");

@@ -105,8 +105,17 @@ public sealed class FormsPage
     public Task EnterSessionIDAsync(string value) =>
         _ui.FillAsync(_locators.SessionID, value, new ControlIntent("Forms", "SessionID"));
 
+    public Task PressSessionIDAsync(string key) =>
+        _ui.PressAsync(_locators.SessionID, key, new ControlIntent("Forms", "SessionID"));
+
+    public Task<bool> HasSessionIDAsync() =>
+        _ui.ExistsAsync(_locators.SessionID);
+
     public Task VerifyStatusCodeAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.StatusCode, expected, property, new ControlIntent("Forms", "StatusCode"));
+
+    public Task<bool> HasStatusCodeAsync() =>
+        _ui.ExistsAsync(_locators.StatusCode);
 
     public Task EnterTotalSubjectPremiumAsync(string value) =>
         _ui.FillAsync(_locators.TotalSubjectPremium, value, new ControlIntent("Forms", "TotalSubjectPremium"));

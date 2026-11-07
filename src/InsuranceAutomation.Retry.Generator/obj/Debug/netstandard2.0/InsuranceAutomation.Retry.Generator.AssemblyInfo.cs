@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InsuranceAutomation.Retry.Generator.ReqnrollPlugin")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e399d54c30191b5947fe2bbc9795241c4d016aab")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7dd8e242810f9695fa93d368d6955dd9571601e1")]
 [assembly: System.Reflection.AssemblyProductAttribute("InsuranceAutomation.Retry.Generator.ReqnrollPlugin")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InsuranceAutomation.Retry.Generator.ReqnrollPlugin")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
