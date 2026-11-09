@@ -9,7 +9,7 @@ public sealed class UnderwritingLocators
 
     public ILocator AreAllCollectorVehiclesKeptInAFullyEnclosedAndLockedStructure => _page.GetByLabel("Are all collector vehicles kept in a fully enclosed and locked structure?", new() { Exact = true });
 
-    public ILocator ChkBoxCheckBoxNoneOfTheAbove => _page.Locator("[id=\"fields.data.policy.preQualificationQuestionPolicy$noneOfTheAbove.value-checkbox\"]");
+    public ILocator ChkBoxCheckBoxNoneOfTheAbove => _page.GetByTestId("fields.data.policy.preQualificationQuestionPolicy$noneOfTheAbove.value-checkbox-wrapper");
 
     public ILocator CycleUnderwritingNext => _page.Locator("[id=\"fields.pageAction.next\"]");
 
@@ -19,7 +19,7 @@ public sealed class UnderwritingLocators
 
     public ILocator HeaderUnderwriting => _page.GetByText("Header Underwriting", new() { Exact = true });
 
-
+    public ILocator BtnNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
     public ILocator NewQuoteSearch => _page.Locator("input[id=\"quoteSearchInput\"][name=\"quoteSearchInput\"]");
 
 

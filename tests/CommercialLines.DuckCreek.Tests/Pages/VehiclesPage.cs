@@ -69,10 +69,10 @@ public sealed class VehiclesPage
         _ui.PressAsync(_locators.PolicyNumber, key, new ControlIntent("Vehicles", "PolicyNumber"));
 
     public Task WaitForRecreationalVehicleLiabilityAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Vehicles", "RecreationalVehicleLiability"));
+        _ui.WaitAsync(_locators.RecreationalVehicleLiability, expected, new ControlIntent("Vehicles", "RecreationalVehicleLiability"));
 
     public Task ClickRecreationalVehicleLiabilityAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Vehicles", "RecreationalVehicleLiability"));
+        _locators.RecreationalVehicleLiability.EvaluateAsync("el => el.click()");
 
     public Task WaitForRecreationalVehicleLiabilityHeadingAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Vehicles", "RecreationalVehicleLiabilityHeading"));
@@ -104,4 +104,10 @@ public sealed class VehiclesPage
 
     public Task EnterTotalSubjectPremiumSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.TotalSubjectPremium, value, new ControlIntent("Vehicles", "TotalSubjectPremium"), delayMs);
+
+    public Task EnterCommercialUMLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.CommercialUMLimit, value, new ControlIntent("Navigation", "CommercialAutoLiabilityLimit"), delayMs);
+
+    public Task PressCommercialUMLimitAsync(string key) =>
+        _ui.PressAsync(_locators.CommercialUMLimit, key, new ControlIntent("Vehicles", "CommercialUMLimit"));
 }
