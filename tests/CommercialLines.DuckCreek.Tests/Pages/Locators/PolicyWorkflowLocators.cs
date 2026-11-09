@@ -52,6 +52,8 @@ public sealed class PolicyWorkflowLocators
     public ILocator IFRAMEDuckCreekPolicyOtherCheckBox => _page.Locator("input[fieldref=\"CovExclusionDesignatedWorkInput.Other\"]");
 
     public ILocator DoesThisPolicyCoverContractorExposure => _page.Locator("input[fieldref='LineInput.PolicyContractorExposure']");
+    public ILocator UMLimit => _page.Locator("input[fieldref=\"LineInput.UMLimits\"]");
+
     public ILocator IncludeBusinessowners => _page.Locator("input[fieldref=\"LineUmbrellaBusinessOwners.IncludeBusinessOwners\"]").First;
 
     public ILocator IncludeCommercialAuto => _page.Locator("input[fieldref=\"LineUmbrellaCommercialAuto.IncludeCommercialAuto\"]").First;
