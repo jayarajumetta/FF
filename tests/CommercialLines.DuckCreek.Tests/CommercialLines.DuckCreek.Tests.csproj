@@ -24,4 +24,5 @@
   <ItemGroup>
     <None Include="../../config/framework.json" Link="config/framework.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties testdata_4scenarios_4011_3wc_3expanded_3de_1json__JsonSchema="https://acp-protocol.dev/schemas/v1/config.schema.json" /></VisualStudio></ProjectExtensions>
 </Project>

@@ -134,9 +134,34 @@ public sealed class UiActions
                 }
             }
 
-            throw new InvalidOperationException($"{intent} value is empty after {maxAttempts} fill attempts.");
+            if (!string.IsNullOrWhiteSpace(resolvedValue) && await IsTextLikeInputAsync(x))
+            {
+                _logger.Warn($"FILL FALLBACK: {intent}; switching to keyboard sequential entry.");
+
+                await x.ClickAsync();
+                try { await x.FillAsync(string.Empty); } catch { }
+
+                try
+                {
+                    await x.PressAsync("Control+A");
+                    await x.PressAsync("Delete");
+                }
+                catch { }
+
+                await x.PressSequentiallyAsync(resolvedValue, new LocatorPressSequentiallyOptions { Delay = 20 });
+                await Task.Delay(500);
+
+                var fallbackValue = await TryGetInputValueAsync(x);
+                if (!string.IsNullOrWhiteSpace(fallbackValue))
+                {
+                    return;
+                }
+            }
+
+            throw new InvalidOperationException($"{intent} value is empty after {maxAttempts} fill attempts and sequential fallback.");
         });
         _semanticallyCommittedControls.Add(IntentKey(intent));
+
     }
 
     private async Task PressSequentiallyCoreAsync(ILocator locator, string value, ControlIntent intent, int delayMs = 20)
@@ -650,10 +675,17 @@ public sealed class UiActions
         if (!_config.Waits.WaitForDomContentLoadedBeforeActions || !_browser.IsStarted) return;
         try
         {
+
             await _browser.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded, new PageWaitForLoadStateOptions
             {
                 Timeout = _config.Waits.PageReadyTimeoutMs
             });
+
+            await _browser.Page.WaitForLoadStateAsync(LoadState.Load, new PageWaitForLoadStateOptions
+            {
+                Timeout = _config.Waits.PageReadyTimeoutMs
+            });
+
         }
         catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
         {

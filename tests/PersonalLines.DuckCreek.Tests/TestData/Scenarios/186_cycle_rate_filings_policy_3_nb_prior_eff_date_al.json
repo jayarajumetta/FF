@@ -25,6 +25,8 @@
   "values": {
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
+    "firstname_7": "CORY",
+    "lastname_8": "STUART",
     "statename": "ALABAMA",
     "txt_best_phone_account_owner_18": "5555551234",
     "txt_email_account_owner_19": "a@a.com",
@@ -164,7 +166,7 @@
     "AL_ClientData.Street Address": "2006 SUMMERVILLE RD",
     "AL_ClientData.City": "PHENIX CITY",
     "AL_ClientData.ZIP": "36867",
-    "AL_ClientData.Apartment": "19"
+    "AL_ClientData.Apartment": "19" 
   },
   "_canonical": {
     "mappedBaseValues": 23,

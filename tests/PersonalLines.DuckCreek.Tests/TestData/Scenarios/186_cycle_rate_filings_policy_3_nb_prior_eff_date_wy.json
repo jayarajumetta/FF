@@ -25,7 +25,10 @@
   "values": {
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
+    "firstname_7": "CycleNB",
+    "lastname_8": "BENGTSON",
     "statename": "WYOMING",
+    "date_of_birth": "1/1/1992",
     "txt_best_phone_account_owner_18": "5555551234",
     "txt_email_account_owner_19": "a@a.com",
     "agentcode_42": "D2102",

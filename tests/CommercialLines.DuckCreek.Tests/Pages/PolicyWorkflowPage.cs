@@ -119,6 +119,9 @@ public sealed class PolicyWorkflowPage
     public Task EnterDoesThisPolicyCoversAContractorExposureAsync(string value) =>
         _ui.FillAsync(_locators.DoesThisPolicyCoverContractorExposure, value, new ControlIntent("PolicyWorkflow", "IFRAMEDuckCreekPolicyDescriptionOfOther"));
 
+    public Task EnterUMLimitAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.UMLimit, value, new ControlIntent("Navigation", "UM Limit"), delayMs);
+
     public Task EnterUMLimitsAsync(string value) =>
        _ui.FillAsync(_locators.UMLimits, value, new ControlIntent("PolicyWorkflow", "UMLimits"));
 

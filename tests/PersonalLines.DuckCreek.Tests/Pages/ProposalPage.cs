@@ -30,10 +30,10 @@ public sealed class ProposalPage
         _ui.PressAsync(_locators.AgentCode, key, new ControlIntent("Proposal", "AgentCode"));
 
     public Task VerifyCONFIRMAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ConfirmBtn, expected, property, new ControlIntent("Proposal", "CONFIRM"));
+        _ui.VerifyAsync(_locators.SubmitAngular, expected, property, new ControlIntent("Proposal", "CONFIRM"));
 
     public Task ClickCONFIRMAsync() =>
-        _locators.ConfirmBtn.EvaluateAsync("el => el.click()");
+        _locators.SubmitAngular.EvaluateAsync("el => el.click()");
 
     public Task<bool> IsCONFIRMPresentAsync() =>
         _ui.ExistsAsync(_locators.ConfirmSSN);

@@ -26,11 +26,19 @@ public sealed class PricingPage
     public Task WaitForFullTermPremiumAsync(string expected) =>
         _ui.WaitAsync(_locators.FullTermPremium, expected, new ControlIntent("Pricing", "FullTermPremium"));
 
+    public Task EnterWCEstimatedPremiumAsync(string value) =>
+       _ui.FillAsync(_locators.EstimatedPremium, value, new ControlIntent("Navigation", "EstimatedPremium"));
+
+
     public Task EnterJavaScriptAsync(string value) =>
         _ui.FillAsync(_locators.JavaScript, value, new ControlIntent("Pricing", "JavaScript"));
 
     public Task VerifyPremiumAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.Premium, expected, property, new ControlIntent("Pricing", "Premium"));
+
+
+    public Task ClickPolicyFormAsync() =>
+       _ui.ClickAsync(_locators.PolicyForms, new ControlIntent("Submission", "PolicyForms"));
 
     public Task VerifyPremiumChangeAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.PremiumChange, expected, property, new ControlIntent("Pricing", "PremiumChange"));

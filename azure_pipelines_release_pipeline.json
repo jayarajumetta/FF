@@ -59,7 +59,7 @@
       "allowOverride": true
     },
     "EnableParallelExecution": {
-      "value": "true",
+      "value": "false",
       "isSecret": false,
       "allowOverride": true
     },
@@ -157,8 +157,7 @@
         {
           "deploymentInput": {
             "parallelExecution": {
-              "parallelExecutionType": "multiMachine",
-              "maxNumberOfAgents": 2
+              "parallelExecutionType": "none"
             },
             "skipArtifactsDownload": false,
             "artifactsDownloadInput": {
@@ -649,8 +648,7 @@
         {
           "deploymentInput": {
             "parallelExecution": {
-              "parallelExecutionType": "multiMachine",
-              "maxNumberOfAgents": 2
+              "parallelExecutionType": "none"
             },
             "skipArtifactsDownload": false,
             "artifactsDownloadInput": {
@@ -1141,8 +1139,7 @@
         {
           "deploymentInput": {
             "parallelExecution": {
-              "parallelExecutionType": "multiMachine",
-              "maxNumberOfAgents": 2
+              "parallelExecutionType": "none"
             },
             "skipArtifactsDownload": false,
             "artifactsDownloadInput": {

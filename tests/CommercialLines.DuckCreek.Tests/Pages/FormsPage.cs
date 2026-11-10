@@ -64,7 +64,7 @@ public sealed class FormsPage
         _ui.PressAsync(_locators.PageTitle, key, new ControlIntent("Forms", "HomeownerSLiability"));
 
     public Task ClickHomeownerSLiabilityAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Forms", "HomeownerSLiability"));
+    _locators.HomersLiability.EvaluateAsync("el => el.click()");
 
     public Task ClickImportPolicyDataButtonAsync() =>
         _ui.ClickAsync(_locators.ImportPolicyDataButton, new ControlIntent("Forms", "ImportPolicyDataButton"));
@@ -80,6 +80,12 @@ public sealed class FormsPage
 
     public Task EnterPDLimitAsync(string value) =>
         _ui.FillAsync(_locators.PDLimit, value, new ControlIntent("Forms", "PDLimit"));
+
+    public Task EnterCommercialUMLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.CommercialUMLimit, value, new ControlIntent("Forms", "CommercialUMLimit"), delayMs);
+
+    public Task PressCommercialUMLimitAsync(string key) =>
+       _ui.PressAsync(_locators.CommercialUMLimit, key, new ControlIntent("Forms", "CommercialUMLimit"));
 
     public Task PressPDLimitAsync(string key) =>
         _ui.PressAsync(_locators.PDLimit, key, new ControlIntent("Forms", "PDLimit"));
@@ -105,8 +111,17 @@ public sealed class FormsPage
     public Task EnterSessionIDAsync(string value) =>
         _ui.FillAsync(_locators.SessionID, value, new ControlIntent("Forms", "SessionID"));
 
+    public Task PressSessionIDAsync(string key) =>
+        _ui.PressAsync(_locators.SessionID, key, new ControlIntent("Forms", "SessionID"));
+
+    public Task<bool> HasSessionIDAsync() =>
+        _ui.ExistsAsync(_locators.SessionID);
+
     public Task VerifyStatusCodeAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.StatusCode, expected, property, new ControlIntent("Forms", "StatusCode"));
+
+    public Task<bool> HasStatusCodeAsync() =>
+        _ui.ExistsAsync(_locators.StatusCode);
 
     public Task EnterTotalSubjectPremiumAsync(string value) =>
         _ui.FillAsync(_locators.TotalSubjectPremium, value, new ControlIntent("Forms", "TotalSubjectPremium"));
@@ -124,7 +139,7 @@ public sealed class FormsPage
         _ui.PressAsync(_locators.PageTitle, key, new ControlIntent("Forms", "WatercraftLiability"));
 
     public Task ClickWatercraftLiabilityAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Forms", "WatercraftLiability"));
+        _locators.WaterLiability.EvaluateAsync("el => el.click()");
 
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);

@@ -21,8 +21,13 @@ public sealed class UMBBasicPolicySteps
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickNewQuoteAsync();
-        await page.EnterEffectiveDateAsync(data.Resolve("{{data:effectivedate_105}}"));
+        await page.EnterEffectiveDateAsync(data.Resolve("{{data:effectivedate_104}}"));
         await page.EnterProductAsync(data.Resolve("{{data:product_14}}"));
+
+        if (data.Resolve("{{data:stateVariant}}") == "MA Auto")
+        {
+            await page.EnterProducerSequentiallyAsync(data.Resolve("{{data:producer_1}}"));
+        }
         await page.WaitForStartAsync("Visible");
         await page.ClickStartAsync();
 
@@ -224,10 +229,11 @@ public sealed class UMBBasicPolicySteps
         await page.WaitForClientSearchAsync("Exists");
         await page.ClickClientSearchAsync();
         await page.VerifySearchResultsDuckCreekPolicyFirstCheckboxAsync("Absent", "");
+        await page.WaitForOKAsync("Visible");
         await page.ClickOKAsync();
         await page.ClickOrderSSNAsync();
         await EnterWithTabAndNonEmptyRetryAsync(
-            () => page.EnterAddAssociatedClientEnterSSNAsync(data.Resolve("{{data:enter_ssn_63}}")),
+            () => page.EnterAddAssociatedClientEnterSSNSequentiallyAsync(data.Resolve("{{data:enter_ssn_63}}")),
             () => page.PressAddAssociatedClientEnterSSNAsync("Tab"),
             () => page.CaptureAddAssociatedClientEnterSSNAsync("value"),
             "AddAssociatedClientEnterSSN");
@@ -244,7 +250,7 @@ public sealed class UMBBasicPolicySteps
         }
         await page.WaitForClientSearchAsync("Exists");
         await page.ClickClientSearchAsync();
-        await page.WaitForOKAsync("Exists");
+        await page.WaitForOKAsync("Visible");
         await page.ClickOKAsync();
         await page.WaitForClientSearchAsync("Absent");
     }
@@ -260,9 +266,9 @@ public sealed class UMBBasicPolicySteps
 
         await page.ClickUnderwritingInfoAsync();
         await page.WaitForIsThereAPriorCarrierAsync("Exists");
-        await page.EnterIsThereAPriorCarrierAsync("Yes");
+        await page.EnterIsThereAPriorCarrierAsync(data.Resolve("{{data:is_there_a_prior_carrier_83}}"));
         await page.ClickAddPriorCarrierAsync();
-        await page.WaitForCarrierAsync("Exists");
+        //await page.WaitForCarrierAsync("Exists");
         await EnterWithTabAndNonEmptyRetryAsync(
             () => page.EnterCarrierSequentiallyAsync(data.Resolve("{{data:carrier_86}}")),
             () => page.PressCarrierAsync("Tab"),
@@ -318,7 +324,7 @@ public sealed class UMBBasicPolicySteps
         await page.ClickPolicyInfoAsync();
         await page.WaitForPolicyInfoHeaderAsync("Exists");
         await page.PauseAsync(1000);
-        await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_105}}"));
+        await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_104}}"));
         await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_106}}"));
         await page.PauseAsync(1000);
 
@@ -333,6 +339,7 @@ public sealed class UMBBasicPolicySteps
         else
         {
             await page.EnterPrimaryRatingStateAsync(primaryRatingState);
+            await page.PressPrimaryRatingStateAsync("Tab");
         }
         await EnterWithTabAndNonEmptyRetryAsync(
             () => page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysSequentiallyAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_112}}")),
@@ -342,7 +349,7 @@ public sealed class UMBBasicPolicySteps
         await page.PauseAsync(1000);
         await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
-        await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
+        await page.EnterDescriptionOfSpecifiedOperationSequentiallyAsync(data.BuildQuoteDescription());
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }
@@ -570,7 +577,7 @@ public sealed class UMBBasicPolicySteps
 
         await page.WaitForGeneralLiabAsync("Visible");
         await page.ClickGeneralLiabAsync();
-        await page.WaitForGeneralLiabilityInformationAsync("Visible");
+        //await page.WaitForGeneralLiabilityInformationAsync("Visible");
         await page.PauseAsync(3000);
         await EnterWithTabAndNonEmptyRetryAsync(
             () => page.EnterGeneralLiabilityPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_173}}")),
@@ -647,7 +654,7 @@ public sealed class UMBBasicPolicySteps
                 await page.EnterEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
                 await page.EnterExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
             }
-            else if (data.Resolve("{{data:state}}") == "MA Auto")
+            else if (data.Resolve("{{data:stateVariant}}") == "MA Auto")
             {
                 await page.EnterEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
                 await page.EnterExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
@@ -739,6 +746,11 @@ public sealed class UMBBasicPolicySteps
         if (data.Resolve("{{data:policy_number_200}}") == "CPPPOL#")
         {
             if(data.Resolve("{{data:state}}") == "LA" || data.Resolve("{{data:state}}") == "MA Auto" || data.Resolve("{{data:state}}") == "NM")
+            {
+                await page.EnterBusinessownersEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+                await page.EnterBusinessownersExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+            }
+            else if (data.Resolve("{{data:stateVariant}}") == "MA Auto")
             {
                 await page.EnterBusinessownersEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
                 await page.EnterBusinessownersExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));

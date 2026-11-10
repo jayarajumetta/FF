@@ -221,7 +221,7 @@ junk = sorted(
 if junk:
     fail(f"Build/editor cache directories are present: {junk[:20]}")
 
-features = sorted(ROOT.glob("tests/*/Features/*.feature"))
+features = sorted(ROOT.glob("tests/*/Features/**/*.feature"))
 STATS["featureCount"] = len(features)
 if len(features) != 32:
     fail(f"Expected 32 feature files, found {len(features)}")
@@ -267,7 +267,7 @@ missing_data: list[str] = []
 unresolved_steps: list[str] = []
 for path in features:
     parsed = parse_feature(path)
-    app_root = path.parents[1]
+    app_root = next(parent.parent for parent in path.parents if parent.name == "Features")
     active_rows = parsed["rows"]
     commented_rows = parsed["commentedRows"]
     feature_stats[path.name] = {
@@ -351,13 +351,16 @@ for app in APPS:
     scenario_dir = app_root / "TestData" / "Scenarios"
     layered_root = app_root / "TestData" / "Layered"
     manifest_path = layered_root / "manifest.json"
-    scenarios = sorted(scenario_dir.glob("*.json"))
+    scenarios = sorted(scenario_dir.rglob("*.json"))
     if not manifest_path.exists():
         fail(f"{app}: layered-data manifest is missing")
         continue
     manifest = load_json_with_size_guard(manifest_path)
     entries = manifest.get("entries", {})
-    layered_names = {path.name for path in scenarios if not is_standalone_smoke(app, path.name)}
+    layered_names = {
+        path.name for path in scenarios
+        if path.parent.name != "Basic" and not is_standalone_smoke(app, path.name)
+    }
     if set(entries) != layered_names:
         missing = sorted(layered_names - set(entries))
         extra = sorted(set(entries) - layered_names)
@@ -365,6 +368,15 @@ for app in APPS:
     reconstructed = 0
     standalone = 0
     for source in scenarios:
+        if source.parent.name == "Basic":
+            document = load_json_with_size_guard(source)
+            metadata = sorted({"_canonical", "_rawTosca"}.intersection(document))
+            if metadata:
+                fail(f"{app}: {source.name}: Basic metadata sections remain: {metadata}")
+            if source.name in entries:
+                fail(f"{app}: {source.name}: standalone Basic scenario still routes through layered data")
+            standalone += 1
+            continue
         if is_standalone_smoke(app, source.name):
             try:
                 problems = validate_standalone(
