@@ -1,6 +1,7 @@
 using InsuranceAutomation.Core;
 using Reqnroll;
 using InsuranceAutomation.CLDC.Pages;
+using Microsoft.Playwright;
 
 namespace InsuranceAutomation.CLDC.StepDefinitions;
 
@@ -206,8 +207,7 @@ public sealed class IMBasicPolicySteps
         await page.WaitForPleaseVerifySSNAsync("Absent");
         await page.ClickCompleteAsync();
         await page.ClickClientSearchAsync();
-        await page.WaitForOKAsync("Exists");
-        await page.ClickOKAsync();
+        await page.ClickOKWithRetryAsync();
         await page.WaitForClientSearchAsync("Absent");
 
     }
@@ -226,6 +226,7 @@ public sealed class IMBasicPolicySteps
         await page.ClickInsuranceHistoryAsync();
         await page.EnterIsThereAPriorCarrierSequentiallyAsync(data.Resolve("{{data:is_there_a_prior_carrier_87}}"));
         await page.ClickLossExperienceAsync();
+        await page.WaitForNoKnownLossesAsync("Visible");
         await page.ClickReturnToQuoteAsync();
     }
 
@@ -289,13 +290,7 @@ public sealed class IMBasicPolicySteps
         await page.EnterCoverageFormToBeAddedSequentiallyAsync(data.Resolve("{{data:coverage_form_to_be_added_134}}"));
         await page.ClickAddCoverageFormAsync();
         await page.WaitForDescriptionAsync("Visible");
-        var description = data.Resolve("{{data:description_136}}");
-        await EnterWithRetryAsync(
-            description,
-            page.EnterDescriptionAsync,
-            () => page.CaptureDescriptionAsync("value"),
-            "Description");
-
+        await page.EnterDescriptionSequentiallyAsync(data.Resolve("{{data:description_136}}"));
         await page.PressDescriptionAsync("Tab");
         await page.EnterCoinsuranceSequentiallyAsync(data.Resolve("{{data:coinsurance_137}}"));
         await page.EnterAwayFromPremisesLmtSequentiallyAsync(data.Resolve("{{data:away_from_premises_lmt_138}}"));
@@ -417,6 +412,7 @@ public sealed class IMBasicPolicySteps
         await page.EnterPolicyCovgMotorTruckCargoDeductibleSequentiallyAsync(data.Resolve("{{data:deductible_198}}"));
         await page.EnterPerVehicleLimitSequentiallyAsync(data.Resolve("{{data:per_vehicle_limit_199}}"));
         await page.EnterGroupClassSequentiallyAsync(data.Resolve("{{data:group_class_200}}"));
+        await page.PressGroupClassAsync("Tab");
         await page.EnterNumberOfVehiclesSequentiallyAsync(data.Resolve("{{data:number_of_vehicles_201}}"));
         await page.EnterUnnamedTerminalsLimitAsync(data.Resolve("{{data:unnamed_terminals_limit_202}}"));
         await page.ClickOKAsync();
@@ -545,21 +541,19 @@ public sealed class IMBasicPolicySteps
         await page.PressRiskMainCoverageFormAsync("Tab");
         await page.ClickAddAsync();
         await page.EnterComputerEquipmentSequentiallyAsync(data.Resolve("{{data:computer_equipment_251}}"));
+        await page.PressComputerEquipmentAsync("Tab");
         await page.EnterDataAndMediaSequentiallyAsync(data.Resolve("{{data:data_and_media_252}}"));
-        var riskComputerSystemsSearchValue = data.Resolve("{{data:search_value_254}}");
-        await EnterWithRetryAsync(
-            riskComputerSystemsSearchValue,
-            page.EnterRiskComputerSystemsSearchValueAsync,
+        await page.PressDataAndMediaAsync("Tab");
+        await EnterWithTabAndNonEmptyRetryAsync(
+            () => page.EnterRiskComputerSystemsSearchValueSequentiallyAsync(data.Resolve("{{data:search_value_254}}")),
+            () => page.PressRiskComputerSystemsSearchValueAsync("Tab"),
             () => page.CaptureRiskComputerSystemsSearchValueAsync("value"),
-            "Risk Computer Systems Search Value");
-
-        await page.PressRiskComputerSystemsSearchValueAsync("Tab");
+            "RiskComputerSystemsSearchValue");
         await page.EnterRiskComputerSystemsSearchResultSequentiallyAsync(data.Resolve("{{data:search_result_255}}"));
         await page.PressRiskComputerSystemsSearchResultAsync("Tab");
         await page.EnterConstructionCodeSequentiallyAsync(data.Resolve("{{data:construction_code_256}}"));
         await page.PressConstructionCodeAsync("Tab");
         await page.ClickRiskComputerSystemsOKAsync();
-
     }
 
     [Given(@"^I add Signs for risk$")]
@@ -576,23 +570,10 @@ public sealed class IMBasicPolicySteps
         await page.PressRiskMainCoverageFormAsync("Tab");
         await page.ClickAddAsync();
         await page.EnterLimitOfInsuranceSequentiallyAsync(data.Resolve("{{data:limit_of_insurance_263}}"));
-        var signLocation = data.Resolve("{{data:sign_location_264}}");
-        await EnterWithRetryAsync(
-            signLocation,
-            page.EnterSignLocationAsync,
-            () => page.CaptureSignLocationAsync("value"),
-            "Sign Location");
-
-        await EnterWithRetryAsync(data.Resolve("{{data:type_265}}"), page.EnterRiskSignsTypeAsync, () => page.CaptureRiskSignsTypeAsync("value"), "Risk Signs Type");
-        var lettering = data.Resolve("{{data:lettering_266}}");
-        await EnterWithRetryAsync(
-            lettering,
-            page.EnterLetteringAsync,
-            () => page.CaptureLetteringAsync("value"),
-            "Lettering");
-
+        await page.EnterSignLocationSequentiallyAsync(data.Resolve("{{data:sign_location_264}}"));
+        await page.EnterRiskSignsTypeSequentiallyAsync(data.Resolve("{{data:type_265}}"));
+        await page.EnterLetteringSequentiallyAsync(data.Resolve("{{data:lettering_266}}"));
         await page.ClickOKAsync();
-
     }
 
     [Given(@"^I add CM 66 01 Exclude Named Customer$")]
@@ -607,18 +588,11 @@ public sealed class IMBasicPolicySteps
         await page.ClickEndorsementAsync();
         await page.ClickEndorsementMainAddEndorsementAsync();
         await page.EnterEndorsementMainTypeSequentiallyAsync(data.Resolve("{{data:type_271}}"));
+        await page.PressEndorsementMainTypeAsync("Tab");
         await page.EnterNamesSequentiallyAsync(data.Resolve("{{data:names_273}}"));
-        var endorsementAddress = data.Resolve("{{data:address_275}}");
-        await EnterWithRetryAsync(
-            endorsementAddress,
-            page.EnterAddressAsync,
-            () => page.CaptureAddressAsync("value"),
-            "Endorsement Address",
-            maxAttempts: 4,
-            delayMs: 2000);
-
+        await page.EnterAddressSequentiallyAsync(data.Resolve("{{data:address_275}}"));
+        await page.PressAddressAsync("Tab");
         await page.ClickOKAsync();
-
     }
 
     [Given(@"^I add IF 00 02 Waterborne Equipment$")]
@@ -633,10 +607,10 @@ public sealed class IMBasicPolicySteps
         await page.ClickEndorsementAsync();
         await page.ClickEndorsementMainAddEndorsementAsync();
         await page.EnterEndorsementMainTypeSequentiallyAsync(data.Resolve("{{data:type_280}}"));
+        await page.PressEndorsementMainTypeAsync("Tab");
         await page.EnterEndorsementIF0002WaterborneEquipmentLimitSequentiallyAsync(data.Resolve("{{data:limit_281}}"));
         await page.EnterEndorsementIF0002WaterborneEquipmentDeductibleSequentiallyAsync(data.Resolve("{{data:deductible_282}}"));
         await page.ClickOKAsync();
-
     }
 
     [Given(@"^I complete Accounts Receivable Questions$")]
@@ -651,24 +625,9 @@ public sealed class IMBasicPolicySteps
         await page.ClickSpecificUnderwritingQuestionsAsync();
         await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
         await page.PauseAsync(2000);
-        var receivablesPremisesConstruction = data.Resolve("{{data:what_is_the_construction_of_the_premises_where_the_receivables_are_stored_288}}");
-        await EnterWithRetryAsync(
-            receivablesPremisesConstruction,
-            page.EnterWhatIsTheConstructionOfThePremisesWhereTheReceivablesAreStoredAsync,
-            () => page.CaptureWhatIsTheConstructionOfThePremisesWhereTheReceivablesAreStoredAsync("value"),
-            "What Is The Construction Of The Premises Where The Receivables Are Stored",
-            delayMs: 2000);
-
-        var receivablesSafeguards = data.Resolve("{{data:what_safeguards_are_in_place_for_receivables_to_protect_against_damage_or_theft_290}}");
-        await EnterWithRetryAsync(
-            receivablesSafeguards,
-            page.EnterWhatSafeguardsAreInPlaceForReceivablesToProtectAgainstDamageOrTheftAsync,
-            () => page.CaptureWhatSafeguardsAreInPlaceForReceivablesToProtectAgainstDamageOrTheftAsync("value"),
-            "What Safeguards Are In Place For Receivables To Protect Against Damage Or Theft",
-            delayMs: 2000);
-
+        await page.EnterWhatIsTheConstructionOfThePremisesWhereTheReceivablesAreStoredSequentiallyAsync(data.Resolve("{{data:what_is_the_construction_of_the_premises_where_the_receivables_are_stored_288}}"));
+        await page.EnterWhatSafeguardsAreInPlaceForReceivablesToProtectAgainstDamageOrTheftSequentiallyAsync(data.Resolve("{{data:what_safeguards_are_in_place_for_receivables_to_protect_against_damage_or_theft_290}}"));
         await page.ClickOKAsync();
-
     }
 
     [Given(@"^I complete Bailees Customers Questions$")]
@@ -703,6 +662,7 @@ public sealed class IMBasicPolicySteps
         await page.EnterN14WhatIsYourProcedureForProtectingSmallItemsFromBreakageOrDisappearanceWhileInStorageSequentiallyAsync(data.Resolve("{{data:14_what_is_your_procedure_for_protecting_small_items_from_breakage_or_disappearance_while_in_storage_313}}"));
         await page.EnterN15WhatMeasuresDoesTheInsuredTakeToProtectCustomerSPropertyAgainstTheftSequentiallyAsync(data.Resolve("{{data:15_what_measures_does_the_insured_take_to_protect_customer_s_property_against_theft_314}}"));
         await page.EnterN16DoesTheRiskUseReleaseFormsSequentiallyAsync(data.Resolve("{{data:16_does_the_risk_use_release_forms_315}}"));
+        await page.PauseAsync(2000);
         await page.ClickOKAsync();
 
     }
@@ -732,6 +692,7 @@ public sealed class IMBasicPolicySteps
         await page.EnterPowerSuppressorVoltageRegulatorSequentiallyAsync(data.Resolve("{{data:power_suppressor_voltage_regulator_330}}"));
         await page.EnterDedicatedLineSequentiallyAsync(data.Resolve("{{data:dedicated_line_331}}"));
         await page.EnterHowOftenIsDataBackedUpSequentiallyAsync(data.Resolve("{{data:how_often_is_data_backed_up_332}}"));
+        await page.PauseAsync(2000);
         await page.ClickOKAsync();
 
     }
@@ -751,6 +712,7 @@ public sealed class IMBasicPolicySteps
         await page.ClickSpecificUnderwritingQuestionsContractorsEquipmentUpdateAnswersAsync();
         await page.EnterEstimatedHighestValueSequentiallyAsync(data.Resolve("{{data:estimated_highest_value_338}}"));
         await page.EnterIfYesDescribeSequentiallyAsync(data.Resolve("{{data:if_yes_describe_339}}"));
+        await page.PauseAsync(2000);
         await page.ClickOKAsync();
 
     }
@@ -768,6 +730,7 @@ public sealed class IMBasicPolicySteps
         await page.ClickMotorTruckCargoUWQuestionsAsync();
         //await page.WaitForSignsHeadingAsync("Exists");
         await page.EnterWhichFormAreYouCompletingSequentiallyAsync(data.Resolve("{{data:which_form_are_you_completing_344}}"));
+        await page.PressWhichFormAreYouCompletingAsync("Tab");
         await page.EnterN1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipmentSequentiallyAsync(data.Resolve("{{data:1_what_are_the_distances_the_shipments_will_travel_and_the_time_required_to_complete_the_shipment_346}}"));
         await page.EnterN2WhatAreTheTypesAndAgesOfTheVehiclesTrailersUsedToTransportYourCommoditiesSequentiallyAsync(data.Resolve("{{data:2_what_are_the_types_and_ages_of_the_vehicles_trailers_used_to_transport_your_commodities_347}}"));
         await page.EnterN3DoesTheApplicantHaulForOthersSequentiallyAsync(data.Resolve("{{data:3_does_the_applicant_haul_for_others_348}}"));
@@ -782,6 +745,7 @@ public sealed class IMBasicPolicySteps
         await page.EnterN12HowOftenAreTheseLogsReviewedOrUpdatedSequentiallyAsync(data.Resolve("{{data:12_how_often_are_these_logs_reviewed_or_updated_357}}"));
         await page.EnterN13LiveAnimalInTransitCoverageSequentiallyAsync(data.Resolve("{{data:13_live_animal_in_transit_coverage_358}}"));
         await page.EnterN14LegalLiabilityCoverageSequentiallyAsync(data.Resolve("{{data:14_legal_liability_coverage_359}}"));
+        await page.PauseAsync(2000);
         await page.ClickOKAsync();
 
     }
@@ -799,26 +763,12 @@ public sealed class IMBasicPolicySteps
         await page.ClickSignsUWQuestionsAsync();
         //await page.WaitForSignsHeadingAsync("Exists");
         var areAnySignsOffPremises = data.Resolve("{{data:are_any_signs_off_premises_or_not_attached_to_building_364}}");
-        await EnterWithRetryAsync(
-            areAnySignsOffPremises,
-            page.EnterAreAnySignsOffPremisesOrNotAttachedToBuildingAsync,
-            () => page.CaptureAreAnySignsOffPremisesOrNotAttachedToBuildingAsync("value"),
-            "Are Any Signs Off Premises Or Not Attached To Building");
-
+        await page.EnterAreAnySignsOffPremisesOrNotAttachedToBuildingSequentiallyAsync(areAnySignsOffPremises);
         var doesApplicantWishToCoverSignsInsidePremises = data.Resolve("{{data:does_the_applicant_wish_to_cover_any_signs_inside_their_premises_365}}");
-        await EnterWithRetryAsync(
-            doesApplicantWishToCoverSignsInsidePremises,
-            page.EnterDoesTheApplicantWishToCoverAnySignsInsideTheirPremisesAsync,
-            () => page.CaptureDoesTheApplicantWishToCoverAnySignsInsideTheirPremisesAsync("value"),
-            "Does The Applicant Wish To Cover Any Signs Inside Their Premises");
-
+        await page.EnterDoesTheApplicantWishToCoverAnySignsInsideTheirPremisesSequentiallyAsync(doesApplicantWishToCoverSignsInsidePremises);
         var constructionOfEachSign = data.Resolve("{{data:what_is_the_construction_of_each_sign_366}}");
-        await EnterWithRetryAsync(
-            constructionOfEachSign,
-            page.EnterWhatIsTheConstructionOfEachSignAsync,
-            () => page.CaptureWhatIsTheConstructionOfEachSignAsync("value"),
-            "What Is The Construction Of Each Sign");
-
+        await page.EnterWhatIsTheConstructionOfEachSignSequentiallyAsync(constructionOfEachSign);
+        await page.PauseAsync(2000);
         await page.ClickOKAsync();
 
     }
@@ -834,12 +784,12 @@ public sealed class IMBasicPolicySteps
 
         await page.ClickNavigationBillingAsync();
         //await page.WaitForBillingAsync("Exists");
-        await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_370}}"));
+        await page.EnterBillTypeSequentiallyAsync(data.Resolve("{{data:bill_type_370}}"));
         await page.WaitForBillTypeAsync("Equal");
-        await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_373}}"));
+        await page.EnterPayPlanSequentiallyAsync(data.Resolve("{{data:pay_plan_373}}"));
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
-        await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_377}}"));
+        await page.EnterEasyPaySequentiallyAsync(data.Resolve("{{data:easy_pay_377}}"));
         //await page.PauseAsync(1000);
 
     }
@@ -858,13 +808,7 @@ public sealed class IMBasicPolicySteps
         await page.ClickAddNotesRemarksAsync();
         //await page.PauseAsync(3000);
         var textBoxValue = data.Resolve("Test {B[Product (LOB)]}");
-        await EnterWithRetryAsync(
-            textBoxValue,
-            page.EnterTextBoxAsync,
-            () => page.CaptureTextBoxAsync("value"), 
-            "TextBox",
-            delayMs: 2000, postEnterKeyboardActionAsync: () => page.PressTextBoxAsync("Tab"));
-
+        await page.EnterTextBoxSequentiallyAsync(textBoxValue);
         await page.PressTextBoxAsync("Tab");
         await page.ClickOKAsync();
     }
@@ -926,7 +870,5 @@ public sealed class IMBasicPolicySteps
         await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_441}}"), "value");
         //await page.PauseAsync(1000);
         //await page.PauseAsync(1000);
-
     }
-
 }

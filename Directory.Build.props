@@ -7,6 +7,10 @@
     <BaseOutputPath>$(MSBuildThisFileDirectory)bin\$(MSBuildProjectName)\</BaseOutputPath>
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)Tosca.runsettings</RunSettingsFilePath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'InsuranceAutomation.Retry.Generator'">
+    <BaseIntermediateOutputPath Condition="'$(RetryGeneratorHostProject)' != ''">obj/$(RetryGeneratorHostProject)/</BaseIntermediateOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)reqnroll.json" Link="reqnroll.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

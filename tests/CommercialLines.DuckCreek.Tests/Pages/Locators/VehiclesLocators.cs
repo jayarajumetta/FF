@@ -21,13 +21,15 @@ public sealed class VehiclesLocators
 
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
 
+    public ILocator RecreationalVehicleLiability => _page.GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Recreational Vehicle Liability" });
+
     public ILocator PDLimit => _page.Locator("input[fieldref=\"UmbrellaRecreationalVehicleLiabilityInput.PDLimit\"]");
 
-    public ILocator PolicyCovg => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Policy Covg']/@for] | //label[normalize-space(string(.))='Policy Covg']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Policy Covg']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
+    public ILocator PolicyCovg => _page.Locator("[id=\"pageTitle\"]").GetByText("Policy Covg", new() { Exact = true });
 
     public ILocator PolicyNumber => _page.Locator("input[fieldref=\"UmbrellaRecreationalVehicleLiabilityInput.PolicyNumber\"]");
 
-
-
     public ILocator TotalSubjectPremium => _page.Locator("input[fieldref=\"UmbrellaRecreationalVehicleLiabilityInput.TotalSubjectPremium\"]");
+    public ILocator CommercialUMLimit => _page.Locator("input[fieldref*='UMLimit']");
+
 }

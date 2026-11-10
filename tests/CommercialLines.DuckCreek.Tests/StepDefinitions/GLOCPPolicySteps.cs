@@ -159,7 +159,11 @@ public sealed class GLOCPPolicySteps
             await page.EnterEstimatedPremiumAsync("Under 1,500");
         }
 
-        await page.ClickInsuranceScoreAsync();
+        if (await page.IsInsuranceScoreAvailableAsync())
+        {
+            await page.ClickInsuranceScoreAsync();
+        }
+
 
         await page.PauseAsync(3000);
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));

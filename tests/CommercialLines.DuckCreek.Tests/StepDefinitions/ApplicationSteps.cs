@@ -43,7 +43,15 @@ public sealed class ApplicationSteps
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
         var username = ResolveCredential(data, "username", "CL_DC_USERNAME");
         var password = ResolveCredential(data, "password", "CL_DC_PASSWORD");
-        return SignInWithLoginPageAsync(page, username, password);
+
+        if(data.Resolve("{{data:stateVariant}}") == "MA Auto")
+        {
+            return SignInWithLoginPageAsync(page, "AGO9999", password);
+        }
+        else
+        {
+            return SignInWithLoginPageAsync(page, username, password);
+        }
     }
 
     [When("I refresh the authenticated Duck Creek session")]

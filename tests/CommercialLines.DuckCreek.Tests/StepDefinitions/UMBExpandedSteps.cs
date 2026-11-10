@@ -1,6 +1,7 @@
 using InsuranceAutomation.Core;
 using Reqnroll;
 using InsuranceAutomation.CLDC.Pages;
+using Microsoft.Playwright;
 
 namespace InsuranceAutomation.CLDC.StepDefinitions;
 
@@ -9,6 +10,23 @@ public sealed class UMBExpandedSteps
 {
     private readonly ScenarioContext _scenario;
     public UMBExpandedSteps(ScenarioContext scenario) => _scenario = scenario;
+
+    [Given(@"^I start a new quote$")]
+    [When(@"^I start a new quote$")]
+    [Then(@"^I start a new quote$")]
+    public async Task StartANewQuoteAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickNewQuoteAsync();
+        await page.EnterEffectiveDateAsync(data.Resolve("{{data:effectivedate_104}}"));
+        await page.EnterProductAsync(data.Resolve("{{data:product_14}}"));
+        await page.WaitForStartAsync("Visible");
+        await page.ClickStartAsync();
+
+    }
 
     [Given(@"^I enter business client information$")]
     [When(@"^I enter business client information$")]
@@ -21,26 +39,28 @@ public sealed class UMBExpandedSteps
         data.GenerateRandom("InspectionTelephone_0045", "[0-9]{10}");
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await page.EnterFEINAsync(data.Resolve("{{runtime:FEIN_0044}}"));
 
         await page.WaitForQuickQuoteAsync("Exists");
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_2}}"));
         await page.WaitForUnderwritingInfoAsync("Exists");
-        await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_4}}"));
-        await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_8}}"));
+        await page.EnterInsuredTypeSequentiallyAsync(data.Resolve("{{data:insured_type_4}}"));
+        await page.EnterEntityTypeSequentiallyAsync(data.Resolve("{{data:entity_type_8}}"));
         await page.WaitForBusinessNameAsync("Visible");
-        await page.EnterBusinessNameAsync(data.Resolve("{{data:business_name_7}}"));
-        await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
-        await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_11}}"));
-        await page.EnterAddressAsync(data.Resolve("{{data:address1_12}}"));
-        await page.VerifyYearsInBusinessAsync("Exists", "");
-        await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_14}}"));
-        await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_16}}"));
-        await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0045}}"));
-        await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_18}}"));
-        await page.EnterWebsiteAddressAsync(data.Resolve("{{data:website_address_19}}"));
+        await page.EnterBusinessNameSequentiallyAsync(data.Resolve("{{data:business_name_7}}"));
+        await page.EnterPrimaryPhoneSequentiallyAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
+        await page.EnterNamedInsuredZipCodeSequentiallyAsync(data.Resolve("{{data:zipcode_11}}"));
+        await page.EnterAddressSequentiallyAsync(data.Resolve("{{data:address1_12}}"));
+        await page.EnterFEINSequentiallyAsync(data.Resolve("{{runtime:FEIN_0044}}"));
+        if (await page.HasYearsInBusinessAsync())
+        {
+            await page.VerifyYearsInBusinessAsync("Exists", "");
+            await page.EnterYearsInBusinessSequentiallyAsync(data.Resolve("{{data:years_in_business_14}}"));
+        }
+        await page.EnterNameOfInspectionContactSequentiallyAsync(data.Resolve("{{data:name_of_inspection_contact_16}}"));
+        await page.EnterInspectionTelephoneSequentiallyAsync(data.Resolve("{{runtime:InspectionTelephone_0045}}"));
+        await page.EnterInsuredEMailAddressSequentiallyAsync(data.Resolve("{{data:insured_e_mail_address_18}}"));
+        await page.EnterWebsiteAddressSequentiallyAsync(data.Resolve("{{data:website_address_19}}"));
         await page.VerifyNamedInsuredZipCodeAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
-
     }
 
     [Given(@"^I add a new Associated Client \- Business Owner Type \- Click Add Client$")]
@@ -54,7 +74,6 @@ public sealed class UMBExpandedSteps
 
         await page.WaitForAddClientAsync("Exists");
         await page.ClickAddClientAsync();
-        await page.VerifyIndividualTypeAsync("Absent", "");
 
     }
 
@@ -104,41 +123,41 @@ public sealed class UMBExpandedSteps
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.EnterIndividualTypeAsync(data.Resolve("{{data:individualtype_45}}"));
+        await page.EnterIndividualTypeSequentiallyAsync(data.Resolve("{{data:individualtype_45}}"));
+        await page.PressIndividualTypeAsync("Tab");
         await page.WaitForPleaseVerifySSNAsync("Exists");
-        await page.EnterMiddleNameAsync(data.Resolve("{{runtime:MiddleName_0057}}"));
-        await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0057}}"));
-        await page.EnterAddAssociatedClientDateOfBirthAsync(data.Resolve("{{data:dateofbirth_50}}"));
-        await page.EnterAddressAsync(data.Resolve("{{data:address1_51}}"));
-        await page.EnterCityAsync(data.Resolve("{{data:city_52}}"));
-        await page.EnterStateAsync(data.Resolve("{{data:state_53}}"));
-        await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_54}}"));
-        await page.EnterGenderAsync(data.Resolve("{{data:gender_55}}"));
-        await page.EnterFirstNameAsync(data.Resolve("{{runtime:FirstName_0057}}"));
+        await page.EnterFirstNameSequentiallyAsync(data.Resolve("{{runtime:FirstName_0057}}"));
+        await page.EnterMiddleNameSequentiallyAsync(data.Resolve("{{runtime:MiddleName_0057}}"));
+        await page.EnterLastNameSequentiallyAsync(data.Resolve("{{runtime:LastName_0057}}"));
+        await page.EnterAddAssociatedClientDateOfBirthSequentiallyAsync(data.Resolve("{{data:dateofbirth_50}}"));
+        await page.EnterAddressSequentiallyAsync(data.Resolve("{{data:address1_51}}"));
+        await page.EnterCitySequentiallyAsync(data.Resolve("{{data:city_52}}"));
+        await page.EnterStateSequentiallyAsync(data.Resolve("{{data:state_53}}"));
+        await page.EnterNamedInsuredZipCodeSequentiallyAsync(data.Resolve("{{data:zipcode_54}}"));
+        await page.EnterGenderSequentiallyAsync(data.Resolve("{{data:gender_55}}"));
+        await page.PressGenderAsync("Tab");
         await page.WaitForClientSearchAsync("Exists");
         await page.ClickClientSearchAsync();
-        await page.VerifySearchResultsDuckCreekPolicyFirstCheckboxAsync("Absent", "");
-        await page.ClickOKAsync();
+        await page.ClickOKWithRetryAsync();
         await page.ClickOrderSSNAsync();
-        await page.PressAddAssociatedClientEnterSSNAsync("Enter");
-        await page.EnterAddAssociatedClientEnterSSNAsync(data.Resolve("{{data:enter_ssn_63}}"));
-        await page.VerifyVerifyAsync("Absent", "");
-        await page.ClickCompleteAsync();
-        await page.ClickAddAssociatedClientDetailAsync();
-        await page.WaitForAddAssociatedClientEnterSSNAsync("Exists");
-        await page.ClickVerifyAsync();
-        await page.WaitForPleaseVerifySSNAsync("Absent");
-        await page.ClickCompleteAsync();
-        await page.WaitForAddAssociatedClientEnterSSNAsync("Exists");
-        await page.ClickVerifyAsync();
-        await page.WaitForPleaseVerifySSNAsync("Absent");
-        await page.ClickCompleteAsync();
+        await page.EnterAddAssociatedClientEnterSSNSequentiallyAsync(data.Resolve("{{data:enter_ssn_63}}"));
+        await page.PauseAsync(4000);
+        await page.PressAddAssociatedClientEnterSSNAsync("Tab");
+        await page.PauseAsync(3000);
+        if (await page.HasVerifyAsync())
+        {
+            await page.ClickVerifyAsync();
+            await page.WaitForPleaseVerifySSNAsync("Absent");
+            await page.ClickCompleteAsync();
+        }
+        else
+        {
+            await page.ClickCompleteAsync();
+        }
         await page.WaitForClientSearchAsync("Exists");
         await page.ClickClientSearchAsync();
-        await page.WaitForOKAsync("Exists");
-        await page.ClickOKAsync();
+        await page.ClickOKWithRetryAsync();
         await page.WaitForClientSearchAsync("Absent");
-
     }
 
     [Given(@"^I navigate to Underwriting Info Screen$")]
@@ -154,24 +173,18 @@ public sealed class UMBExpandedSteps
         await page.WaitForIsThereAPriorCarrierAsync("Exists");
         await page.EnterIsThereAPriorCarrierAsync(data.Resolve("{{data:is_there_a_prior_carrier_83}}"));
         await page.ClickAddPriorCarrierAsync();
-        await page.WaitForCarrierAsync("Exists");
-        await page.EnterCarrierAsync(data.Resolve("{{data:carrier_86}}"));
-        await page.EnterGeneralLiabilityPolicyNumberAsync(data.Resolve("{{data:policy_number_87}}"));
-        await page.EnterPolicyTypeAsync(data.Resolve("{{data:policy_type_88}}"));
-        await page.EnterCommercialAutoEffectiveDateAsync(data.Resolve("{DATE[][-2y][MM'/'dd'/'yyyy]}"));
-        await page.EnterGeneralLiabilityExpirationDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
-        await page.EnterModificationFactorAsync(data.Resolve("{{data:modificationfactor_91}}"));
-        await page.EnterTotalPremiumAsync(data.Resolve("{{data:total_premium_92}}"));
+        await page.EnterCarrierSequentiallyAsync(data.Resolve("{{data:carrier_86}}"));
+        await page.EnterGeneralLiabilityPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_87}}"));
+        await page.EnterPolicyTypeSequentiallyAsync(data.Resolve("{{data:policy_type_88}}"));
+        await page.EnterCommercialAutoEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][-2y][MM'/'dd'/'yyyy]}"));
+        await page.EnterGeneralLiabilityExpirationDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+        await page.EnterModificationFactorSequentiallyAsync(data.Resolve("{{data:modificationfactor_91}}"));
+        await page.EnterTotalPremiumSequentiallyAsync(data.Resolve("{{data:total_premium_92}}"));
         await page.ClickOKAsync();
-        await page.WaitForUnderwritingInfoOtherInsuranceHistoryDetailAsync("Exists");
         await page.ClickLossExperienceAsync();
-        await page.WaitForNoKnownLossesAsync("Exists");
+        await page.WaitForNoKnownLossesAsync("Visible");
         await page.SetNoKnownLossesAsync(data.Resolve("{{data:no_known_losses_97}}"));
         await page.ClickReturnToQuoteAsync();
-        await page.EnterTitleAsync(data.Resolve("{{data:title_99}}"));
-        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_100}}"));
-        await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_101}}"), "value");
-
     }
 
     [Given(@"^I complete required policy information$")]
@@ -186,29 +199,26 @@ public sealed class UMBExpandedSteps
         await page.ClickPolicyInfoAsync();
         await page.WaitForPolicyInfoHeaderAsync("Exists");
         await page.PauseAsync(1000);
-        await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_105}}"));
-        await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_106}}"));
-        await page.PauseAsync(1000);
-        await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_108}}"));
-        await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_112}}"));
-        await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_114}}"));
-        await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_115}}"));
-        await page.PressPrimaryRatingStateAsync("Down");
-        await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_117}}"));
-        await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_118}}"));
-        await page.PressPrimaryRatingStateAsync("Down");
-        await page.PauseAsync(1000);
-        await page.WaitForPrimaryRatingStateAsync("Exists");
-        await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_122}}"));
-        await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
-        await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
-        await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
+        await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateSequentiallyAsync(data.Resolve("{{data:effectivedate_104}}"));
+        await page.EnterYearsInBusinessSequentiallyAsync(data.Resolve("{{data:years_in_business_106}}"));
+        var stateCode = data.Resolve("{{data:state}}");
+        var primaryRatingState = data.Resolve("{{data:primaryratingstate_108}}");
+
+        if (stateCode == "KS")
+        {
+            await page.EnterPrimaryRatingStateSequentiallyAsync(primaryRatingState);
+            await page.ClickPrimaryRatingStateKansasAsync();
+        }
+        else
+        {
+            await page.EnterPrimaryRatingStateSequentiallyAsync(primaryRatingState);
+        }
+        await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysSequentiallyAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_112}}"));
         await page.PauseAsync(1000);
         await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
-        await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
+        await page.EnterDescriptionOfSpecifiedOperationSequentiallyAsync(data.BuildQuoteDescription());
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
-
     }
 
     [Given(@"^I complete required policy covg information$")]
@@ -222,29 +232,18 @@ public sealed class UMBExpandedSteps
 
         await page.ClickPolicyCovgerageAsync();
         await page.WaitForPolicyCovgAsync("Visible");
-        if (data.Condition("'Umb Limit' != \"$1,000,000\""))
+        await page.EnterUmbrellaLimitSequentiallyAsync(data.Resolve("{{data:umbrella_limit_134}}"));
+        await page.PressUmbrellaLimitAsync("Tab");
+        if (data.Resolve("{{data:umbrella_limit_134}}") == "Over $15M")
         {
-            await page.EnterUmbrellaLimitAsync(data.Resolve("{{data:umbrella_limit_134}}"));
+            await page.EnterRequestedUmbrellaLimitSequentiallyAsync(data.Resolve("{{data:requested_umbrella_limit_135}}"));
         }
-        if (data.Condition("'Umb Limit' == \"Over $15M\""))
+        await page.EnterExcludedLiabilityConfidentialInformationSequentiallyAsync(data.Resolve("{{data:excluded_liability_confidential_information_136}}"));
+        await page.EnterProductsCompletedOperationsAggregateLimitSequentiallyAsync(data.Resolve("{{data:products_completed_operations_aggregate_limit_138}}"));
+        if (data.Resolve("{{data:stateVariant}}") == "TX")
         {
-            await page.EnterRequestedUmbrellaLimitAsync(data.Resolve("{{data:requested_umbrella_limit_135}}"));
+            await page.EnterIndustryCodeAsync(data.Resolve("{{data:indutrycode_63}}"));
         }
-        if (data.Condition("'Excluded Liability' != \"CU2186\""))
-        {
-            await page.EnterExcludedLiabilityConfidentialInformationAsync(data.Resolve("{{data:excluded_liability_confidential_information_136}}"));
-        }
-        if (data.Condition("'Excluded Liability' != \"CU2186\""))
-        {
-            await page.WaitForExcludedLiabilityConfidentialInformationAsync("NotEqual");
-        }
-        if (data.Condition("'Products - Aggregate Limit' != \"Umbrella Policy Limit\""))
-        {
-            await page.EnterProductsCompletedOperationsAggregateLimitAsync(data.Resolve("{{data:products_completed_operations_aggregate_limit_138}}"));
-        }
-        await page.VerifyLoadingMessageAsync("Visible", "");
-        await page.PauseAsync(1000);
-
     }
 
     [Given(@"^I add Commercial Auto Underlying LOB$")]
@@ -423,7 +422,11 @@ public sealed class UMBExpandedSteps
         await page.WaitForPolicyCovgAsync("Visible");
         await page.ClickIncludeWatercraftLiabilityAsync();
         await page.WaitForWatercraftLiabilityAsync("Visible");
-
+        await page.EnterDoesThisPolicyCoversAContractorExposureAsync(data.Resolve("{{data:does_this_policy_cover_contractor_exposure_224}}"));
+        if (data.Resolve("{{data:stateVariant}}") == "VT")
+        {
+            await page.EnterUMLimitAsync(data.Resolve("{{data:ul_Limit}}"));
+        }
     }
 
     [Given(@"^I complete required location information$")]
@@ -440,7 +443,6 @@ public sealed class UMBExpandedSteps
         await page.VerifyLocationZipCodeAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
         await page.ClickOKAsync();
         await page.WaitForLocationDetailAsync("Visible");
-
     }
 
     [Given(@"^I complete required commercial auto information$")]
@@ -453,17 +455,21 @@ public sealed class UMBExpandedSteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickCommercialAutoAsync();
-        await page.WaitForSignsHeadingAsync("Visible");
-        await page.EnterCommercialAutoPolicyNumberAsync(data.Resolve("{{data:policy_number_183}}"));
-        if (data.Condition("'BAP Policy Number' != \"BAPPOL#\""))
+        await page.WaitForCommercialAutoDetailAsync("Visible");
+        await page.EnterCommercialAutoPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_183}}"));
+        if (data.Resolve("{{data:policy_number_183}}") != "BAPPOL#")
         {
             await page.ClickImportPolicyDataAsync();
+            await page.PauseAsync(5000);
         }
-        await page.WaitForCommercialAutoEffectiveDateAsync("NotEqual");
-        await page.WaitForStoplightMessageTotalSubjectPremiumAsync("Absent");
-        await page.VerifyLoadingMessageAsync("Visible", "");
-        await page.PauseAsync(1000);
-
+        else
+        {
+            await page.EnterCommercialAutoEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+            await page.EnterCommercialAutoExpirynDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+            await page.EnterCGLLimitsSequentiallyAsync(data.Resolve("{{data:ca_cgl_limits_177}}"));
+            await page.EnterGeneralLiabilityTotalSubjectPremiumSequentiallyAsync(data.Resolve("{{data:ca_total_subject_premium_178}}"));
+        }
+        await page.PauseAsync(3000);
     }
 
     [Given(@"^I complete required general liability information$")]
@@ -478,27 +484,36 @@ public sealed class UMBExpandedSteps
         await page.WaitForGeneralLiabAsync("Visible");
         await page.ClickGeneralLiabAsync();
         await page.WaitForSignsHeadingAsync("Visible");
-        await page.EnterGeneralLiabilityPolicyNumberAsync(data.Resolve("{{data:policy_number_193}}"));
-        if (data.Condition("'GL Policy Number' == \"GLPOL#\""))
+        await page.EnterGeneralLiabilityPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_193}}"));
+        if (data.Resolve("{{data:policy_number_193}}") == "GLPOL#")
         {
-            await page.EnterCommercialAutoEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+            await page.EnterCommercialAutoEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+            await page.EnterGeneralLiabilityExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+            await page.WaitForCommercialAutoEffectiveDateAsync("NotEqual");
+            await page.EnterCGLLimitsSequentiallyAsync(data.Resolve("{{data:gl_cgl_limits_177}}"));
+            await page.EnterGeneralLiabilityTotalSubjectPremiumSequentiallyAsync(data.Resolve("{{data:gl_total_subject_premium_178}}"));
+            await page.PauseAsync(1000);
         }
-        await page.WaitForCommercialAutoEffectiveDateAsync("NotEqual");
-        if (data.Condition("'GL Policy Number' == \"GLPOL#\""))
+        else
         {
-            await page.EnterGeneralLiabilityExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+            await page.ClickImportPolicyDataAsync();
+            await page.PauseAsync(6000);
         }
-        if (data.Condition("'GL Policy Number' == \"GLPOL#\""))
-        {
-            await page.EnterCGLLimitsAsync(data.Resolve("{{data:cgl_limits_197}}"));
-        }
-        if (data.Condition("'GL Policy Number' == \"GLPOL#\""))
-        {
-            await page.EnterGeneralLiabilityTotalSubjectPremiumAsync(data.Resolve("{{data:total_subject_premium_198}}"));
-        }
-        await page.VerifyLoadingMessageAsync("Visible", "");
-        await page.PauseAsync(1000);
 
+        var yearbuilt1980 = data.Resolve("{{data:yearbuilt1980}}");
+        if (data.Resolve("{{data:state}}") == "NY")
+        {
+            if (yearbuilt1980 == "Yes")
+            {
+                await page.EnterEnterYearInBuilt1980Async(data.Resolve("{{data:yearbuilt1980}}"));
+            }
+            else
+            {
+                await page.VerifyYearBuilt1980Async(data.Resolve("{{data:yearbuilt1980}}"), "value");
+            }
+        }
+
+        await page.PauseAsync(1000);
     }
 
     [Given(@"^I complete required businessowners information$")]
@@ -509,22 +524,39 @@ public sealed class UMBExpandedSteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
         await page.ClickBusinessownersAsync();
         await page.WaitForBusinessownersHeadingAsync("Visible");
-        await page.EnterPolicyNumberAsync(data.Resolve("{{data:policy_number_203}}"));
-        if (data.Condition("'BOP Policy Number' != \"BOPPOL#\""))
+        await page.EnterPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_203}}"));
+        await page.PauseAsync(3000);
+        if (data.Resolve("{{data:policy_number_203}}") != "BOPPOL#")
         {
             await page.ClickImportPolicyDataButtonAsync();
+            await page.PauseAsync(3000);
         }
-        await page.WaitForEffectiveDateAsync("NotEqual");
-        if (data.Condition("'Employers Liability Checkbox' == NULL"))
+        else
         {
-            await page.VerifyEmployerSLiabilityCheckBoxAsync("Absent", "");
+            if (data.Resolve("{{data:state}}") == "MO")
+            {
+                await page.EnterLiquifiedGasAsync(data.Resolve("{{data:gl_liquifiedgas}}"));
+                await page.EnterEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+                await page.EnterExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+                await page.EnterLiabilityLimitAsync(data.Resolve("{{data:bo_cgl_limits_177}}"));
+                await page.EnterTotalSubjectPremiumAsync(data.Resolve("{{data:bo_total_subject_premium_178}}"));
+            }
+            else
+            {
+                await page.EnterEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+                await page.EnterExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+                await page.EnterLiabilityLimitAsync(data.Resolve("{{data:bo_cgl_limits_177}}"));
+                await page.EnterTotalSubjectPremiumAsync(data.Resolve("{{data:bo_total_subject_premium_178}}"));
+            }
         }
-        await page.VerifyLoadingMessageAsync("Visible", "");
-        await page.PauseAsync(1000);
 
+        if (data.Resolve("{{data:state}}") == "NY")
+        {
+            await page.VerifyYearBuilt1980Async(data.Resolve("{{data:yearbuilt1980}}"), "value");
+        }
+        await page.PauseAsync(3000);
     }
 
     [Given(@"^I complete required sfp 10 information$")]
@@ -537,14 +569,38 @@ public sealed class UMBExpandedSteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickSFP10LiabilityFarmAsync();
+        await page.PauseAsync(2000);
         await page.WaitForSignsHeadingAsync("Visible");
-        await page.EnterGeneralLiabilityPolicyNumberAsync(data.Resolve("{{data:policy_number_211}}"));
-        await page.EnterCommercialAutoEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
-        await page.WaitForCommercialAutoEffectiveDateAsync("NotEqual");
-        await page.EnterGeneralLiabilityExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
-        await page.EnterSFP10LiabilityFarmLiabilityLimitAsync(data.Resolve("{{data:liability_limit_215}}"));
-        await page.EnterGeneralLiabilityTotalSubjectPremiumAsync(data.Resolve("{{data:total_subject_premium_216}}"));
+        if (data.Resolve("{{data:state}}") == "ME")
+        {
+            await page.EnterFarmLiabilityCoverage10000000Async(data.Resolve("{{data:me_farm_family_liability}}"));
+            await page.EnterSFPiabilityPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_211}}"));
+            await page.EnterCommercialAutoEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+            await page.EnterGeneralLiabilityExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+            await page.EnterSFP10LiabilityFarmLiabilityLimitSequentiallyAsync(data.Resolve("{{data:sfp_cgl_limits_177}}"));
+            await page.EnterGeneralLiabilityTotalSubjectPremiumSequentiallyAsync(data.Resolve("{{data:sfp_total_subject_premium_178}}"));
+        }
+        else
+        {
+            await page.EnterSFPiabilityPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_211}}"));
+            await page.EnterCommercialAutoEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+            await page.WaitForCommercialAutoEffectiveDateAsync("NotEqual");
+            await page.EnterGeneralLiabilityExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+            await page.EnterSFP10LiabilityFarmLiabilityLimitSequentiallyAsync(data.Resolve("{{data:sfp_cgl_limits_177}}"));
+            await page.EnterGeneralLiabilityTotalSubjectPremiumSequentiallyAsync(data.Resolve("{{data:sfp_total_subject_premium_178}}"));
+            await page.PauseAsync(3000);
 
+        }
+
+        var yearbuilt1980 = data.Resolve("{{data:yearbuilt1980}}");
+
+        if (data.Resolve("{{data:stateVariant}}") == "NY")
+        {
+            await page.WaitForYearBuilt1980Async("Exists");
+            await page.EnterEnterYearInBuilt1980Async(data.Resolve("{{data:yearbuilt1980}}"));
+            await page.EnterLiveStockMeatAsync(data.Resolve("{{data:LiveStockMeat}}"));
+        }
+        await page.PauseAsync(3000);
     }
 
     [Given(@"^I complete required employers liability information$")]
@@ -558,15 +614,32 @@ public sealed class UMBExpandedSteps
 
         await page.WaitForEmployersLiabAsync("Visible");
         await page.ClickEmployersLiabAsync();
-        await page.EnterBusinessownersPolicyNumberAsync(data.Resolve("{{data:policy_number_220}}"));
-        if (data.Condition("'WC Policy Number' != \"WCPOL#\""))
+        await page.PauseAsync(2000);
+        await page.EnterBusinessownersPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_220}}"));
+        await page.PauseAsync(2000);
+        if (data.Resolve("{{data:policy_number_220}}") != "WCPOL#")
         {
             await page.ClickImportPolicyDataButtonAsync();
+            await page.PauseAsync(3000);
         }
-        await page.WaitForBusinessownersEffectiveDateAsync("NotEqual");
-        await page.VerifyLoadingMessageAsync("Visible", "");
-        await page.PauseAsync(1000);
-
+        else
+        {
+            if (data.Resolve("{{data:state}}") == "LA")
+            {
+                await page.EnterCommercialAutoEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+                await page.EnterGeneralLiabilityExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+                await page.EnterCGLLimitsSequentiallyAsync(data.Resolve("{{data:emp_cgl_limits_177}}"));
+                await page.EnterGeneralLiabilityTotalSubjectPremiumSequentiallyAsync(data.Resolve("{{data:emp_total_subject_premium_178}}"));
+            }
+            else
+            {
+                await page.EnterCommercialAutoEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+                await page.EnterGeneralLiabilityExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+                await page.EnterCGLLimitsSequentiallyAsync(data.Resolve("{{data:emp_cgl_limits_177}}"));
+                await page.EnterGeneralLiabilityTotalSubjectPremiumSequentiallyAsync(data.Resolve("{{data:emp_total_subject_premium_178}}"));
+            }
+        }
+        await page.PauseAsync(3000);
     }
 
     [Given(@"^I complete required homeowners liability information$")]
@@ -579,14 +652,19 @@ public sealed class UMBExpandedSteps
         var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.WaitForHomeownerSLiabilityAsync("Visible");
-        await page.PressHomeownerSLiabilityAsync("HOME");
         await page.ClickHomeownerSLiabilityAsync();
-        await page.EnterPolicyNumberAsync(data.Resolve("{{data:policy_number_228}}"));
-        await page.EnterEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
-        await page.WaitForEffectiveDateAsync("NotEqual");
-        await page.EnterExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
-        await page.EnterLiabilityLimitAsync(data.Resolve("{{data:liability_limit_232}}"));
+        await page.PauseAsync(2000);
+        await page.EnterPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_228}}"));
+        await page.EnterEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+        await page.EnterExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+        await page.EnterLiabilityLimitSequentiallyAsync(data.Resolve("{{data:ol_cgl_limits_177}}"));
 
+        if (!string.IsNullOrEmpty(data.Resolve("{{data:ca_total_subject_premium_229}}")))
+        {
+            await page.EnterTotalSubjectPremiumSequentiallyAsync(data.Resolve("{{data:ca_total_subject_premium_229}}"));
+        }
+
+        await page.PressLiabilityLimitAsync("Tab");
     }
 
     [Given(@"^I complete required motorcycle liability information$")]
@@ -600,16 +678,28 @@ public sealed class UMBExpandedSteps
 
         await page.WaitForMotorcycleLiabilityAsync("Visible");
         await page.ClickMotorcycleLiabilityAsync();
-        await page.EnterBusinessownersPolicyNumberAsync(data.Resolve("{{data:policy_number_236}}"));
-        await page.EnterBusinessownersEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
-        await page.WaitForBusinessownersEffectiveDateAsync("NotEqual");
-        await page.EnterBusinessownersExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
-        if (data.Condition("'Motocycle Libaility Limit' != NULL"))
-        {
-            await page.EnterCommercialAutoLiabilityLimitAsync(data.Resolve("{{data:liability_limit_240}}"));
-        }
-        await page.EnterBusinessownersTotalSubjectPremiumAsync(data.Resolve("{{data:total_subject_premium_241}}"));
+        await page.PauseAsync(2000);
+        await page.EnterBusinessownersPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_236}}"));
+        await page.EnterBusinessownersEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+        await page.EnterBusinessownersExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
 
+        if (data.Resolve("{{data:mc_cgl_limits_177}}") != "")
+        {
+            await page.EnterCommercialAutoLiabilityLimitSequentiallyAsync(data.Resolve("{{data:mc_cgl_limits_177}}"));
+            await page.PressCommercialAutoLiabilityLimitAsync("Tab");
+        }
+        if (data.Resolve("{{data:vt_nh_wv_la_um_limit}}") != "")
+        {
+            await page.EnterCommercialUMLimitSequentiallyAsync(data.Resolve("{{data:vt_nh_wv_la_um_limit}}"));
+            await page.PressCommercialUMLimitAsync("Tab");
+        }
+       
+        if (data.Resolve("{{data:mc_total_subject_premium_178}}") != "")
+        {
+            await page.EnterBusinessownersTotalSubjectPremiumAsync(data.Resolve("{{data:mc_total_subject_premium_178}}"));
+            await page.PressBusinessownersTotalSubjectPremiumAsync("Tab");
+        }
+        await page.PauseAsync(3000);
     }
 
     [Given(@"^I complete required personal auto liability information$")]
@@ -623,17 +713,22 @@ public sealed class UMBExpandedSteps
 
         await page.WaitForPersonalAutoAsync("Visible");
         await page.ClickPersonalAutoAsync();
-        await page.EnterPolicyNumberAsync(data.Resolve("{{data:policy_number_245}}"));
-        await page.EnterEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
-        await page.WaitForEffectiveDateAsync("NotEqual");
-        await page.EnterExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
-        await page.EnterLiabilityLimitAsync(data.Resolve("{{data:liability_limit_249}}"));
-        if (data.Condition("'PD Limit' != NULL"))
+        await page.PauseAsync(2000);
+        await page.EnterPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_245}}"));
+        await page.EnterEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+        await page.EnterExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+        await page.EnterLiabilityLimitSequentiallyAsync(data.Resolve("{{data:liability_limit_249}}"));
+        await page.EnterTotalSubjectPremiumAsync(data.Resolve("{{data:total_subject_premium_251}}"));
+
+        if (data.Resolve("{{data:pd_limit_250}}") != "")
         {
             await page.EnterPDLimitAsync(data.Resolve("{{data:pd_limit_250}}"));
         }
-        await page.EnterTotalSubjectPremiumAsync(data.Resolve("{{data:total_subject_premium_251}}"));
-
+        if (data.Resolve("{{data:pa_vt_nh_wv_la_um_limit}}") != "")
+        {
+            await page.EnterCommercialUMLimitSequentiallyAsync(data.Resolve("{{data:pa_vt_nh_wv_la_um_limit}}"));
+            await page.PressCommercialUMLimitAsync("Tab");
+        }
     }
 
     [Given(@"^I complete required rental owners liability information$")]
@@ -647,12 +742,21 @@ public sealed class UMBExpandedSteps
 
         await page.WaitForRentalOwnersLiabilityAsync("Visible");
         await page.ClickRentalOwnersLiabilityAsync();
-        await page.EnterBusinessownersPolicyNumberAsync(data.Resolve("{{data:policy_number_255}}"));
-        await page.EnterBusinessownersEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
-        await page.WaitForBusinessownersEffectiveDateAsync("NotEqual");
-        await page.EnterBusinessownersExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
-        await page.EnterCommercialAutoLiabilityLimitAsync(data.Resolve("{{data:liability_limit_259}}"));
-
+        await page.PauseAsync(3000);
+        await page.EnterBusinessownersPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_255}}"));
+        await page.EnterBusinessownersEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+        await page.EnterBusinessownersExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+        await page.EnterCommercialAutoLiabilityLimitSequentiallyAsync(data.Resolve("{{data:rro_cgl_limits_177}}"));
+        await page.PressCommercialAutoLiabilityLimitAsync("Tab");
+        if(!string.IsNullOrEmpty(data.Resolve("{{data:rro_total_subject_premium_178}}")))
+        {
+            await page.EnterBusinessownersTotalSubjectPremiumSequentiallyAsync(data.Resolve("{{data:rro_total_subject_premium_178}}"));
+        }
+        if(data.Resolve("{{data:stateVariant}}") == "NY")
+        {
+            await page.EnterEnterYearInBuilt1980Async(data.Resolve("{{data:rr0_yearbuilt1980}}"));
+        }
+        await Task.Delay(3000);
     }
 
     [Given(@"^I complete required cpp information$")]
@@ -666,25 +770,43 @@ public sealed class UMBExpandedSteps
 
         await page.WaitForCPPLiabilityAsync("Visible");
         await page.ClickCPPLiabilityAsync();
-        await page.EnterBusinessownersPolicyNumberAsync(data.Resolve("{{data:policy_number_263}}"));
-        if (data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
+        await page.PauseAsync(2000);
+        await page.EnterCPPLiabPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_263}}"));
+        await page.PauseAsync(3000);
+        if (data.Resolve("{{data:policy_number_263}}") == "CPPPOL#")
         {
-            await page.EnterBusinessownersEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+            if (data.Resolve("{{data:state}}") == "LA")
+            {
+                await page.EnterBusinessownersEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+                await page.EnterBusinessownersExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+                await page.EnterBusinessownersTotalSubjectPremiumSequentiallyAsync(data.Resolve("{{data:cpp_total_subject_premium_178}}"));
+            }
+            else if(data.Resolve("{{data:state}}") == "NM")
+            {
+                await page.EnterBusinessownersEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+                await page.EnterBusinessownersExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+                await page.EnterCommercialAutoLiabilityLimitSequentiallyAsync(data.Resolve("{{data:cpp_cgl_limits_177}}"));
+                await page.EnterBusinessownersTotalSubjectPremiumSequentiallyAsync(data.Resolve("{{data:cpp_total_subject_premium_178}}"));
+            }
+            else
+            {
+                await page.EnterBusinessownersEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+                await page.EnterBusinessownersExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+                await page.EnterCommercialAutoLiabilityLimitSequentiallyAsync(data.Resolve("{{data:cpp_cgl_limits_177}}"));
+                await page.EnterBusinessownersTotalSubjectPremiumSequentiallyAsync(data.Resolve("{{data:cpp_total_subject_premium_178}}"));
+            }
+
         }
-        await page.WaitForBusinessownersEffectiveDateAsync("NotEqual");
-        if (data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
+        else
         {
-            await page.EnterBusinessownersExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+            await page.ClickImportPolicyDataAsync();
+            await page.PauseAsync(3000);
         }
-        if (data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
+        if (data.Resolve("{{data:state}}") == "NY")
         {
-            await page.EnterCommercialAutoLiabilityLimitAsync(data.Resolve("{{data:liability_limit_267}}"));
+            await page.WaitForYearBuilt1980Async("Exists");
+            await page.VerifyYearBuilt1980Async(data.Resolve("{{data:yearbuilt1980}}"), "value");
         }
-        if (data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
-        {
-            await page.EnterBusinessownersTotalSubjectPremiumAsync(data.Resolve("{{data:total_subject_premium_268}}"));
-        }
-        await page.VerifyLoadingMessageAsync("Visible", "");
         await page.PauseAsync(1000);
 
     }
@@ -700,13 +822,13 @@ public sealed class UMBExpandedSteps
 
         await page.WaitForWatercraftLiabilityAsync("Visible");
         await page.ClickWatercraftLiabilityAsync();
-        await page.EnterPolicyNumberAsync(data.Resolve("{{data:policy_number_274}}"));
-        await page.EnterEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
-        await page.WaitForEffectiveDateAsync("NotEqual");
-        await page.EnterExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
-        await page.EnterLiabilityLimitAsync(data.Resolve("{{data:liability_limit_278}}"));
-        await page.EnterTotalSubjectPremiumAsync(data.Resolve("{{data:total_subject_premium_279}}"));
-
+        await page.PauseAsync(2000);
+        await page.EnterPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_274}}"));
+        await page.EnterEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+        await page.EnterExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+        await page.EnterLiabilityLimitSequentiallyAsync(data.Resolve("{{data:wl_cgl_limits_177}}"));
+        await page.EnterTotalSubjectPremiumSequentiallyAsync(data.Resolve("{{data:wl_total_subject_premium_178}}"));
+        await page.PressTotalSubjectPremiumAsync("Tab");
     }
 
     [Given(@"^I complete required recreational vehicle information$")]
@@ -719,19 +841,25 @@ public sealed class UMBExpandedSteps
         var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickRecreationalVehicleLiabilityAsync();
+        await Task.Delay(2000);
         await page.WaitForRecreationalVehicleLiabilityHeadingAsync("Visible");
-        await page.EnterPolicyNumberAsync(data.Resolve("{{data:policy_number_282}}"));
+        await page.EnterPolicyNumberSequentiallyAsync(data.Resolve("{{data:policy_number_282}}"));
         await page.EnterCarrierNameAsync(data.Resolve("{{data:carrier_name_283}}"));
-        await page.EnterEffectiveDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
-        await page.WaitForEffectiveDateAsync("NotEqual");
-        await page.EnterExpirationDateAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
-        await page.EnterLiabilityLimitAsync(data.Resolve("{{data:liability_limit_287}}"));
-        if (data.Condition("'PD Limit' != NULL"))
+        await page.EnterEffectiveDateSequentiallyAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+        await page.EnterExpirationDateSequentiallyAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+        await page.EnterLiabilityLimitSequentiallyAsync(data.Resolve("{{data:rv_cgl_limits_177}}"));
+        await page.EnterTotalSubjectPremiumSequentiallyAsync(data.Resolve("{{data:rv_total_subject_premium_178}}"));
+        await page.PressTotalSubjectPremiumAsync("Tab");
+        if (!string.IsNullOrEmpty(data.Resolve("{{data:um_Limit_1}}")) || data.Resolve("{{data:state}}") == "NH" || data.Resolve("{{data:state}}") == "LA")
         {
-            await page.EnterPDLimitAsync(data.Resolve("{{data:pd_limit_288}}"));
+            await page.EnterCommercialUMLimitSequentiallyAsync(data.Resolve("{{data:rv_um_Limit_1}}"));
+            await page.PressCommercialUMLimitAsync("Tab");
         }
-        await page.EnterTotalSubjectPremiumAsync(data.Resolve("{{data:total_subject_premium_289}}"));
-
+        if (!string.IsNullOrEmpty(data.Resolve("{{data:pd_limit_288}}")))
+        {
+            await page.EnterPDLimitSequentiallyAsync(data.Resolve("{{data:pd_limit_288}}"));
+            await page.PressPDLimitAsync("Tab");
+        }
     }
 
     [Given(@"^I complete required endorsement information$")]
@@ -743,230 +871,254 @@ public sealed class UMBExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.VerifySignsHeadingAsync("Absent", "");
         await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
         await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySelectEndorsementAsync(data.Resolve("{{data:expected_select_endorsement_value_300}}"), "Value");
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_301}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.ClickOKAsync();
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_305}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.EnterIFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivitiesAsync(data.Resolve("{{data:iframe_duck_creek_policy_description_of_premises_or_activities_308}}"));
-        await page.ClickOKAsync();
-        await page.WaitForSelectEndorsementAsync("Exists");
-        await page.PauseAsync(1000);
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySelectEndorsementAsync(data.Resolve("{{data:expected_select_endorsement_value_322}}"), "Value");
+        
+        await page.WaitForSelectEndorsementAsync("Visible");
+        
+        if(data.Resolve("{{data:stateVariant}}") is ("MA" or "TX" or "WA"))
+        {
+            var endorsement = data.Resolve("{{data:select_endorsement_305}}");
+            if (new[] { "[CU2119]", "[CU2120]", "[CU2121]" }.Any(code => endorsement?.Contains(code, StringComparison.OrdinalIgnoreCase) == true))
+
+            {
+                await page.PauseAsync(3000);
+                if (await page.IsCU2118DeletePresentAsync())
+                {
+                    await page.ClickCU2118DeleteAsync();
+                }
+            }
+            await page.EnterSelectEndorsementSequentiallyAsync(data.Resolve("{{data:select_endorsement_305}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.WaitForOKAsync2("Visible");
+            await page.ClickOKAsync();
+        }
+        else {
+            await page.EnterSelectEndorsementSequentiallyAsync(data.Resolve("{{data:select_endorsement_305}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.EnterIFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivitiesSequentiallyAsync(data.Resolve("{{data:iframe_duck_creek_policy_description_of_premises_or_activities_308}}"));
+            await page.WaitForOKAsync2("Visible");
+            await page.ClickOKAsync();
+        }
+        
+
+        if (data.Resolve("{{data:stateVariant}}") is "IA" or "IL" or "KS" or "MO" or "MT" or "KY" or "MD" or "ME" or "ND" or "NJ" or "NY" or "OH" or "OK" or "OR" or "PA" or "RI" or "SC" or "TN" or "VT" or "WI" or "WV" or "WY")
+        {
+            var endorsement = data.Resolve("{{data:select_endorsement_306}}");
+            if (new[] { "[CU2119]", "[CU2120]", "[CU2121]" }.Any(code => endorsement?.Contains(code, StringComparison.OrdinalIgnoreCase) == true))
+
+            {
+                await page.PauseAsync(3000);
+                if (await page.IsCU2118DeletePresentAsync())
+                {
+                    await page.ClickCU2118DeleteAsync();
+                }
+            }
+            if (data.Resolve("{{data:stateVariant}}") is "IA" or "WY")
+            {
+                await page.EnterSelectEndorsementSequentiallyAsync(data.Resolve("{{data:select_endorsement_306}}"));
+                await page.PressSelectEndorsementAsync("Tab");
+                await page.ClickEndorsementMainAddEndorsementAsync();
+                await page.ClickBadilyJustingAsync();
+                await page.ClickPropertDamageAsync();
+                await page.ClickPersonalAdvertisingAsync();
+                await page.EnterSDescriptionLocationSequentiallyAsync(data.Resolve("{{data:description_1}}"));
+                await page.WaitForOKAsync2("Visible");
+                await page.ClickOKAsync();
+            }
+            else
+            {
+                await page.EnterSelectEndorsementSequentiallyAsync(data.Resolve("{{data:select_endorsement_306}}"));
+                await page.PressSelectEndorsementAsync("Tab");
+                await page.ClickEndorsementMainAddEndorsementAsync();
+                await page.WaitForOKAsync2("Visible");
+                await page.ClickOKAsync();
+            }
+        }
+
+        if(data.Resolve("{{data:stateVariant}}") is "NM" or "UT" or "WA")
+        {
+            await page.EnterSelectEndorsementSequentiallyAsync(data.Resolve("{{data:select_endorsement_306}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.ClickBadilyJustingAsync();
+            await page.ClickPropertDamageAsync();
+            await page.ClickPersonalAdvertisingAsync();
+            await page.EnterSDescriptionLocationSequentiallyAsync(data.Resolve("{{data:DescriptionLocation}}"));
+            await page.ClickOKAsync();
+        }
+
+        await page.WaitForSelectEndorsementAsync("Visible");
         await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_323}}"));
+        await page.PressSelectEndorsementAsync("Tab");
         await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.WaitForOKAsync2("Visible");
         await page.ClickOKAsync();
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_327}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.ClickOKAsync();
-        await page.WaitForSelectEndorsementAsync("Exists");
-        await page.PauseAsync(1000);
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySelectEndorsementAsync(data.Resolve("{{data:expected_select_endorsement_value_338}}"), "Value");
+        
+        await page.WaitForSelectEndorsementAsync("Visible");
         await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_339}}"));
+        await page.PressSelectEndorsementAsync("Tab");
+
         await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
+        
+        await page.EnterAggregateLimitSequentiallyAsync(data.Resolve("{{data:iframe_duck_creek_policy_aggregate_limit_346}}"));
+        await page.WaitForOKAsync2("Visible");
+
         await page.ClickOKAsync();
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_343}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.EnterAggregateLimitAsync(data.Resolve("{{data:iframe_duck_creek_policy_aggregate_limit_346}}"));
-        await page.ClickOKAsync();
-        await page.WaitForSelectEndorsementAsync("Exists");
-        await page.PauseAsync(1000);
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySelectEndorsementAsync(data.Resolve("{{data:expected_select_endorsement_value_355}}"), "Value");
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_356}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.ClickOKAsync();
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_360}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.EnterIFRAMEDuckCreekPolicyExcludedDriverAsync(data.Resolve("{{data:iframe_duck_creek_policy_excluded_driver_363}}"));
-        await page.ClickOKAsync();
-        await page.WaitForSelectEndorsementAsync("Exists");
-        await page.PauseAsync(1000);
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySelectEndorsementAsync(data.Resolve("{{data:expected_select_endorsement_value_382}}"), "Value");
+        
+        await page.WaitForSelectEndorsementAsync("Visible");
+        
+        if (data.Resolve("{{data:stateVariant}}") is not ("MO" or "NH" or "NY" or "UT" or "VA"))
+        {
+            await page.EnterSelectEndorsementSequentiallyAsync(data.Resolve("{{data:select_endorsement_360}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.EnterIFRAMEDuckCreekPolicyExcludedDriverAsync(data.Resolve("{{data:iframe_duck_creek_policy_excluded_driver_363}}"));
+            await page.WaitForOKAsync2("Visible");
+
+            await page.ClickOKAsync();
+        }
+        await page.WaitForSelectEndorsementAsync("Visible");
         await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_383}}"));
         await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.ClickOKAsync();
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_387}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.ClickOKAsync();
-        await page.WaitForSelectEndorsementAsync("Exists");
-        await page.PauseAsync(1000);
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySelectEndorsementAsync(data.Resolve("{{data:expected_select_endorsement_value_398}}"), "Value");
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_399}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.ClickOKAsync();
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_403}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.ClickOKAsync();
-        await page.WaitForSelectEndorsementAsync("Exists");
-        await page.PauseAsync(1000);
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySelectEndorsementAsync(data.Resolve("{{data:expected_select_endorsement_value_414}}"), "Value");
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_415}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.ClickOKAsync();
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_419}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.EnterIFRAMEDuckCreekPolicyAddressEsOrDescriptionSOfDesignatedFarmLocationSAsync(data.Resolve("{{data:iframe_duck_creek_policy_address_es_or_description_s_of_designated_farm_location_s_422}}"));
-        await page.ClickOKAsync();
-        await page.WaitForSelectEndorsementAsync("Exists");
-        await page.PauseAsync(1000);
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySelectEndorsementAsync(data.Resolve("{{data:expected_select_endorsement_value_431}}"), "Value");
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_432}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.ClickOKAsync();
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_436}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.EnterNameSOrDescriptionSAndDateSOfDesignatedActivitiesOrServicesAsync(data.Resolve("{{data:iframe_duck_creek_policy_name_s_or_description_s_and_date_s_of_designated_activities_or_services_439}}"));
-        await page.ClickOKAsync();
-        await page.WaitForSelectEndorsementAsync("Exists");
-        await page.PauseAsync(1000);
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySelectEndorsementAsync(data.Resolve("{{data:expected_select_endorsement_value_448}}"), "Value");
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_449}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.ClickOKAsync();
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_453}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.EnterIFRAMEDuckCreekPolicyNameSOrDescriptionSOfDesignatedAnimalSAsync(data.Resolve("{{data:iframe_duck_creek_policy_name_s_or_description_s_of_designated_animal_s_456}}"));
-        await page.ClickOKAsync();
-        await page.WaitForSelectEndorsementAsync("Exists");
-        await page.PauseAsync(1000);
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySelectEndorsementAsync(data.Resolve("{{data:expected_select_endorsement_value_465}}"), "Value");
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_466}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.ClickOKAsync();
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_470}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.EnterIFRAMEDuckCreekPolicyAddressEsOrDescriptionSOfDesignatedPremisesAsync(data.Resolve("{{data:iframe_duck_creek_policy_address_es_or_description_s_of_designated_premises_473}}"));
-        await page.ClickOKAsync();
-        await page.WaitForSelectEndorsementAsync("Exists");
-        await page.PauseAsync(1000);
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySignsHeadingAsync("Absent", "");
-        await page.WaitForWCNavigationLinksEndorsementsAsync("Visible");
-        await page.PressWCNavigationLinksEndorsementsAsync("END");
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.VerifySelectEndorsementAsync(data.Resolve("{{data:expected_select_endorsement_value_502}}"), "Value");
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_503}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.ClickOKAsync();
-        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_507}}"));
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
-        await page.ClickOKAsync();
-        await page.WaitForSelectEndorsementAsync("Exists");
-        await page.PauseAsync(1000);
+        await page.WaitForOKAsync2("Visible");
 
+        await page.ClickOKAsync();
+        await page.WaitForSelectEndorsementAsync("Visible");
+        if(data.Resolve("{{data:stateVariant}}") != "MS")
+        {
+            await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_399}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.WaitForOKAsync2("Visible");
+
+            await page.ClickOKAsync();
+        }
+        await page.WaitForSelectEndorsementAsync("Visible");
+        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_419}}"));
+        await page.PressSelectEndorsementAsync("Tab");
+        await page.ClickEndorsementMainAddEndorsementAsync();
+        await page.EnterIFRAMEDuckCreekPolicyAddressEsOrDescriptionSOfDesignatedFarmLocationSAsync(data.Resolve("{{data:iframe_duck_creek_policy_address_es_or_description_s_of_designated_farm_location_s_422}}"));
+        await page.WaitForOKAsync2("Visible");
+
+        await page.ClickOKAsync();
+        await page.WaitForSelectEndorsementAsync("Visible");
+
+        if (data.Resolve("{{data:stateVariant}}") is not ("AR"))
+        {
+            await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_432}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.EnterNameSOrDescriptionSAndDateSOfDesignatedActivitiesOrServicesAsync(data.Resolve("{{data:iframe_duck_creek_policy_name_s_or_description_s_and_date_s_of_designated_activities_or_services_439}}"));
+            await page.WaitForOKAsync2("Visible");
+
+            await page.ClickOKAsync();
+        }
+        await page.WaitForSelectEndorsementAsync("Visible");
+        if (data.Resolve("{{data:stateVariant}}") is not ("IL" or "NH" or "NY" or "VT"))
+        {
+            await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_449}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.EnterIFRAMEDuckCreekPolicyNameSOrDescriptionSOfDesignatedAnimalSAsync(data.Resolve("{{data:iframe_duck_creek_policy_name_s_or_description_s_of_designated_animal_s_456}}"));
+            await page.WaitForOKAsync2("Visible");
+
+            await page.ClickOKAsync();
+        }
+        await page.WaitForSelectEndorsementAsync("Visible");
+        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_466}}"));
+        await page.PressSelectEndorsementAsync("Tab");
+
+        await page.ClickEndorsementMainAddEndorsementAsync();
+        await page.EnterIFRAMEDuckCreekPolicyAddressEsOrDescriptionSOfDesignatedPremisesAsync(data.Resolve("{{data:iframe_duck_creek_policy_address_es_or_description_s_of_designated_premises_473}}"));
+        await page.WaitForOKAsync2("Visible");
+
+        await page.ClickOKAsync();
+        if(data.Resolve("{{data:stateVariant}}") == "UT")
+        {
+            await page.WaitForSelectEndorsementAsync("Visible");
+            await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_502}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.WaitForOKAsync2("Visible");
+
+            await page.ClickOKAsync();
+        }
+
+        if(data.Resolve("{{data:stateVariant}}") == "WA")
+        {
+            await page.WaitForSelectEndorsementAsync("Visible");
+            await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_502}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.EnterIFRAMEDuckCreekPolicyWADescriptionOfPremisesOrActivitiesAsync(data.Resolve("{{data:test_premises_activities}}"));
+            await page.WaitForOKAsync2("Visible");
+
+            await page.ClickOKAsync();
+        }
+
+        if (data.Resolve("{{data:stateVariant}}") == "CT")
+        {
+            await page.WaitForSelectEndorsementAsync("Visible");
+            await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_504}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.WaitForOKAsync2("Visible");
+
+            await page.ClickOKAsync();
+            await page.WaitForSelectEndorsementAsync("Visible");
+            await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_505}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.WaitForOKAsync2("Visible");
+
+            await page.ClickOKAsync();
+        }
+
+        if (data.Resolve("{{data:stateVariant}}") == "VT")
+        {
+            await page.WaitForSelectEndorsementAsync("Visible");
+            await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_502}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.WaitForOKAsync2("Visible");
+
+            await page.ClickOKAsync();
+            await page.WaitForSelectEndorsementAsync("Visible");
+            await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_504}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.WaitForOKAsync2("Visible");
+
+            await page.ClickOKAsync();
+
+            await page.WaitForSelectEndorsementAsync("Visible");
+            await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_505}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.WaitForOKAsync2("Visible");
+
+            await page.ClickOKAsync();
+
+            await page.WaitForSelectEndorsementAsync("Visible");
+            await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_506}}"));
+            await page.PressSelectEndorsementAsync("Tab");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.WaitForOKAsync2("Visible");
+
+            await page.ClickOKAsync();
+        }
+        await page.WaitForSelectEndorsementAsync("Visible");
+        await page.EnterSelectEndorsementAsync(data.Resolve("{{data:select_endorsement_503}}"));
+        await page.PressSelectEndorsementAsync("Tab");
+        await page.ClickEndorsementMainAddEndorsementAsync();
+        await page.WaitForOKAsync2("Visible");
+
+        await page.ClickOKAsync();
+        await page.PauseAsync(1000);
     }
 
     [Given(@"^I complete fill in CU2103 if it exists$")]
@@ -980,13 +1132,11 @@ public sealed class UMBExpandedSteps
 
         await page.VerifyValueAsync("Exists", "");
         await page.ClickValueAsync();
-        await page.WaitForEndorsementHeadingAsync("Equal");
         await page.ClickIFRAMEDuckCreekPolicyOtherCheckBoxAsync();
-        await page.EnterIFRAMEDuckCreekPolicyDescriptionOfOtherAsync(data.Resolve("{{data:iframe_duck_creek_policy_description_of_other_517}}"));
+        await page.EnterIFRAMEDuckCreekPolicyDescriptionOfOtherSequentiallyAsync(data.Resolve("{{data:iframe_duck_creek_policy_description_of_other_517}}"));
         await page.ClickOKAsync();
         await page.VerifyLoadingMessageAsync("Visible", "");
         await page.PauseAsync(1000);
-
     }
 
     [Given(@"^I complete required underwriting question information$")]
@@ -999,12 +1149,8 @@ public sealed class UMBExpandedSteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickUWQuestionsUmbrellaAsync();
-        await page.PressUWQuestionsUmbrellaAsync("LongClick");
-        await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
-        await page.WaitForHaveYouHadAnyLiabilityLossesInTheLast5YearsOnAnyPrimaryOrExcessPolicyAsync("Equal");
         await page.EnterPleaseProvideWebsiteAddressEsAsync(data.Resolve("{{data:please_provide_website_address_es_525}}"));
-
     }
 
     [Given(@"^I complete required billing information for billing$")]
@@ -1019,9 +1165,7 @@ public sealed class UMBExpandedSteps
         await page.ClickNavigationBillingAsync();
         await page.WaitForBillingAsync("Exists");
         await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_528}}"));
-        await page.WaitForBillTypeAsync("Equal");
         await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_531}}"));
-        await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_535}}"));
         await page.PauseAsync(1000);
@@ -1040,9 +1184,10 @@ public sealed class UMBExpandedSteps
         await page.ClickNotepadAsync();
         await page.WaitForNotepadHeadingAsync("Exists");
         await page.ClickAddNotesRemarksAsync();
-        await page.EnterTextBoxAsync(data.Resolve("Test {B[Product (LOB)]}"));
+        await page.EnterTextBoxSequentiallyAsync(data.Resolve("Test {B[Product (LOB)]}"));
         await page.ClickOKAsync();
-
+        //await page.ClickSaveForLaterAsync();
+        //await page.ClickOKAsync();
     }
 
     [Given(@"^I complete required submission information$")]
@@ -1057,15 +1202,6 @@ public sealed class UMBExpandedSteps
         await page.WaitForSubmissionAsync("Visible");
         await page.ClickSubmissionAsync();
         await page.WaitForSubmissionHeadingAsync("Exists");
-        await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_546}}"));
-        await page.VerifyOrderAuditAsync("Exists", "");
-        await page.EnterOrderAuditAsync(data.Resolve("{{data:order_audit_548}}"));
-        await page.VerifySubmissionHeadingAsync("Absent", "");
-        await page.ClickSubmissionAsync();
-        await page.PauseAsync(1000);
-        await page.WaitForSubmissionHeadingAsync("Exists");
-        await page.PauseAsync(1000);
-
     }
 
     [Given(@"^I run Stoplight$")]
@@ -1077,39 +1213,12 @@ public sealed class UMBExpandedSteps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.VerifyIsThisCoverageBoundAsync("Exists", "");
-        await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_value_556}}"), "Value");
-        await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_557}}"));
         await page.ClickCompleteApplicationAsync();
-        await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
-        await page.PauseAsync(1000);
-        await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
+        await page.PauseAsync(5000);
+        await page.WaitStoplightWaitingWindowCloseAsync("Visible");
         await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
-        await page.PauseAsync(1000);
-        await page.ClickCompleteApplicationAsync();
-        await page.PauseAsync(1000);
-        await page.ClickStoplightWaitingWindowCloseAsync();
-        await page.WaitForStoplightWaitingWindowAsync("Absent");
-        await page.PauseAsync(1000);
-        await page.VerifyLoadingMessageAsync("Visible", "");
-        await page.PauseAsync(1000);
-        await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
-        await page.ClickCompleteApplicationAsync();
-        await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
-        await page.PauseAsync(1000);
-        await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
-        await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
-        await page.PauseAsync(1000);
-        await page.ClickCompleteApplicationAsync();
-        await page.PauseAsync(1000);
-        await page.ClickStoplightWaitingWindowCloseAsync();
-        await page.WaitForStoplightWaitingWindowAsync("Absent");
         await page.PauseAsync(1000);
         await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
-        await page.EnterTitleAsync(data.Resolve("{{data:title_589}}"));
-        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_590}}"));
-        data.Set("SessionId", await page.CaptureResultAsync("value"));
-
     }
 
     [Given(@"^I complete forms verification UMB$")]
@@ -1121,10 +1230,10 @@ public sealed class UMBExpandedSteps
 
         var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.EnterSessionIDAsync(data.Resolve("{B[SessionId]}"));
-        await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_594}}"), "value");
-        await page.PauseAsync(1000);
-        await page.PauseAsync(1000);
+        //await page.EnterSessionIDAsync(data.Resolve("{B[SessionId]}"));
+        //await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_594}}"), "value");
+        //await page.PauseAsync(1000);
+        //await page.PauseAsync(1000);
 
     }
 

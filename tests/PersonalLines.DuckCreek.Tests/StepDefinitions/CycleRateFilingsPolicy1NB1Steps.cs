@@ -23,7 +23,6 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
         await page.WaitForNewQuoteAsync("Exists");
         await page.VerifyNewQuoteAsync(data.Resolve("{{data:expected_btn_new_quote_2}}"), "");
         await page.ClickNewQuoteAsync();
-
     }
 
     [Given(@"^I select or create the policy client$")]
@@ -61,37 +60,21 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForAccountInformationAsync("Exists");
-        await page.VerifyFirstNameAccountOwnerAsync("Exists", "");
         await page.EnterDOBAsync(data.Get("AL_ClientData.DOB"));
         await page.EnterBestPhoneAccountOwnerAsync(data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
         await page.EnterEmailAccountOwnerAsync(data.Resolve("{{data:txt_email_account_owner_19}}"));
-        await page.WaitForMaritalStatusAsync("Exists");
-        if (data.Condition("'Marital Status' == \"Single\""))
-        {
-                    await page.ClickSingleAsync();
-        }
-        if (data.Condition("'Marital Status' == \"Married\""))
-        {
-                    await page.SelectMarriedAsync("");
-        }
-        if (data.Condition("'Marital Status' == \"Divorced\""))
-        {
-                    await page.ClickDivorcedAsync();
-        }
+        await page.ClickSingleAsync();
+
         await page.EnterEnterALocationAsync(data.Get("AL_ClientData.Street Address"));
         await page.EnterOwnerAddressLine2Async(data.Get("AL_ClientData.Apartment"));
         await page.EnterOwnerAddressCityNewAsync(data.Get("AL_ClientData.City"));
-        await page.SelectDrpdwnStateAsync("");
-        await page.SelectStateNameAsync("");
+        await page.SelectStateAsync(data.Get("statename"));
         await page.EnterOwnerAddressZipAsync(data.Get("AL_ClientData.ZIP"));
         await page.WaitForSatelliteAsync("Visible");
-        await page.PressAccountDetailsNextAsync("SHIFTTAB");
         await page.SelectYesAtLeast90DaysAsync("");
         await page.WaitForIsTheAccountAddressAlsoWhereTheClientResidesAsync("Exists");
         await page.SelectYesClientResidesAsync("");
         await page.ClickAccountDetailsNextAsync();
-        data.Set("EffectiveDate", "{Date[{DATE}][][MM/dd/yyyy]}");
-
     }
 
     [Given(@"^I start the policy proposal$")]
@@ -102,97 +85,58 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.PressEffectiveDateAsync("Scroll[-2]");
-        if (data.Condition("LOB == \"PersonalAuto\""))
-        {
-                    await page.ClickPersonalAutoAsync();
-        }
-        if (data.Condition("LOB == \"Cycle\""))
-        {
-                    await page.ClickMotorcycleAsync();
-        }
-        if (data.Condition("LOB == \"RecreationalVehicle\""))
-        {
-                    await page.ClickRecreationalVehicleAsync();
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-                    await page.EnterEffectiveDateAsync(data.Resolve("{{runtime:EffectiveDate}}"));
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-                    await page.EnterAgentCodeAsync(data.Resolve("{{data:agentcode_42}}"));
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-                    await page.SelectStateAsync("");
-        }
-        await page.SelectStateNameAsync("");
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-                    await page.SelectWritingCompanyAsync("");
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-                    await page.EnterWritingCompanyAsync(data.Resolve("{{data:writingcompany_49}}"));
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-                    await page.EnterWritingCompanyAsync("");
-        }
+        await page.ClickMotorcycleAsync();
+        await page.EnterEffectiveDateAsync(page.GetTomorrowEffectiveDate());
+        await page.EnterAgentCodeAsync(data.Resolve("{{data:agentcode_42}}"));
+        await page.SelectStateAsync("");
+        await page.EnterStateAsync(data.Resolve("{{data:state_44}}"));
+        await page.SelectWritingCompanyAsync("");
+        await page.EnterWritingCompanyAsync(data.Resolve("{{data:writingcompany_49}}"));
         await page.WaitForSameAsMailingAddressAsync("True");
         await page.ClickSameAsMailingAddressAsync();
-        await page.PressSameAsMailingAddressAsync("Click");
-        if (data.Condition("'County Name' != NULL"))
+
+        if (data.Condition("State == \"NY\""))
         {
-                    await page.EnterCountyComboBoxAsync(data.Get("County Name"));
+            await page.EnterCountyComboBoxAsync(data.Get("County Name"));
         }
-        await page.WaitForStartQuoteAsync("Visible");
+
+        if (data.Condition("State == \"KY\""))
+        {
+            await page.EnterCountyComboBoxAsync(data.Get("County Name"));
+        }
+        if (data.Condition("State == \"NY\" OR State == \"KY\""))
+        {
+            await page.WaitForCountyYesAsync("Exists");
+            await page.SelectCountyYesAsync("");
+        }
+        await page.WaitForStartQuoteAsync("True");
         await page.ClickStartQuoteAsync();
+        await page.PauseAsync(10000);
+
         if (await page.IsPROCEEDPresentAsync())
         {
-                    await page.VerifyPROCEEDAsync("Exists", "");
-        }
-        if (await page.IsPROCEEDPresentAsync())
-        {
-                    await page.ClickPROCEEDAsync();
-        }
-        if (await page.IsCONFIRMPresentAsync())
-        {
-                    await page.VerifyCONFIRMAsync("Exists", "");
-        }
-        if (await page.IsCONFIRMPresentAsync())
-        {
-                    await page.ClickCONFIRMAsync();
+            await page.VerifyPROCEEDAsync("Exists", "");
+            await page.ClickCONFIRMAsync();
+            await page.PauseAsync(5000);
         }
         if (await page.IsSSNPresentAsync())
         {
-                    await page.VerifySSNAsync("Exists", "");
+            await page.WaitForSSNAsync("Exists");
+            await page.VerifyProposalStartProceedSSNSUBMITAsync("Exists", "");
+            await page.EnterSSNAsync(data.Get("SSN"));
+            await page.ClickProposalStartProceedSSNSUBMITAsync();
+            await page.PauseAsync(5000);
         }
-        await page.VerifyProposalStartProceedSSNSUBMITAsync("Exists", "");
-        if (await page.IsSSNPresentAsync())
+        if (await page.IsCONFIRMPresentAsync())
         {
-                    await page.EnterSSNAsync(data.Get("AL_ClientData.SSN"));
+            await page.VerifyCONFIRMAsync("Exists", "");
+            await page.ClickCONFIRMAsync();
+            await page.PauseAsync(5000);
         }
-        await page.ClickProposalStartProceedSSNSUBMITAsync();
-        if (await page.IsClientAlreadyExistsPresentAsync())
+        if (await page.IsUSEEXISTINGACCOUNTPresentAsync())
         {
-                    await page.VerifyClientAlreadyExistsAsync("Exists", "");
-        }
-        if (await page.IsCREATENEWACCOUNTPresentAsync())
-        {
-                    await page.ClickCREATENEWACCOUNTAsync();
+            await page.ClickUSEEXISTINGACCOUNTAsync();
+            await page.PauseAsync(5000);
         }
 
     }

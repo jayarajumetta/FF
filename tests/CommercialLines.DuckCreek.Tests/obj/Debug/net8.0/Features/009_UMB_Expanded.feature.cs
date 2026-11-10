@@ -209,121 +209,118 @@ namespace CommercialLines.DuckCreek.Tests.Features
     await testRunner.AndAsync("I sign in to Commercial Lines Duck Creek using configured credentials", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 14
-    await testRunner.WhenAsync("I enter business client information", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.AndAsync("I start a new quote", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 15
+    await testRunner.WhenAsync("I enter business client information", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 16
     await testRunner.AndAsync("I add a new Associated Client - Business Owner Type - Click Add Client", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 18
+#line 17
     await testRunner.AndAsync("I complete the Associated Client Info", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 19
+#line 18
     await testRunner.AndAsync("I navigate to Underwriting Info Screen", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 20
+#line 19
     await testRunner.AndAsync("I complete required policy information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 21
+#line 20
     await testRunner.AndAsync("I complete required policy covg information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 22
+#line 21
     await testRunner.AndAsync("I add Commercial Auto Underlying LOB", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 23
+#line 22
     await testRunner.AndAsync("I add General Liability Underlying LOB", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 24
+#line 23
     await testRunner.AndAsync("I add Businessowners Underlying LOB", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 25
+#line 24
     await testRunner.AndAsync("I add SFP - 10 Liability Farm Underlying LOB", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 26
+#line 25
     await testRunner.AndAsync("I add Commercial Package Policy Liability Underlying LOB", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 27
+#line 26
     await testRunner.AndAsync("I add Employers Liability Underlying LOB", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 28
+#line 27
     await testRunner.AndAsync("I add Homeowner\'s Liability Underlying LOB", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 29
+#line 28
     await testRunner.AndAsync("I add Motorcycle Liability Underlying LOB", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 30
+#line 29
     await testRunner.AndAsync("I add Personal Auto Liability Underlying LOB", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 31
+#line 30
     await testRunner.AndAsync("I add Recreational Vehicle Liability Underlying LOB", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 32
+#line 31
     await testRunner.AndAsync("I add Rental Owner\'s Liability Underlying LOB", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 33
+#line 32
     await testRunner.AndAsync("I add Watercraft Liability Underlying LOB", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 34
+#line 33
     await testRunner.AndAsync("I complete required location information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 35
+#line 34
     await testRunner.AndAsync("I complete required commercial auto information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 36
+#line 35
     await testRunner.AndAsync("I complete required general liability information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 37
+#line 36
     await testRunner.AndAsync("I complete required businessowners information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 38
+#line 37
     await testRunner.AndAsync("I complete required sfp 10 information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 39
+#line 38
     await testRunner.AndAsync("I complete required employers liability information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 40
+#line 39
     await testRunner.AndAsync("I complete required homeowners liability information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 41
+#line 40
     await testRunner.AndAsync("I complete required motorcycle liability information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 42
+#line 41
     await testRunner.AndAsync("I complete required personal auto liability information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 43
+#line 42
     await testRunner.AndAsync("I complete required rental owners liability information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 44
+#line 43
     await testRunner.AndAsync("I complete required cpp information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 45
+#line 44
     await testRunner.AndAsync("I complete required watercraft liability information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 46
+#line 45
     await testRunner.AndAsync("I complete required recreational vehicle information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 47
+#line 46
     await testRunner.AndAsync("I complete required endorsement information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 48
-    await testRunner.AndAsync("I complete fill in CU2103 if it exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 49
     await testRunner.AndAsync("I complete required underwriting question information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 50
+#line 49
     await testRunner.AndAsync("I complete required billing information for billing", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 51
+#line 50
     await testRunner.AndAsync("I add notepad comment", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 52
+#line 51
     await testRunner.AndAsync("I complete required submission information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 53
+#line 52
     await testRunner.AndAsync("I run Stoplight", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 54
-    await testRunner.AndAsync("I complete forms verification UMB", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

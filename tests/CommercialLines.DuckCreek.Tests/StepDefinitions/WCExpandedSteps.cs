@@ -10,14 +10,6 @@ public sealed class WCExpandedSteps
     private readonly ScenarioContext _scenario;
     public WCExpandedSteps(ScenarioContext scenario) => _scenario = scenario;
 
-
-
-
-
-
-
-
-
     [Given(@"^I start a new quote$")]
     [When(@"^I start a new quote$")]
     [Then(@"^I start a new quote$")]
@@ -32,17 +24,6 @@ public sealed class WCExpandedSteps
         await page.WaitForStartAsync("Visible");
         await page.ClickStartAsync();
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
     [Given(@"^I enter business client information$")]

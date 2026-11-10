@@ -161,6 +161,7 @@ public sealed class UiActions
             throw new InvalidOperationException($"{intent} value is empty after {maxAttempts} fill attempts and sequential fallback.");
         });
         _semanticallyCommittedControls.Add(IntentKey(intent));
+
     }
 
     private async Task PressSequentiallyCoreAsync(ILocator locator, string value, ControlIntent intent, int delayMs = 20)
@@ -674,10 +675,17 @@ public sealed class UiActions
         if (!_config.Waits.WaitForDomContentLoadedBeforeActions || !_browser.IsStarted) return;
         try
         {
+
             await _browser.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded, new PageWaitForLoadStateOptions
             {
                 Timeout = _config.Waits.PageReadyTimeoutMs
             });
+
+            await _browser.Page.WaitForLoadStateAsync(LoadState.Load, new PageWaitForLoadStateOptions
+            {
+                Timeout = _config.Waits.PageReadyTimeoutMs
+            });
+
         }
         catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
         {

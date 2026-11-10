@@ -177,6 +177,66 @@ await this.FeatureBackgroundAsync();
 #line 13
  await testRunner.AndAsync("I sign in to Commercial Lines Duck Creek using configured credentials", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
+#line 14
+ await testRunner.AndAsync("I start a new quote", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 15
+ await testRunner.AndAsync("I enter business client information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 16
+ await testRunner.AndAsync("I add a new Associated Client - Business Owner Type - Click Add Client", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 17
+ await testRunner.AndAsync("I complete the Associated Client Info", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 18
+ await testRunner.AndAsync("I complete Underwriting Info from Client Screen", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 19
+ await testRunner.AndAsync("I complete required policy information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 20
+ await testRunner.AndAsync("I run insurance score", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 21
+ await testRunner.AndAsync("I complete CP Fields", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 23
+ await testRunner.AndAsync("I complete CP Fields for policy coverage", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 24
+ await testRunner.AndAsync("I complete CP Fields for location", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 25
+ await testRunner.AndAsync("I complete CP Fields for building", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 26
+ await testRunner.AndAsync("I add a Rating Group", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 27
+ await testRunner.AndAsync("I complete Structure Questions", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 28
+ await testRunner.AndAsync("I add Addl Interests", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 29
+ await testRunner.AndAsync("I complete required billing information for billing", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 30
+ await testRunner.AndAsync("I add notepad comment", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 31
+ await testRunner.AndAsync("I complete Property UW Questions", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 33
+ await testRunner.AndAsync("I complete required submission information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 34
+ await testRunner.AndAsync("I run Stoplight", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 35
+ await testRunner.AndAsync("I verify values in premium fields", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
 #line 36
     await testRunner.AndAsync("I complete forms verification", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden

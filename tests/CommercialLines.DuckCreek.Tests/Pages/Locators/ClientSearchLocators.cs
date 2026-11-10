@@ -52,7 +52,7 @@ public sealed class ClientSearchLocators
 
     public ILocator Gender => _page.Locator("input[fieldref=\"AccountInput.Gender\"]:visible, input[fieldref=\"AssociatedClientInput.Gender\"]:visible");
 
-    public ILocator OK => _page.GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true });
+    public ILocator OK => _page.FrameLocator("iframe[id*='dctPopup_dctPopupWindow']").GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true });
 
     public ILocator IndividualType => _page.Locator("input[fieldref=\"AssociatedClientInput.IndividualType\"]");
 

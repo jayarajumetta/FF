@@ -45,7 +45,7 @@ public sealed class ClientSearchPage
         _ui.WaitAsync(_locators.Address, expected, new ControlIntent("ClientSearch", "Address"));
 
     public Task EnterAddressAsync(string value) =>
-        _ui.FillAsync(_locators.Address, value, new ControlIntent("ClientSearch", "Address"));
+        _ui.PressSequentiallyAsync(_locators.Address, value, new ControlIntent("ClientSearch", "Address"));
 
     public Task<string> CaptureAddressAsync(string property = "") =>
         _ui.CaptureAsync(_locators.Address, property, new ControlIntent("ClientSearch", "Address"));
@@ -180,7 +180,7 @@ public sealed class ClientSearchPage
         _ui.WaitAsync(_locators.FirstName, expected, new ControlIntent("ClientSearch", "FirstName"));
 
     public Task EnterFirstNameAsync(string value) =>
-        _ui.FillAsync(_locators.FirstName, value, new ControlIntent("ClientSearch", "FirstName"));
+        _ui.PressSequentiallyAsync(_locators.FirstName, value, new ControlIntent("ClientSearch", "FirstName"));//_ui.FillAsync(_locators.FirstName, value, new ControlIntent("ClientSearch", "FirstName"));
 
     public Task<string> CaptureFirstNameAsync(string property = "") =>
         _ui.CaptureAsync(_locators.FirstName, property, new ControlIntent("ClientSearch", "FirstName"));
@@ -230,7 +230,7 @@ public sealed class ClientSearchPage
         _ui.WaitAsync(_locators.InsuredEMailAddress, expected, new ControlIntent("ClientSearch", "InsuredEMailAddress"));
 
     public Task EnterInsuredEMailAddressAsync(string value) =>
-        _ui.FillAsync(_locators.InsuredEMailAddress, value, new ControlIntent("ClientSearch", "InsuredEMailAddress"));
+        _ui.PressSequentiallyAsync(_locators.InsuredEMailAddress, value, new ControlIntent("ClientSearch", "InsuredEMailAddress"));
 
     public Task<string> CaptureInsuredEMailAddressAsync(string property = "") =>
         _ui.CaptureAsync(_locators.InsuredEMailAddress, property, new ControlIntent("ClientSearch", "InsuredEMailAddress"));
@@ -263,7 +263,7 @@ public sealed class ClientSearchPage
         _ui.WaitAsync(_locators.MiddleName, expected, new ControlIntent("ClientSearch", "MiddleName"));
 
     public Task EnterMiddleNameAsync(string value) =>
-        _ui.FillAsync(_locators.MiddleName, value, new ControlIntent("ClientSearch", "MiddleName"));
+        _ui.PressSequentiallyAsync(_locators.MiddleName, value, new ControlIntent("ClientSearch", "MiddleName"));
 
     public Task<string> CaptureMiddleNameAsync(string property = "") =>
         _ui.CaptureAsync(_locators.MiddleName, property, new ControlIntent("ClientSearch", "MiddleName"));
@@ -275,7 +275,7 @@ public sealed class ClientSearchPage
         _ui.WaitAsync(_locators.NameOfAuditContact, expected, new ControlIntent("ClientSearch", "NameOfAuditContact"));
 
     public Task EnterNameOfAuditContactAsync(string value) =>
-        _ui.FillAsync(_locators.NameOfAuditContact, value, new ControlIntent("ClientSearch", "NameOfAuditContact"));
+        _ui.PressSequentiallyAsync(_locators.NameOfAuditContact, value, new ControlIntent("ClientSearch", "NameOfAuditContact"));
 
     public Task PressNameOfAuditContactAsync(string key) =>
         _ui.PressAsync(_locators.NameOfAuditContact, key, new ControlIntent("ClientSearch", "NameOfAuditContact"));
@@ -287,7 +287,7 @@ public sealed class ClientSearchPage
         _ui.WaitAsync(_locators.NameOfInspectionContact, expected, new ControlIntent("ClientSearch", "NameOfInspectionContact"));
 
     public Task EnterNameOfInspectionContactAsync(string value) =>
-        _ui.FillAsync(_locators.NameOfInspectionContact, value, new ControlIntent("ClientSearch", "NameOfInspectionContact"));
+        _ui.PressSequentiallyAsync(_locators.NameOfInspectionContact, value, new ControlIntent("ClientSearch", "NameOfInspectionContact"));
 
     public Task<string> CaptureNameOfInspectionContactAsync(string property = "") =>
         _ui.CaptureAsync(_locators.NameOfInspectionContact, property, new ControlIntent("ClientSearch", "NameOfInspectionContact"));
@@ -374,7 +374,7 @@ public sealed class ClientSearchPage
         _ui.ExistsAsync(_locators.Verify);
 
     public Task EnterWebsiteAddressAsync(string value) =>
-        _ui.FillAsync(_locators.WebsiteAddress, value, new ControlIntent("ClientSearch", "WebsiteAddress"));
+        _ui.PressSequentiallyAsync(_locators.WebsiteAddress, value, new ControlIntent("ClientSearch", "WebsiteAddress"));
 
     public Task<string> CaptureWebsiteAddressAsync(string property = "") =>
         _ui.CaptureAsync(_locators.WebsiteAddress, property, new ControlIntent("ClientSearch", "WebsiteAddress"));
@@ -411,7 +411,7 @@ public sealed class ClientSearchPage
         _ui.WaitAsync(_locators.NamedInsuredZipCode, expected, new ControlIntent("ClientSearch", "NamedInsuredZipCode"));
 
     public Task EnterNamedInsuredZipCodeAsync(string value) =>
-        _ui.FillAsync(_locators.NamedInsuredZipCode, value, new ControlIntent("ClientSearch", "NamedInsuredZipCode"));
+        _ui.PressSequentiallyAsync(_locators.NamedInsuredZipCode, value, new ControlIntent("ClientSearch", "NamedInsuredZipCode"));
 
     public Task<string> CaptureNamedInsuredZipCodeAsync(string property = "") =>
         _ui.CaptureAsync(_locators.NamedInsuredZipCode, property, new ControlIntent("ClientSearch", "NamedInsuredZipCode"));
@@ -426,13 +426,13 @@ public sealed class ClientSearchPage
         _ui.PressAsync(_locators.AdditionalInsuredIndividualZipCode, key, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualZipCode"));
 
     public Task EnterLastNameAsync(string value) =>
-        _ui.FillAsync(_locators.LastName, value, new ControlIntent("ClientSearch", "LastName"));
+        _ui.PressSequentiallyAsync(_locators.LastName, value, new ControlIntent("ClientSearch", "LastName"));
 
     public Task<string> CaptureLastNameAsync(string property = "") =>
         _ui.CaptureAsync(_locators.LastName, property, new ControlIntent("ClientSearch", "LastName"));
 
     public Task EnterNamedInsuredIndividualEnterSSNAsync(string value) =>
-        _ui.FillAsync(_locators.NamedInsuredIndividualEnterSSN, value, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"));
+        _ui.PressSequentiallyAsync(_locators.NamedInsuredIndividualEnterSSN, value, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"));
 
     public Task WaitForPrimaryPhoneAsync(string expected) =>
         _ui.WaitAsync(_locators.PrimaryPhone, expected, new ControlIntent("ClientSearch", "PrimaryPhone"));
@@ -462,13 +462,13 @@ public sealed class ClientSearchPage
         _ui.WaitAsync(_locators.AuditTelephone, expected, new ControlIntent("ClientSearch", "AuditTelephone"));
 
     public Task EnterAuditTelephoneAsync(string value) =>
-        _ui.FillAsync(_locators.AuditTelephone, value, new ControlIntent("ClientSearch", "AuditTelephone"));
+        _ui.PressSequentiallyAsync(_locators.AuditTelephone, value, new ControlIntent("ClientSearch", "AuditTelephone"));
 
     public Task WaitForInspectionTelephoneAsync(string expected) =>
         _ui.WaitAsync(_locators.InspectionTelephone, expected, new ControlIntent("ClientSearch", "InspectionTelephone"));
 
     public Task EnterInspectionTelephoneAsync(string value) =>
-        _ui.FillAsync(_locators.InspectionTelephone, value, new ControlIntent("ClientSearch", "InspectionTelephone"));
+        _ui.PressSequentiallyAsync(_locators.InspectionTelephone, value, new ControlIntent("ClientSearch", "InspectionTelephone"));
 
     public Task PressInspectionTelephoneAsync(string key) =>
         _ui.PressAsync(_locators.InspectionTelephone, key, new ControlIntent("ClientSearch", "InspectionTelephone"));

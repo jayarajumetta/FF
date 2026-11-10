@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InsuranceAutomation.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7dd8e242810f9695fa93d368d6955dd9571601e1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+adba2ab6d2c0f75d61cfc4062d6707e8289cb71d")]
 [assembly: System.Reflection.AssemblyProductAttribute("InsuranceAutomation.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InsuranceAutomation.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

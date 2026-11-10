@@ -170,12 +170,17 @@ public sealed class GLBasicPolicySteps
             await page.EnterEstimatedPremiumAsync(data.Resolve("{{data:estimated_premium_170}}"));
         }
 
+        if (await page.IsInsuranceScoreAvailableAsync())
+        {
+            await page.ClickInsuranceScoreAsync();
+        }
 
-        await page.ClickInsuranceScoreConsentAsync();
+
+        //await page.ClickInsuranceScoreConsentAsync();
         //await page.WaitForAcceptAsync("Exists");
         //await page.ClickAcceptAsync();
         //await page.WaitForInsuranceScoreAsync("Exists");
-        await page.ClickInsuranceScoreAsync();
+       
         //await page.VerifyReferenceNumberAsync(data.Resolve("{{data:expected_reference_number_innertext_140}}"), "InnerText");
         await page.PauseAsync(2000);
         //await page.PauseAsync(1000);

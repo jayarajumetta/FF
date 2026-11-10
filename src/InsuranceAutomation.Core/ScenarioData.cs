@@ -110,9 +110,12 @@ public sealed class ScenarioData
             var scenarioPath = SafeFileAccess.ResolveExistingFileUnderRoot(scenarioRelative, MaxJsonBytes, ".json");
             return JsonDocument.Parse(File.ReadAllText(scenarioPath));
         }
-        var scenarioDirectory = Path.GetDirectoryName(scenarioFile);
+        var scenarioDirectory = Path.GetDirectoryName(Path.Combine(repositoryRoot, scenarioRelative));
         if (string.IsNullOrWhiteSpace(scenarioDirectory)) return Direct();
-        var testDataRoot = Directory.GetParent(scenarioDirectory)?.FullName;
+        var scenariosRoot = new DirectoryInfo(scenarioDirectory);
+        while (scenariosRoot is not null && !scenariosRoot.Name.Equals("Scenarios", StringComparison.OrdinalIgnoreCase))
+            scenariosRoot = scenariosRoot.Parent;
+        var testDataRoot = scenariosRoot?.Parent?.FullName;
         if (string.IsNullOrWhiteSpace(testDataRoot)) return Direct();
         var testDataRootRelative = SafeFileAccess.ToRepositoryRelativePath(testDataRoot);
         var safeTestDataRoot = SafeFileAccess.ResolveExistingDirectoryUnderRoot(testDataRootRelative);
@@ -216,6 +219,7 @@ public sealed class ScenarioData
     public string GetCanonicalField(string fieldName, string fallback = "")
     {
         if (_canonicalFields.TryGetValue(fieldName, out var value)) return Track(fieldName, Resolve(value));
+        if (_static.TryGetValue(fieldName, out var staticValue)) return Track(fieldName, Resolve(staticValue));
         return Track(fieldName, fallback);
     }
     public string GetCanonicalFieldRequired(string fieldName)
