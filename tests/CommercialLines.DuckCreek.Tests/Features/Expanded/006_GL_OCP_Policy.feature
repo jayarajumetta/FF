@@ -37,17 +37,17 @@ Feature: GL OCP Policy
 
     Examples:
       | dataFile | stateCode | stateVariant | stateName | externalDataFile |
-      | TestData/Scenarios/006_gl_ocp_policy_az.json | AZ | AZ | Arizona | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/006_gl_ocp_policy_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/006_gl_ocp_policy_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/006_gl_ocp_policy_ma.json | MA | MA | Massachusetts | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/006_gl_ocp_policy_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/006_gl_ocp_policy_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/006_gl_ocp_policy_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/006_gl_ocp_policy_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/006_gl_ocp_policy_ny.json | NY | NY | New York | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/006_gl_ocp_policy_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/006_gl_ocp_policy_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/006_gl_ocp_policy_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/006_gl_ocp_policy_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/006_gl_ocp_policy_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_az.json | AZ | AZ | Arizona | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_ma.json | MA | MA | Massachusetts | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_ny.json | NY | NY | New York | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/Expanded/006_gl_ocp_policy_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |

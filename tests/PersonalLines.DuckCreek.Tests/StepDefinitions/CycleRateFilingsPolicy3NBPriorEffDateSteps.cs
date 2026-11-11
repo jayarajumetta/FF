@@ -19,7 +19,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.WaitForNewQuoteAsync("Exists");
+        //await page.WaitForNewQuoteAsync("Exists");
         await page.VerifyNewQuoteAsync(data.Resolve("{{data:expected_btn_new_quote_2}}"), "");
         await page.ClickNewQuoteAsync();
     }
@@ -36,13 +36,13 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         var data = _scenario.Get<ScenarioData>();
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.WaitForLblClientInfoAsync("Exists");
+        //await page.WaitForLblClientInfoAsync("Exists");
         await page.VerifyLblClientInfoAsync(data.Resolve("{{data:expected_lbl_client_info_5}}"), "");
         await page.EnterTxtFirstAsync(data.Get("AL_ClientData.First Name"));
         await page.EnterTxtLastAsync(data.Get("AL_ClientData.Last Name"));
-        await page.WaitForAddEditAdditionalInterestFirstMortgageeSearchAsync("Exists");
+        //await page.WaitForAddEditAdditionalInterestFirstMortgageeSearchAsync("Exists");
         await page.ClickAddEditAdditionalInterestFirstMortgageeSearchAsync();
-        await page.WaitForBtnCreateNewClientAsync("Exists");
+        //await page.WaitForBtnCreateNewClientAsync("Exists");
         await page.ClickBtnCreateNewClientAsync();
         await page.ClickPricingDetailsNextAsync();
         data.Set("StateName", data.Resolve("{{data:statename}}"));
@@ -69,7 +69,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         //await page.EnterDOBAsync(data.Get("DOB"));
         await page.EnterBestPhoneAccountOwnerAsync(data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
         await page.EnterEmailAccountOwnerAsync(data.Resolve("{{data:txt_email_account_owner_19}}"));
-        await page.WaitForMaritalStatusAsync("Exists");
+        //await page.WaitForMaritalStatusAsync("Exists");
         await page.ClickSingleAsync();
         //if (data.Condition("'Marital Status' == \"Single\""))
         //{
@@ -195,7 +195,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         }
         if (data.Condition("State == \"NY\" OR State == \"KY\""))
         {
-            await page.WaitForCountyYesAsync("Exists");
+            //await page.WaitForCountyYesAsync("Exists");
             await page.SelectCountyYesAsync("");
         }
 
@@ -259,7 +259,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         //await page.ClickStartQuoteAsync();
 
 
-        await page.WaitForStartQuoteAsync("True");
+        //await page.WaitForStartQuoteAsync("True");
         await page.ClickStartQuoteAsync();
 
 
@@ -883,7 +883,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
 
         if (await page.IsCONTINUED555DPresentAsync())
         {
-            await page.WaitForCONTINUED555DAsync("Exists");
+            //await page.WaitForCONTINUED555DAsync("Exists");
         }
         if (await page.IsCONTINUED555DPresentAsync())
         {
@@ -1379,7 +1379,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         if (await page.IsCONTINUEPresentAsync())
         {
-                    await page.WaitForCONTINUEAsync("Exists");
+                    //await page.WaitForCONTINUEAsync("Exists");
         }
         //await page.VerifyCONTINUEAsync("Exists", "");
         if (await page.IsCONTINUEPresentAsync())
@@ -1401,7 +1401,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         if (await page.IsUWCONTINUEPresentAsync())
         {
-                    await page.WaitForUWCONTINUEAsync("Exists");
+                    //await page.WaitForUWCONTINUEAsync("Exists");
         }
         //await page.VerifyUWCONTINUEAsync("Exists", "");
         if (await page.IsUWCONTINUEPresentAsync())
@@ -1423,7 +1423,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         if (await page.IsEditClaimPresentAsync())
         {
-                    await page.WaitForEditClaimAsync("Exists");
+                    //await page.WaitForEditClaimAsync("Exists");
         }
         if (await page.IsEditClaimPresentAsync())
         {
@@ -1564,7 +1564,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
                     await page.SelectNoDefensiveDriverDiscountAsync("");
         }
 
-        await page.WaitForDiscountNEWNextAsync("Visible");
+        //await page.WaitForDiscountNEWNextAsync("Visible");
         await page.ClickDiscountNEWNextAsync();
         if (await page.IsLoadingPresentAsync())
         {

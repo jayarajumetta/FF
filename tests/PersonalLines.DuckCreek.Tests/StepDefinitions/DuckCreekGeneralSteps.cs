@@ -127,7 +127,7 @@ public sealed class DuckCreekGeneralSteps
 
         await navigationPage.NavigateToScreenAsync("Submission");
 
-        await submissionPage.WaitForTransmitAsync("Exists");
+        //await submissionPage.WaitForTransmitAsync("Exists");
         await submissionPage.ClickTransmitAsync();
 
         await submissionPage.WaitForPolicyNumberAsync("Exists");
@@ -142,22 +142,22 @@ public sealed class DuckCreekGeneralSteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.WaitForSearchTextAsync("Visible");
+        //await page.WaitForSearchTextAsync("Visible");
         await page.EnterSearchTextSequentiallyAsync(data.Get("Quote_Num"));
-        await page.WaitForQuickSearchButtonAsync("Visible");
+        //await page.WaitForQuickSearchButtonAsync("Visible");
         await page.ClickQuickSearchButtonAsync();
-        await page.WaitForSearchMethodEGDescriptionPolicyAsync("Visible");
+        //await page.WaitForSearchMethodEGDescriptionPolicyAsync("Visible");
         await page.EnterSearchMethodEGDescriptionPolicySequentiallyAsync("Description");
         await page.PressSearchMethodEGDescriptionPolicyAsync("Tab");
-        await page.WaitForSearchButtonAsync("Visible");
+        //await page.WaitForSearchButtonAsync("Visible");
         await page.ClickSearchButtonAsync();
-        await page.WaitForSearchResultsInsuredNameColumnHeaderAsync("Visible");
+        //await page.WaitForSearchResultsInsuredNameColumnHeaderAsync("Visible");
         await page.ClickSearchResultInsuredNameLinkAsync();
-        await page.WaitForCommercialAutoQuoteLinkAsync("Visible");
+        //await page.WaitForCommercialAutoQuoteLinkAsync("Visible");
         await page.ClickCommercialAutoQuoteLinkAsync();
 
         var navigationPage = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await navigationPage.WaitForClientLinkAsync("Visible");
+        //await navigationPage.WaitForClientLinkAsync("Visible");
         await navigationPage.ClickClientLinkAsync();
         await navigationPage.WaitForClientPageTitleAsync("Visible");
     }

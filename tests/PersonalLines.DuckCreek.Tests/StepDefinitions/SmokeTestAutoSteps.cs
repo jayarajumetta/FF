@@ -19,7 +19,7 @@ public sealed class SmokeTestAutoSteps
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.WaitForNewQuoteAsync("Exists");
+        //await page.WaitForNewQuoteAsync("Exists");
         await page.VerifyNewQuoteAsync(data.Resolve("{{data:expected_btn_new_quote_2}}"), "");
         await page.ClickNewQuoteAsync();
 
@@ -34,13 +34,13 @@ public sealed class SmokeTestAutoSteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.WaitForLblClientInfoAsync("Exists");
+        //await page.WaitForLblClientInfoAsync("Exists");
         await page.VerifyLblClientInfoAsync(data.Resolve("{{data:expected_lbl_client_info_5}}"), "");
         await page.EnterTxtFirstAsync(data.Get("First Name"));
         await page.EnterTxtLastAsync(data.Get("Last Name"));
-        await page.WaitForAddEditAdditionalInterestFirstMortgageeSearchAsync("Exists");
+        //await page.WaitForAddEditAdditionalInterestFirstMortgageeSearchAsync("Exists");
         await page.ClickAddEditAdditionalInterestFirstMortgageeSearchAsync();
-        await page.WaitForBtnCreateNewClientAsync("Exists");
+        //await page.WaitForBtnCreateNewClientAsync("Exists");
         await page.ClickBtnCreateNewClientAsync();
         await page.ClickPricingDetailsNextAsync();
         data.Set("StateName", data.Resolve("{{data:statename}}"));
@@ -100,7 +100,7 @@ public sealed class SmokeTestAutoSteps
         await page.EnterStateAsync(data.Resolve("{{data:state_44}}"));
         await page.SelectWritingCompanyAsync("");
         await page.EnterWritingCompanyAsync(data.Resolve("{{data:writingcompany_48}}"));
-        await page.WaitForSameAsMailingAddressAsync("True");
+        //await page.WaitForSameAsMailingAddressAsync("True");
         await page.ClickSameAsMailingAddressAsync();
 
         if (data.Condition("State == \"NY\""))
@@ -114,10 +114,10 @@ public sealed class SmokeTestAutoSteps
         }
         if (data.Condition("State == \"NY\" OR State == \"KY\""))
         {
-            await page.WaitForCountyYesAsync("Exists");
+            //await page.WaitForCountyYesAsync("Exists");
             await page.SelectCountyYesAsync("");
         }
-        await page.WaitForStartQuoteAsync("True");
+        //await page.WaitForStartQuoteAsync("True");
         await page.ClickStartQuoteAsync();
 
         if (await page.IsPROCEEDPresentAsync())
@@ -151,7 +151,7 @@ public sealed class SmokeTestAutoSteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await page.WaitForCaptureQuoteNumberAsync("Exists");
+        //await page.WaitForCaptureQuoteNumberAsync("Exists");
         data.Set("QuoteNumber2", await page.CaptureQNumAsync("InnerText"));
         var quoteNumber = data.Get("QuoteNumber2").ReplaceLineEndings(string.Empty);
         var lastName = data.Get("Last Name");
