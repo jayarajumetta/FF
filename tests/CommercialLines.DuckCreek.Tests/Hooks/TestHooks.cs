@@ -92,7 +92,7 @@ public sealed class TestHooks
 
         if (browser.IsStarted && failed && config.Browser.ScreenshotOnFailure)
         {
-            try { screenshot = await browser.CaptureScreenshotAsync("scenario.png"); }
+            try { screenshot = await browser.CaptureScreenshotAsync("scenario.png"); browser.FailureScreenshotCaptured = true; }
             catch (Exception ex) { logger.Warn($"Unable to capture failure screenshot: {ex.Message}"); }
         }
 

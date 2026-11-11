@@ -64,12 +64,12 @@ public sealed class BrowserOptions
     public int ViewportHeight { get; init; } = 900;
     public int ActionTimeoutMs { get; init; } = 15000;
     public int NavigationTimeoutMs { get; init; } = 30000;
-    public bool Trace { get; init; } = true;
-    public bool Video { get; init; } = true;
-    public bool Har { get; init; } = true;
+    public bool Trace { get; init; }
+    public bool Video { get; init; }
+    public bool Har { get; init; }
     public bool ScreenshotOnFailure { get; init; } = true;
     public bool ScreenshotEachStep { get; init; }
-    public bool ScreenshotAtScenarioEnd { get; init; } = true;
+    public bool ScreenshotAtScenarioEnd { get; init; }
     public bool HighlightInteractions { get; init; } = true;
     public int HighlightDurationMs { get; init; } = 120;
 }
@@ -97,16 +97,16 @@ public sealed class ReportingOptions
     public bool ExcludeVideos { get; init; } = true;
     public bool ExcludePassedVideos { get; init; } = true;
     public bool ShouldExcludeVideo(bool passed) => ExcludeVideos || (ExcludePassedVideos && passed);
-    public bool CollectConsole { get; init; } = true;
-    public bool CollectNetwork { get; init; } = true;
+    public bool CollectConsole { get; init; }
+    public bool CollectNetwork { get; init; }
     public EvidenceAttachmentPolicy Passed { get; init; } = EvidenceAttachmentPolicy.PassedDefaults();
     public EvidenceAttachmentPolicy Failed { get; init; } = EvidenceAttachmentPolicy.FailedDefaults();
     public string ResultsRoot { get; set; } = "TestResults";
     public string ArtifactRoot { get; set; } = "Artifacts";
     public bool HtmlReport { get; init; } = true;
     public bool IncludeResolvedData { get; init; } = true;
-    public bool IncludeConsoleErrors { get; init; } = true;
-    public bool IncludeNetworkErrors { get; init; } = true;
+    public bool IncludeConsoleErrors { get; init; }
+    public bool IncludeNetworkErrors { get; init; }
     public bool CreateEvidenceBundle { get; init; } = true;
 
     // NUnit/Visual Studio/Azure DevOps test-result evidence integration.
@@ -124,14 +124,14 @@ public sealed class EvidenceAttachmentPolicy
     public bool Screenshot { get; init; } = true;
     public bool ExecutionLog { get; init; } = true;
     public bool HtmlReport { get; init; } = true;
-    public bool Video { get; init; } = true;
-    public bool Trace { get; init; } = true;
-    public bool Har { get; init; } = false;
-    public bool Console { get; init; } = true;
-    public bool Network { get; init; } = true;
+    public bool Video { get; init; }
+    public bool Trace { get; init; }
+    public bool Har { get; init; }
+    public bool Console { get; init; }
+    public bool Network { get; init; }
     public bool Bundle { get; init; } = false;
-    public static EvidenceAttachmentPolicy PassedDefaults() => new() { Har = false, Bundle = false };
-    public static EvidenceAttachmentPolicy FailedDefaults() => new() { Har = true, Bundle = true };
+    public static EvidenceAttachmentPolicy PassedDefaults() => new();
+    public static EvidenceAttachmentPolicy FailedDefaults() => new();
 }
 
 public sealed class ExecutionOptions

@@ -25,6 +25,9 @@ public sealed class BrowserSession : IAsyncDisposable
     public string? HarPath { get; private set; }
     public string? EvidenceBundlePath { get; private set; }
     public string? ScreenshotPath { get; private set; }
+    // Tracks whether a failure screenshot was already captured mid-scenario (e.g. AfterStep),
+    // so the scenario-end finalizer does not capture a second, duplicate failure screenshot.
+    public bool FailureScreenshotCaptured { get; set; }
     public void SetArtifactDirectory(string artifactDirectory)
     {
         _artifactDirectory = artifactDirectory;

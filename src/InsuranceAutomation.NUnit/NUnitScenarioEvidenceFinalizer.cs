@@ -26,7 +26,7 @@ public static class NUnitScenarioEvidenceFinalizer
         try
         {
             if (browser.IsStarted && (config.Browser.ScreenshotAtScenarioEnd ||
-                (config.Browser.ScreenshotOnFailure && (scenarioError is not null || verificationFailures.HasFailures))))
+                (config.Browser.ScreenshotOnFailure && (scenarioError is not null || verificationFailures.HasFailures) && !browser.FailureScreenshotCaptured)))
             {
                 try { await browser.CaptureScreenshotAsync("scenario-final.png"); }
                 catch (Exception ex) { logger.Warn($"Unable to capture final scenario screenshot: {ex.Message}"); }
