@@ -2,6 +2,7 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 $sourceRoot = Split-Path $PSScriptRoot -Parent
+. (Join-Path $PSScriptRoot 'Resolve-ParallelWorkers.ps1')
 $configuration = $env:BUILDCONFIGURATION
 $stageKey = $env:STAGEKEY
 $resultsDirectory = $env:STAGERESULTSDIRECTORY
@@ -37,6 +38,7 @@ $headless = $true
 if (-not [bool]::TryParse($env:HEADLESS, [ref]$headless)) { throw 'Headless must be true or false.' }
 $configSource = Join-Path $sourceRoot 'config\framework.json'
 $config = Get-Content -LiteralPath $configSource -Raw | ConvertFrom-Json
+$workers = Resolve-ParallelWorkerCount -FrameworkConfigPath $configSource
 $config.browser.headless = $headless
 $config.browser.channel = ''
 $config.browser.fallbackBrowser = $env:PLAYWRIGHTBROWSER
@@ -56,11 +58,11 @@ $settings = @"
 <RunSettings>
   <RunConfiguration>
 	<ResultsDirectory>$escapedResults\Runner</ResultsDirectory>
-	<MaxCpuCount>1</MaxCpuCount>
+	<MaxCpuCount>$workers</MaxCpuCount>
   </RunConfiguration>
   <NUnit>
 	<WorkDirectory>$escapedResults\NUnitWork</WorkDirectory>
-	<NumberOfTestWorkers>1</NumberOfTestWorkers>
+	<NumberOfTestWorkers>$workers</NumberOfTestWorkers>
 	<UseParentFQNForParametrizedTests>false</UseParentFQNForParametrizedTests>
 	<TestOutputXml>$escapedResults\NUnit</TestOutputXml>
   </NUnit>

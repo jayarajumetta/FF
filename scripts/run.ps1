@@ -25,6 +25,7 @@ try {
     $env:TEST_RESULTS_ROOT = $resultsFull
     $env:TEST_REPOSITORY_ROOT = $repositoryRoot
     $env:TEST_FRAMEWORK_CONFIG = $output.ConfigPath
+    & (Join-Path $PSScriptRoot 'Sync-ParallelSettings.ps1') -RepositoryRoot $repositoryRoot
     $nunitXmlDirectory = Join-Path $resultsFull 'NUnit'
     New-Item -ItemType Directory -Force -Path $nunitXmlDirectory | Out-Null
     Write-Host "Results and evidence: $resultsFull"

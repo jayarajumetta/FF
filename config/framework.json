@@ -62,7 +62,8 @@
     "retryCount": 0,
     "strictUnknownConditions": true,
     "externalDataFile": "TestData/ExternalDataOverrides.json",
-    "deferVerificationFailures": true
+    "deferVerificationFailures": true,
+    "parallel": true
   },
   "waits": {
     "pageReadyTimeoutMs": 20000,

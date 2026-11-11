@@ -2,6 +2,11 @@
 	<PropertyGroup Condition="'$(MSBuildProjectName)' == 'CommercialLines.DuckCreek.Tests' Or '$(MSBuildProjectName)' == 'CommercialLines.ExpertQuote.Tests' Or '$(MSBuildProjectName)' == 'PersonalLines.DuckCreek.Tests'">
 	<EnableConfiguredRetries>true</EnableConfiguredRetries>
   </PropertyGroup>
+	<Target Name="SyncParallelSettings" BeforeTargets="Build"
+			Condition="'$(MSBuildProjectName)' == 'CommercialLines.DuckCreek.Tests' Or '$(MSBuildProjectName)' == 'CommercialLines.ExpertQuote.Tests' Or '$(MSBuildProjectName)' == 'PersonalLines.DuckCreek.Tests'">
+	<Exec Command="pwsh -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)scripts/Sync-ParallelSettings.ps1&quot; -RepositoryRoot &quot;$(MSBuildThisFileDirectory)&quot;"
+		  WorkingDirectory="$(MSBuildThisFileDirectory)" ContinueOnError="WarnAndContinue" />
+  </Target>
 	<Target Name="BuildRetryGenerator" BeforeTargets="ReqnrollCreateProcessFeatureFileInputsCacheFile"
 			Condition="'$(EnableConfiguredRetries)' == 'true'">
 	<Exec Command="dotnet build &quot;$(MSBuildThisFileDirectory)src/InsuranceAutomation.Retry.Generator/InsuranceAutomation.Retry.Generator.csproj&quot; --configuration &quot;$(Configuration)&quot; --property:RetryGeneratorHostProject=&quot;$(MSBuildProjectName)&quot; --nologo"

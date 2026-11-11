@@ -142,4 +142,11 @@ public sealed class ExecutionOptions
     // allowing later steps and all requested evidence to complete. Fatal browser/action failures still fail immediately.
     public bool DeferVerificationFailures { get; init; } = true;
     public string ExternalDataFile { get; init; } = "TestData/ExternalDataOverrides.json";
+
+    // Source of truth for test-level (fixture) parallel execution. Honored by Tosca.runsettings,
+    // which is synced from this value (config/framework.json: execution.parallel) before every build/test run
+    // via Directory.Build.targets -> scripts/Sync-ParallelSettings.ps1, so toggling it requires no code changes.
+    // The release pipeline's EnableParallelExecution variable takes precedence over this value when set,
+    // letting operators disable parallelism from the pipeline without touching config or code.
+    public bool Parallel { get; init; } = true;
 }
