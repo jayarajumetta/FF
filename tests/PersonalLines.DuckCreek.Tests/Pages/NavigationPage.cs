@@ -22,13 +22,71 @@ public sealed class NavigationPage
         await _locators.CloseQuote.EvaluateAsync("el => el.click()");
     }
 
+    public Task ClickDiscountsAdjustmentsNavAsync() =>
+        _ui.ClickAsync(_locators.DiscountsAdjustmentsNav, new ControlIntent("Discounts", "DiscountsAdjustmentsNav"));
+
+    public Task ClickLaunchToChecklistAsync() =>
+        _ui.ClickAsync(_locators.LaunchToChecklist, new ControlIntent("Navigation", "LaunchToChecklist"));
+
+    public Task ClickChecklistOpenedOKAsync() =>
+        _ui.ClickAsync(_locators.ChecklistOpenedOK, new ControlIntent("Navigation", "ChecklistOpenedOK"));
+
+    public Task ClickClientLinkAsync() =>
+        _ui.ClickAsync(_locators.ClientLink, new ControlIntent("Navigation", "ClientLink"));
+
+    public Task WaitForClientLinkAsync(string expected) =>
+        _ui.WaitAsync(_locators.ClientLink, expected, new ControlIntent("Navigation", "ClientLink"));
+
+    public Task WaitForClientPageTitleAsync(string expected) =>
+        _ui.WaitAsync(_locators.ClientPageTitle, expected, new ControlIntent("Navigation", "ClientPageTitle"));
+
+    public Task ClickCloseQuoteAsync() =>
+        _ui.ClickAsync(_locators.CloseQuote, new ControlIntent("Navigation", "CloseQuote"));
+
+    public Task ClickKeepGoingAsync() =>
+        _ui.ClickAsync(_locators.KeepGoing, new ControlIntent("Navigation", "KeepGoing"));
+
+    public Task<bool> IsKeepGoingPresentAsync() => _ui.ExistsAsync(_locators.KeepGoing);
+
+    public Task<string> CaptureNameAndQuoteAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.NameAndQuote, property, new ControlIntent("Navigation", "NameAndQuote"));
+
+    public Task VerifyNameAndQuoteAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.NameAndQuote, expected, property, new ControlIntent("Navigation", "NameAndQuote"));
+
+    public Task NavigateToScreenAsync(string screen) =>
+        _ui.ClickAsync(_locators.GetNavigationLink(screen), new ControlIntent("Navigation", $"NavLink:{screen}"));
+
+    public Task VerifyScreenAsync(string screen) =>
+        _ui.VerifyAsync(_locators.GetScreenHeading(screen), "Visible", "", new ControlIntent("Navigation", $"ScreenHeading:{screen}"));
+
     public Task PressCoveragesNewNextAsync(string key) =>
         _ui.PressAsync(_locators.CoveragesNewNext, key, new ControlIntent("Navigation", "CoveragesNewNext"));
 
     public Task ClickCoveragesNewNextAsync() =>
         _ui.ClickAsync(_locators.CoveragesNewNext, new ControlIntent("Navigation", "CoveragesNewNext"));
+
+    public Task ClickCoveragesTabAsync() =>
+        _ui.ClickAsync(_locators.CoveragesTab, new ControlIntent("Navigation", "CoveragesTab"));
+
+    public Task ClickAdditionalCoveragesTabAsync() =>
+        _ui.ClickAsync(_locators.AdditionalCoveragesTab, new ControlIntent("Navigation", "AdditionalCoveragesTab"));
+
+    public Task WaitForCoveragesHeaderAsync(string expected) =>
+        _ui.WaitAsync(_locators.CoveragesHeader, expected, new ControlIntent("Navigation", "CoveragesHeader"));
+
+    public Task WaitForSubmissionHeaderAsync(string expected) =>
+        _ui.WaitAsync(_locators.SubmissionHeader, expected, new ControlIntent("Navigation", "SubmissionHeader"));
+
+    public Task WaitForAdditionalCoveragesHeaderAsync(string expected) =>
+        _ui.WaitAsync(_locators.AdditionalCoveragesHeader, expected, new ControlIntent("Navigation", "AdditionalCoveragesHeader"));
+
+    public Task WaitForVehicleInformationHeaderAsync(string expected) =>
+        _ui.WaitAsync(_locators.VehicleInformationHeader, expected, new ControlIntent("Navigation", "VehicleInformationHeader"));
+
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
+
     public Task<string> CaptureDriver1Async(string property = "") =>
         _ui.CaptureAsync(_locators.Driver1, property, new ControlIntent("Navigation", "Driver1"));
 
@@ -38,6 +96,48 @@ public sealed class NavigationPage
     public Task ClickEDITCOVERAGEOpt1Async() =>
         _ui.ClickAsync(_locators.EDITCOVERAGEOpt1, new ControlIntent("Navigation", "EDITCOVERAGEOpt1"));
 
+    public Task VerifyUninsuredMotoristsLimitLabelAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.UninsuredMotoristsLimitLabel, expected, property, new ControlIntent("Navigation", "UninsuredMotoristsLimitLabel"));
+
+    public Task<bool> IsUninsuredMotoristsLimitLabelPresentAsync() =>
+        _ui.ExistsAsync(_locators.UninsuredMotoristsLimitLabel);
+
+    public Task<bool> IsExpertQuoteOptionPolicyOptionPresentAsync() =>
+        _ui.ExistsAsync(_locators.ExpertQuoteOptionPolicyOption);
+
+    public Task<bool> IsUninsuredUnderinsuredMotoristLabelPresentAsync() =>
+        _ui.ExistsAsync(_locators.UninsuredUnderinsuredMotoristLabel);
+
+    public Task<bool> IsBodilyInjuryLabelPresentAsync() =>
+        _ui.ExistsAsync(_locators.BodilyInjuryLabel);
+
+    public Task ClickBI_LimitChipAsync() =>
+        _ui.ClickAsync(_locators.BI_LimitChip, new ControlIntent("Navigation", "BI_LimitChip"));
+
+    public Task ClickUMBI_LimitChipAsync() =>
+        _ui.ClickAsync(_locators.UMBI_LimitChip, new ControlIntent("Navigation", "UMBI_LimitChip"));
+
+    public Task<bool> IsMedicalPaymentsLabelPresentAsync() =>
+        _ui.ExistsAsync(_locators.MedicalPaymentsLabel);
+
+    public Task ClickMED_LimitChipAsync() =>
+        _ui.ClickAsync(_locators.MED_LimitChip, new ControlIntent("Navigation", "MED_LimitChip"));
+
+    public Task<bool> IsPropertyDamageLabelPresentAsync() =>
+        _ui.ExistsAsync(_locators.PropertyDamageLabel);
+
+    public Task ClickPD_LimitChipAsync() =>
+        _ui.ClickAsync(_locators.PD_LimitChip, new ControlIntent("Navigation", "PD_LimitChip"));
+
+    public Task<bool> IsUnderinsuredMotoristsLimitLabelPresentAsync() =>
+        _ui.ExistsAsync(_locators.UnderinsuredMotoristsLimitLabel);
+
+    public Task ClickUIMBI_LimitChipAsync() =>
+        _ui.ClickAsync(_locators.UIMBI_LimitChip, new ControlIntent("Navigation", "UIMBI_LimitChip"));
+
+    public Task ClickOptionDetailSaveAndContinueAsync() =>
+        _ui.ClickAsync(_locators.OptionDetailSaveAndContinue, new ControlIntent("Navigation", "OptionDetailSaveAndContinue"));
+
     public Task ClickEDITCOVERAGEOpt2Async() =>
         _ui.ClickAsync(_locators.EDITCOVERAGEOpt2, new ControlIntent("Navigation", "EDITCOVERAGEOpt2"));
 
@@ -46,11 +146,20 @@ public sealed class NavigationPage
     public Task SetOption1Async(string value) =>
             _ui.SmartSetAsync(_locators.Option1, value, new ControlIntent("Navigation", "Option1"));
 
+    public Task<bool> IsOption1PresentAsync() =>
+        _ui.ExistsAsync(_locators.Option1);
+
     public Task SetOption2Async(string value) =>
         _ui.SmartSetAsync(_locators.Option2, value, new ControlIntent("Navigation", "Option2"));
 
+    public Task<bool> IsOption2PresentAsync() =>
+        _ui.ExistsAsync(_locators.Option2);
+
     public Task SetOption3Async(string value) =>
         _ui.SmartSetAsync(_locators.Option3, value, new ControlIntent("Navigation", "Option3"));
+
+    public Task<bool> IsOption3PresentAsync() =>
+        _ui.ExistsAsync(_locators.Option3);
 
     public Task PressOption3Async(string key) =>
         _ui.PressAsync(_locators.Option3, key, new ControlIntent("Navigation", "Option3"));
@@ -96,6 +205,21 @@ public sealed class NavigationPage
     public Task ClickV1CollDedAsync() =>
         _ui.ClickAsync(_locators.V1CollDed, new ControlIntent("Navigation", "V1CollDed"));
 
+    public Task ClickV1CollDed500Async() =>
+        _ui.ClickAsync(_locators.V1CollDed500, new ControlIntent("Navigation", "V1CollDed500"));
+
+    public Task ClickV2CollDed1000Async() =>
+        _ui.ClickAsync(_locators.V2CollDed1000, new ControlIntent("Navigation", "V2CollDed1000"));
+
+    public Task ClickV2CollDed500Async() =>
+        _ui.ClickAsync(_locators.V2CollDed500, new ControlIntent("Navigation", "V2CollDed500"));
+
+    public Task ClickV3CollDed500Async() =>
+        _ui.ClickAsync(_locators.V3CollDed500, new ControlIntent("Navigation", "V3CollDed500"));
+
+    public Task ClickV4CollDed500Async() =>
+        _ui.ClickAsync(_locators.V4CollDed500, new ControlIntent("Navigation", "V4CollDed500"));
+
     public Task ClickV1CollDedMoreOptAsync() =>
         _ui.ClickAsync(_locators.V1CollDedMoreOpt, new ControlIntent("Navigation", "V1CollDedMoreOpt"));
 
@@ -104,6 +228,24 @@ public sealed class NavigationPage
 
     public Task ClickV1CompDedAsync() =>
         _ui.ClickAsync(_locators.V1CompDed, new ControlIntent("Navigation", "V1CompDed"));
+
+    public Task ClickV1CompDed500Async() =>
+        _ui.ClickAsync(_locators.V1CompDed500, new ControlIntent("Navigation", "V1CompDed500"));
+
+    public Task ClickV2CompDed200Async() =>
+        _ui.ClickAsync(_locators.V2CompDed200, new ControlIntent("Navigation", "V2CompDed200"));
+
+    public Task ClickV2CompDed500Async() =>
+        _ui.ClickAsync(_locators.V2CompDed500, new ControlIntent("Navigation", "V2CompDed200"));
+
+    public Task ClickV3CompDed2000Async() =>
+        _ui.ClickAsync(_locators.V3CompDed2000, new ControlIntent("Navigation", "V3CompDed2000"));
+
+    public Task ClickV3CompDed500Async() =>
+        _ui.ClickAsync(_locators.V3CompDed500, new ControlIntent("Navigation", "V3CompDed2000"));
+
+    public Task ClickV4CompDed1000Async() =>
+        _ui.ClickAsync(_locators.V4CompDed1000, new ControlIntent("Navigation", "V4CompDed1000"));
 
     public Task ClickV1CompDedMoreOptAsync() =>
         _ui.ClickAsync(_locators.V1CompDedMoreOpt, new ControlIntent("Navigation", "V1CompDedMoreOpt"));
@@ -203,4 +345,7 @@ public sealed class NavigationPage
 
     public Task ClickVehicleSummaryAsync() =>
         _ui.ClickAsync(_locators.VehicleSummary, new ControlIntent("Navigation", "VehicleSummary"));
+
+    public Task ClickOprion2Async() =>
+        _ui.ClickAsync(_locators.Option2CheckBox, new ControlIntent("Navigation", "Option2CheckBox"));
 }

@@ -23,6 +23,7 @@
     "stateVariant": "MO"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "MISSOURI",
@@ -130,7 +131,7 @@
     "MO_ClientData.Apartment": "19",
     "AL_ClientData.Apartment": "19",
     "MO_ClientData.SSN": "666015624",
-    "AL_ClientData.SSN": "666015624",
+    "AL_ClientData.SSN": "666358818",
     "MO_ClientData.State": "MO",
     "AL_ClientData.State": "MO",
     "MO_ClientData.Gender": "M",

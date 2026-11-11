@@ -35,13 +35,13 @@ public sealed class SubmissionPage
         _ui.ExistsAsync(_locators.Caption);
 
     public Task VerifyChecklist1Async(string expected, string property) =>
-        _ui.VerifyAsync(_locators.Checklist1, expected, property, new ControlIntent("Submission", "Checklist1"));
+        _ui.VerifyAsync(_locators.LaunchToChecklist, expected, property, new ControlIntent("Submission", "Checklist1"));
 
     public Task ClickChecklist1Async() =>
-        _ui.ClickAsync(_locators.Checklist1, new ControlIntent("Submission", "Checklist1"));
+        _ui.ClickAsync(_locators.LaunchToChecklist, new ControlIntent("Submission", "Checklist1"));
 
     public Task<bool> IsChecklist1PresentAsync() =>
-        _ui.ExistsAsync(_locators.Checklist1);
+        _ui.ExistsAsync(_locators.LaunchToChecklist);
 
     public Task ClickChecklistCloseOkAsync() =>
         _ui.ClickAsync(_locators.ChecklistCloseOk, new ControlIntent("Submission", "ChecklistCloseOk"));
@@ -54,6 +54,19 @@ public sealed class SubmissionPage
 
     public Task<bool> IsCommentsPresentAsync() =>
         _ui.ExistsAsync(_locators.Comments);
+
+    public async Task<int> FillAllAgentCommentsAsync(string value)
+    {
+        var fields = _locators.AgentCommentFields;
+        var count = await fields.CountAsync();
+        for (var index = 0; index < count; index++)
+        {
+            var field = fields.Nth(index);
+            await _ui.FillAsync(field, value, new ControlIntent("Submission", $"AgentComment{index}"));
+            await Assertions.Expect(field).ToHaveValueAsync(value);
+        }
+        return count;
+    }
 
     public Task VerifyCorrectionNeededStep1Async(string expected, string property) =>
         _ui.VerifyAsync(_locators.CorrectionNeededStep1, expected, property, new ControlIntent("Submission", "CorrectionNeededStep1"));
@@ -88,6 +101,17 @@ public sealed class SubmissionPage
     public Task WaitForPolicyNumberAsync(string expected) =>
         _ui.WaitAsync(_locators.PolicyNumber, expected, new ControlIntent("Submission", "PolicyNumber"));
 
+    public async Task WaitForGeneratedPolicyNumberAsync()
+    {
+        await _ui.WaitAsync(_locators.PolicyNumberValue, "Visible", new ControlIntent("Submission", "PolicyNumberValue"));
+        await Assertions.Expect(_locators.PolicyNumberValue).ToHaveTextAsync(
+            new System.Text.RegularExpressions.Regex(@"\S"),
+            new() { Timeout = 30_000, UseInnerText = true });
+    }
+
+    public Task WaitForTransmitConfirmationAsync(string expected) =>
+        _ui.WaitAsync(_locators.TransmitConfirmation, expected, new ControlIntent("Submission", "PolicyNumber"));
+
     public Task<string> CapturePolicyNumberAsync(string property = "") =>
         _ui.CaptureAsync(_locators.PolicyNumber, property, new ControlIntent("Submission", "PolicyNumber"));
 
@@ -118,8 +142,20 @@ public sealed class SubmissionPage
     public Task WaitForSubmission1Async(string expected) =>
         _ui.WaitAsync(_locators.Submission1, expected, new ControlIntent("Submission", "Submission1"));
 
+    public async Task WaitForSubmissionReadyAsync()
+    {
+        await _page.WaitForLoadStateAsync(LoadState.Load, new() { Timeout = 60_000 });
+        await _locators.Submission1.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60_000 });
+    }
     public Task WaitForTransmitAsync(string expected) =>
         _ui.WaitAsync(_locators.Transmit, expected, new ControlIntent("Submission", "Transmit"));
+
+    public Task WaitForTransmitAsync() =>
+        _locators.Transmit.WaitForAsync(new LocatorWaitForOptions
+        {
+            State = WaitForSelectorState.Visible,
+            Timeout = 30_000
+        });
 
     public Task ClickTransmitAsync() =>
         _ui.ClickAsync(_locators.Transmit, new ControlIntent("Submission", "Transmit"));
@@ -129,5 +165,11 @@ public sealed class SubmissionPage
 
     public Task NavigateAsync(string url) =>
         _page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+
+    public Task ClickChecklistOpenedOKAsync() =>
+        _ui.ClickAsync(_locators.ChecklistOpenedOK, new ControlIntent("Navigation", "ChecklistOpenedOK"));
+
+    public Task ClickSubmissionLinkAsync() =>
+        _ui.ClickAsync(_locators.Lnk_Submission, new ControlIntent("Submission", "submission link"));
 
 }

@@ -23,6 +23,7 @@
     "stateVariant": "NE"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "NEBRASKA",
@@ -130,7 +131,7 @@
     "NE_ClientData.Apartment": "19",
     "AL_ClientData.Apartment": "19",
     "NE_ClientData.SSN": "888016837",
-    "AL_ClientData.SSN": "888016837",
+    "AL_ClientData.SSN": "666358818",
     "NE_ClientData.State": "NE",
     "AL_ClientData.State": "NE",
     "NE_ClientData.Gender": "M",

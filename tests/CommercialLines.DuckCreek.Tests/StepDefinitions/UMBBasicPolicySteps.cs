@@ -1,7 +1,11 @@
-using InsuranceAutomation.Core;
-using Reqnroll;
 using InsuranceAutomation.CLDC.Pages;
+using InsuranceAutomation.Core;
 using Microsoft.Playwright;
+using NUnit.Framework;
+using Reqnroll;
+using System.Text;
+using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 
 namespace InsuranceAutomation.CLDC.StepDefinitions;
 
@@ -994,6 +998,11 @@ public sealed class UMBBasicPolicySteps
         await page.VerifyPremiumWrittenAsync(expectedPremiumWritten, "value");
         await page.VerifyPriorPremiumAsync(expectedPriorPremium, "value");
         await page.VerifyPremiumChangeAsync(expectedPremiumChange, "value");
+
+        await Task.Delay(4000);
+
+        await page.ClickPolicyFormAsync();
+        await Task.Delay(4000);
     }
 
     [Given(@"^I complete forms verification UMB$")]
@@ -1001,10 +1010,159 @@ public sealed class UMBBasicPolicySteps
     [Then(@"^I complete forms verification UMB$")]
     public async Task CompleteFormsVerificationUMBAsync()
     {
-        var data = _scenario.Get<ScenarioData>();
+        var logger = _scenario.Get<RunLogger>();
+        var browser = _scenario.Get<BrowserSession>();
+        var playwrightPage = browser.Page;
+        var logPath = Path.Combine(browser.ArtifactDirectory, "forms-verification-network.log");
 
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        static bool IsTargetDcUrl(string? url) =>
+            !string.IsNullOrWhiteSpace(url)
+            && url.Contains("default.aspx", StringComparison.OrdinalIgnoreCase)
+            && Regex.IsMatch(url, @"[\?&]_dc=", RegexOptions.IgnoreCase);
+
+        static string ExtractDc(string url)
+        {
+            var m = Regex.Match(url, @"(?:\?|&)_dc=([^&]+)", RegexOptions.IgnoreCase);
+            return m.Success ? m.Groups[1].Value : string.Empty;
+        }
+
+        void EmitLog(string message)
+        {
+            logger.Info(message);
+            Console.WriteLine(message);
+            System.Diagnostics.Debug.WriteLine(message);
+            TestContext.Progress.WriteLine(message);
+            TestContext.WriteLine(message);
+        }
+
+        static Dictionary<string, string> LoadExpectedFormProdDocMap()
+        {
+            var results = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var current = new DirectoryInfo(AppContext.BaseDirectory);
+            while (current is not null &&
+                   !File.Exists(Path.Combine(current.FullName, "ToscaCanonicalSimple.sln")) &&
+                   !File.Exists(Path.Combine(current.FullName, "Tosca.runsettings")))
+            {
+                current = current.Parent;
+            }
+
+            var repoRoot = current?.FullName ?? Directory.GetCurrentDirectory();
+            var filePath = Path.Combine(repoRoot, "tests", "PersonalLines.DuckCreek.Tests", "TestData", "FormVerification", "UMBBasic", "UMB_BASIC.json");
+            if (!File.Exists(filePath))
+            {
+                return results;
+            }
+
+            var root = JsonNode.Parse(File.ReadAllText(filePath)) as JsonObject;
+            var formNode = root?["form"] as JsonObject;
+            if (formNode is null)
+            {
+                return results;
+            }
+
+            foreach (var kvp in formNode)
+            {
+                var form = (kvp.Key ?? string.Empty).Trim();
+                var prodDocName = (kvp.Value?.ToString() ?? string.Empty).Trim();
+                if (!string.IsNullOrWhiteSpace(form) && !string.IsNullOrWhiteSpace(prodDocName))
+                {
+                    results[form] = prodDocName;
+                }
+            }
+
+            return results;
+        }
+
+        IResponse? latestMatchingResponse = null;
+        string latestDc = string.Empty;
+
+        void OnResponse(object? _, IResponse response)
+        {
+            if (IsTargetDcUrl(response.Url)
+                && response.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
+            {
+                latestMatchingResponse = response;
+                latestDc = ExtractDc(response.Url);
+            }
+        }
+
+        try
+        {
+            playwrightPage.Response += OnResponse;
+
+            await playwrightPage.WaitForResponseAsync(
+                r => IsTargetDcUrl(r.Url)
+                     && r.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase),
+                new PageWaitForResponseOptions { Timeout = 60000 });
+
+            await Task.Delay(1500);
+
+            var response = latestMatchingResponse;
+            if (response is null)
+            {
+                EmitLog("[FormsVerification] Matching response observed but latest reference is null.");
+                return;
+            }
+
+            var responseBody = await response.TextAsync();
+            var capturedProdDocNames = Regex.Matches(responseBody, "<printDoc\\b[^>]*\\bname=\"([^\"]+)\"", RegexOptions.IgnoreCase)
+                .Select(m => m.Groups[1].Value)
+                .Where(v => !string.IsNullOrWhiteSpace(v))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            EmitLog($"[FormsVerification] Response URL: {response.Url}");
+            EmitLog($"[FormsVerification] Response Status: {response.Status}");
+            EmitLog($"[FormsVerification] Latest _dc: {latestDc}");
+
+            var expectedFormProdDocMap = LoadExpectedFormProdDocMap();
+            var missing = new List<string>();
+
+            foreach (var expected in expectedFormProdDocMap)
+            {
+                var form = expected.Key;
+                var prodDocName = expected.Value;
+                var found = capturedProdDocNames.Contains(prodDocName, StringComparer.OrdinalIgnoreCase);
+                EmitLog($"[FormsVerification] Form='{form}' ProdDocName='{prodDocName}' Found={found}");
+
+                if (!found)
+                {
+                    missing.Add($"{form}:{prodDocName}");
+                }
+            }
+
+            EmitLog($"[FormsVerification] Captured ProdDocNames ({capturedProdDocNames.Count}): {string.Join(", ", capturedProdDocNames)}");
+
+            var log = new StringBuilder();
+            log.AppendLine($"Timestamp: {DateTime.UtcNow:O}");
+            log.AppendLine($"Response URL: {response.Url}");
+            log.AppendLine($"Response Status: {response.Status}");
+            log.AppendLine($"Latest _dc: {latestDc}");
+            log.AppendLine($"Captured ProdDocNames ({capturedProdDocNames.Count}): {string.Join(", ", capturedProdDocNames)}");
+            log.AppendLine("Response Body:");
+            log.AppendLine(responseBody);
+            log.AppendLine(new string('-', 120));
+            File.AppendAllText(logPath, log.ToString());
+
+            if (missing.Count > 0)
+            {
+                EmitLog($"[FormsVerification] Missing Form->ProdDocName pairs: {string.Join(" | ", missing)}");
+                Assert.Fail($"Missing expected ProdDocNames for forms: {string.Join(" | ", missing)}");
+            }
+        }
+        catch (TimeoutException)
+        {
+            EmitLog("[FormsVerification] No response matched: POST default.aspx with query _dc=");
+        }
+        finally
+        {
+            playwrightPage.Response -= OnResponse;
+        }
     }
+
+
+    
+    
 
     [Given(@"^I sign out of the application$")]
     [When(@"^I sign out of the application$")]

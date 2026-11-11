@@ -36,8 +36,8 @@ Scenario Outline: GL Basic Policy - <stateCode>
     #And I switch back to Agent for OR and WA when required
 	And I run Stoplight
 	And I verify values in premium fields
-    #And I complete forms verification
-    #And I sign out of the application
+    And I complete forms verification
+  
 
 Examples:
 	| stateCode | dataFile                                             | stateVariant | stateName     | externalDataFile                    |

@@ -1,8 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	<TargetFramework>netstandard2.0</TargetFramework>
-	<AssemblyName>InsuranceAutomation.Retry.Generator.ReqnrollPlugin</AssemblyName>
+	<AssemblyName Condition="'$(RetryGeneratorHostProject)' == ''">InsuranceAutomation.Retry.Generator.ReqnrollPlugin</AssemblyName>
 	<AssemblyName Condition="'$(RetryGeneratorHostProject)' != ''">InsuranceAutomation.Retry.Generator.$(RetryGeneratorHostProject).ReqnrollPlugin</AssemblyName>
+
+	<DefaultItemExcludes>$(DefaultItemExcludes);obj/**</DefaultItemExcludes>
+
 	<OutputPath Condition="'$(RetryGeneratorHostProject)' == ''">bin/$(Configuration)/compiler/</OutputPath>
 	<OutputPath Condition="'$(RetryGeneratorHostProject)' != ''">bin/$(Configuration)/compiler/$(RetryGeneratorHostProject)/</OutputPath>
 	<IsPackable>false</IsPackable>

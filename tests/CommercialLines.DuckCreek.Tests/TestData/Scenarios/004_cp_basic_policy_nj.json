@@ -1,4 +1,4 @@
-{
+﻿{
   "_meta": {
     "schemaVersion": "3.0-state-lineage",
     "sourceFile": "004_CP_Basic_Policy_AZ.feature",
@@ -160,13 +160,13 @@
     "errorflag": "Yes",
     "errorflag_2": "No",
     "repetition": "1",
-    "nbprem": "550.00",
-    "expected_full_term_premium_value_384": "$1,316.00",
-    "expected_premium_written_value_385": "1,316.00",
-    "expected_prior_premium_value_386": "0.00",
-    "expected_premium_change_value_387": "1,316.00",
-    "title_389": "*",
-    "javascript_390": "return DCT.sessionID",
+    "nbprem": "2,423.00",
+    "expected_full_term_premium_value_431": "$3,045.00",
+    "expected_premium_written_value_432": "3,045.00",
+    "expected_prior_premium_value_433": "0.00",
+    "expected_premium_change_value_434": "3,045.00",
+    "title_436": "*",
+    "javascript_437": "return DCT.sessionID",
     "serveraddress": "http://svqw-clas21:8080/duckcreek/dctserver.aspx",
     "expected_statuscode_value_394": "200 OK",
     "summaryresults": "*FAIL:0 *",

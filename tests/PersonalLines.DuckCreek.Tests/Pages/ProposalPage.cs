@@ -35,11 +35,20 @@ public sealed class ProposalPage
     public Task ClickCONFIRMAsync() =>
         _locators.SubmitAngular.EvaluateAsync("el => el.click()");
 
+    public Task ClickCONFIRMEditAsync() =>
+        _locators.ConfirmEdit.EvaluateAsync("el => el.click()");
+
     public Task<bool> IsCONFIRMPresentAsync() =>
         _ui.ExistsAsync(_locators.ConfirmSSN);
 
+    public Task ClickEditAsync() =>
+        _ui.ClickAsync(_locators.ConfirmEdit, new ControlIntent("Proposal", "Edit"));
+
+    public Task<bool> IsEditPresentAsync() =>
+        _ui.ExistsAsync(_locators.ConfirmEdit);
+
     public Task ClickCREATENEWACCOUNTAsync() =>
-        _ui.ClickAsync(_locators.CREATENEWACCOUNT, new ControlIntent("Proposal", "CREATENEWACCOUNT"));
+       _locators.CREATENEWACCOUNT.EvaluateAsync("el => el.click()");
 
     public Task<bool> IsCREATENEWACCOUNTPresentAsync() =>
         _ui.ExistsAsync(_locators.CREATENEWACCOUNT);
@@ -51,7 +60,7 @@ public sealed class ProposalPage
         _ui.ExistsAsync(_locators.ClientAlreadyExists);
 
     public Task EnterCountyComboBoxAsync(string value) =>
-        _ui.FillAsync(_locators.CountyComboBox, value, new ControlIntent("Proposal", "CountyComboBox"));
+        _ui.SelectAsync(_locators.CountyComboBox, value, new ControlIntent("Proposal", "CountyComboBox"));
 
     public Task WaitForCountyYesAsync(string expected) =>
         _ui.WaitAsync(_locators.countyYesAsync, expected, new ControlIntent("Proposal", "CountyYes"));
@@ -87,6 +96,9 @@ public sealed class ProposalPage
     public Task<bool> IsPROCEEDPresentAsync() =>
         _ui.ExistsAsync(_locators.PotentialInvalidAddress);
 
+    public Task WaitForPersonalAutoAsync(string expected) =>
+        _ui.WaitAsync(_locators.PersonalAuto, expected, new ControlIntent("Proposal", "PersonalAuto"));
+
     public Task ClickPersonalAutoAsync() =>
         _ui.ClickAsync(_locators.PersonalAuto, new ControlIntent("Proposal", "PersonalAuto"));
 
@@ -102,6 +114,8 @@ public sealed class ProposalPage
         await _locators.SubmitAngular.EvaluateAsync("el => el.click()");
     }
 
+    public string GetTodayEffectiveDate() =>
+        DateTime.Today.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
     public string GetTomorrowEffectiveDate() =>
         DateTime.Today.AddDays(1).ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
 

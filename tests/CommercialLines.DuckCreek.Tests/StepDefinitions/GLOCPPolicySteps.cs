@@ -191,7 +191,7 @@ public sealed class GLOCPPolicySteps
         }
         if (data.Condition("'Aggregate Limit' != NULL"))
         {
-            await page.EnterAggregateLimitAsync(data.Resolve("{{data:aggregate_limit_100}}"));
+            await page.EnterGLOCPAggregateLimitAsync(data.Resolve("{{data:aggregate_limit_100}}"));
         }
         var shouldEnterEmployeeCounts = data.Condition("(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")|| 'Coverage Form' != \"OCP\"");
 

@@ -29,9 +29,11 @@ public sealed class AccountInformationLocators
     public ILocator FirstNameAccountOwner => _page.Locator("[name=\"Txt_First Name_Account Owner\"], [id=\"Txt_First Name_Account Owner\"]").First;
 
 
+    public ILocator Map => _page.Locator("button:has-text('Map'), [aria-label='Map'], [data-testid='map'], [title='Map']").First;
+
+    public ILocator AdditionalInterestsNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
+
     public ILocator Satellite => _page.Locator("button:has-text('Satellite'), [aria-label='Satellite'], [data-testid='satellite'], [title='Satellite']").First;
-
-
 
 
     public ILocator OwnerAddressCityNew => _page.Locator("[id='owner.address.city']");

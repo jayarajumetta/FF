@@ -17,8 +17,13 @@ public sealed class DriversPage
         _ui = ui;
     }
 
-    public Task ClickCLOSEQUOTEAsync() =>
-        _ui.ClickAsync(_locators.CLOSEQUOTE, new ControlIntent("Drivers", "CLOSEQUOTE"));
+    public async Task ClickCLOSEQUOTEAsync()
+    {
+        if (await IsIneligibleQuotePresentAsync())
+        {
+            await _ui.ClickAsync(_locators.CLOSEQUOTE, new ControlIntent("Drivers", "CLOSEQUOTE"));
+        }
+    }
 
     public Task WaitForCONTINUEAsync(string expected) =>
         _ui.WaitAsync(_locators.CONTINUE, expected, new ControlIntent("Drivers", "CONTINUE"));
@@ -29,11 +34,37 @@ public sealed class DriversPage
     public Task ClickCONTINUEAsync() =>
         _ui.ClickAsync(_locators.CONTINUE, new ControlIntent("Drivers", "CONTINUE"));
 
+    public Task WaitForCONTINUED555DAsync(string expected) =>
+        _ui.WaitAsync(_locators.CONTINUED555D, expected, new ControlIntent("Drivers", "CONTINUED555D"));
+
+    public Task ClickCONTINUED555DAsync() =>
+        _ui.ClickAsync(_locators.CONTINUED555D, new ControlIntent("Drivers", "CONTINUED555D"));
+
+    public Task<bool> IsCONTINUED555DPresentAsync() =>
+        _ui.ExistsAsync(_locators.CONTINUED555D);
+
+    public Task ClickDriverAssignmentTabAsync() =>
+        _ui.ClickAsync(_locators.DriverAssignmentTab, new ControlIntent("Drivers", "DriverAssignmentTab"));
+
+    public Task WaitForDriverAssignmentHeaderAsync(string expected) =>
+        _ui.WaitAsync(_locators.DriverAssignmentHeader, expected, new ControlIntent("Drivers", "DriverAssignmentHeader"));
+
     public Task ClickDriver1PrincipalOccasionalAsync() =>
         _ui.ClickAsync(_locators.Driver1PrincipalOccasional, new ControlIntent("Drivers", "Driver1PrincipalOccasional"));
 
     public Task ClickDriver1VehicleAsync() =>
         _ui.ClickAsync(_locators.Driver1Vehicle, new ControlIntent("Drivers", "Driver1Vehicle"));
+
+    public Task ClickDriver1VehicleTesla3Async() =>
+        _ui.ClickAsync(_locators.Driver1VehicleTesla3, new ControlIntent("Drivers", "Driver1VehicleTesla3"));
+
+    public Task ClickSelectAVehicleToassignDriverAsync() =>
+        _ui.ClickAsync(_locators.SelectVehicleToAssignDriver, new ControlIntent("Drivers", "SelectVehicleassignDriver"));
+
+
+
+    public Task ClickDriverAssignmentNextAsync() =>
+         _ui.ClickAsync(_locators.DriverAssignmentNextAsync, new ControlIntent("Drivers", "Next"));
 
     public Task PressDriver2PrincipalOccasionalAsync(string key) =>
         _ui.PressAsync(_locators.Driver2PrincipalOccasional, key, new ControlIntent("Drivers", "Driver2PrincipalOccasional"));
@@ -87,7 +118,7 @@ public sealed class DriversPage
         _ui.PressAsync(_locators.CLOSEQUOTE, key, new ControlIntent("Drivers", "DriverInformationNext"));
 
     public Task ClickDriverInformationNextAsync() =>
-        _ui.ClickAsync(_locators.CLOSEQUOTE, new ControlIntent("Drivers", "DriverInformationNext"));
+        _ui.ClickAsync(_locators.Btn_Next, new ControlIntent("Drivers", "DriverInformationNext"));
 
     public Task ClickExistingClient1Async() =>
         _ui.ClickAsync(_locators.ExistingClient1, new ControlIntent("Drivers", "ExistingClient1"));
@@ -96,10 +127,12 @@ public sealed class DriversPage
         _ui.VerifyAsync(_locators.CLOSEQUOTE, expected, property, new ControlIntent("Drivers", "IneligibleQuote"));
 
     public Task<bool> IsIneligibleQuotePresentAsync() =>
-        _ui.ExistsAsync(_locators.CLOSEQUOTE);
-public Task ClickMultipleDriverAssignmentNextAsync() =>
-        _ui.ClickAsync(_locators.MultipleDriverAssignmentNext, new ControlIntent("Drivers", "MultipleDriverAssignmentNext"));
+        _ui.ExistsAsync(_locators.InEligibleHeading);
 
+    public Task ClickCloseQuoteAsync() =>
+        _locators.CLOSEQUOTE.EvaluateAsync("el => el.click()");
+    public Task ClickMultipleDriverAssignmentNextAsync() =>
+        _ui.ClickAsync(_locators.Btn_Next, new ControlIntent("Drivers", "MultipleDriverAssignmentNext"));
 
     public Task<bool> IsCONTINUEPresentAsync() => _ui.ExistsAsync(_locators.CONTINUE);
 

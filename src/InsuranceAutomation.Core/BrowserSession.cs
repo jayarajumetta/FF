@@ -81,7 +81,7 @@ public sealed class BrowserSession : IAsyncDisposable
         var path = Path.Combine(_artifactDirectory, "screenshots", Safe(fileName));
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         await _page.ScreenshotAsync(new PageScreenshotOptions { Path = path, FullPage = true });
-        return path;
+       return path;
     }
     /// <summary>
     /// Switches the active page to a newly opened tab/window (e.g. a checklist launched via

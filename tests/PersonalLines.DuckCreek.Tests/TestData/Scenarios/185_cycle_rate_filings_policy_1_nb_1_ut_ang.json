@@ -23,6 +23,7 @@
     "stateVariant": "UT ANG"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "UTAH",
@@ -130,7 +131,7 @@
     "UT_ClientData.Apartment": "17",
     "AL_ClientData.Apartment": "17",
     "UT_ClientData.SSN": "888025550",
-    "AL_ClientData.SSN": "888025550",
+    "AL_ClientData.SSN": "666358818",
     "UT_ClientData.State": "UT",
     "AL_ClientData.State": "UT",
     "UT_ClientData.Gender": "M",

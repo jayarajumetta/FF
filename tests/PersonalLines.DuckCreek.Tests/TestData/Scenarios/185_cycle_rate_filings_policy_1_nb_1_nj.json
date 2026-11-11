@@ -23,6 +23,7 @@
     "stateVariant": "NJ"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "NEW JERSEY",
@@ -130,7 +131,7 @@
     "NJ_ClientData.Apartment": "203",
     "AL_ClientData.Apartment": "203",
     "NJ_ClientData.SSN": "888018348",
-    "AL_ClientData.SSN": "888018348",
+    "AL_ClientData.SSN": "666358818",
     "NJ_ClientData.State": "NJ",
     "AL_ClientData.State": "NJ",
     "NJ_ClientData.Gender": "F",

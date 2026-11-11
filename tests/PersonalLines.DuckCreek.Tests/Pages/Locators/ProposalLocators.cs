@@ -15,6 +15,7 @@ public sealed class ProposalLocators
     public ILocator ClientExists => _page.GetByText(new Regex(@"Client Already Exists", RegexOptions.IgnoreCase));
     public ILocator PotentialInvalidAddress => _page.GetByText("Potential Invalid Address");
 
+    public ILocator ConfirmEdit => _page.GetByTestId("btnConfirmNo").GetByText(" Edit ");
 
     public ILocator ConfirmSSN => _page.GetByText(new Regex(@"Confirm the Client's SSN#", RegexOptions.IgnoreCase));
 

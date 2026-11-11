@@ -23,6 +23,7 @@
     "stateVariant": "NY FFCIC"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "NEW YORK",
@@ -130,7 +131,7 @@
     "NY_ClientData.Apartment": "16F",
     "AL_ClientData.Apartment": "16F",
     "NY_ClientData.SSN": "888019735",
-    "AL_ClientData.SSN": "888019735",
+    "AL_ClientData.SSN": "666358818",
     "NY_ClientData.State": "NY",
     "AL_ClientData.State": "NY",
     "NY_ClientData.Gender": "F",

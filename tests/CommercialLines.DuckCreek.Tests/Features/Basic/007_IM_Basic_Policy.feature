@@ -42,6 +42,7 @@ Scenario Outline: IM Basic Policy - <stateCode>
 	And I complete required submission information
 	And I run Stoplight
 	And I verify values in premium fields
+	  And I complete forms verification
 
 Examples:
 	| stateCode | dataFile                                             | stateVariant | stateName     | externalDataFile                    |

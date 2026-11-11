@@ -68,11 +68,19 @@ public sealed class SmokeTestCycleSteps
         await page.EnterOwnerAddressCityNewAsync(data.Get("City"));
         await page.SelectStateAsync(data.Resolve("{{data:state_44}}"));
         await page.EnterOwnerAddressZipAsync(data.Get("ZIP"));
-        await page.WaitForSatelliteAsync("Visible");
-        await page.SelectYesAtLeast90DaysAsync("");
-        await page.WaitForIsTheAccountAddressAlsoWhereTheClientResidesAsync("Exists");
-        await page.SelectYesClientResidesAsync("");
-        await page.ClickAccountDetailsNextAsync();
+        //await page.WaitForSatelliteAsync("Visible");
+        //await page.SelectYesAtLeast90DaysAsync("");
+        //await page.WaitForIsTheAccountAddressAlsoWhereTheClientResidesAsync("Exists");
+        //await page.SelectYesClientResidesAsync("");
+        //await page.ClickAccountDetailsNextAsync();
+        if (await page.IsMapPresentAsync())
+            await page.VerifyMapAsync("Visible", "");
+        if (await page.IsSatellitePresentAsync())
+            await page.VerifySatelliteAsync("Visible", "");
+
+        await page.SelectHaveYouReceivedMailAtThisAddressForAtLeast90DaysYesAsync();
+        await page.SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync();
+        await page.ClickAdditionalInterestsNextAsync();
 
     }
 

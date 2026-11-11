@@ -23,6 +23,7 @@
     "stateVariant": "AL"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "ALABAMA",
@@ -42,7 +43,7 @@
     "cyclenondriver_combobox_146": "Surrendered",
     "cyclenondriver_combobox_147": "Permit Driver",
     "driver_s_license_number_169": "4152778",
-    "yrs_licensed_current_state_171": "\"\"",
+    "yrs_licensed_current_state_171": "9",
     "yrs_licensed_current_state_172": "9",
     "months_licensed_current_state_173": "\"\"",
     "months_licensed_current_state_174": "9",
@@ -50,6 +51,7 @@
     "yrslicensed_all_states_176": "\"\"",
     "yrslicensed_all_states_177": "9",
     "vin_201": "1HD1FCM10DB623649",
+    "additional_cycle_after_first": "Yes",
     "description_of_mods_216": "Misc",
     "annual_mileage_218": "5000",
     "cycle_vin_223": "1HD1CAN14HY114419",
@@ -122,7 +124,7 @@
     "AL_ClientData.First Name": "MALCOLM",
     "AL_ClientData.Last Name": "BRITO",
     "AL_ClientData.DOB": "7/30/1963",
-    "AL_ClientData.SSN": "888000800",
+    "AL_ClientData.SSN": "666358818",
     "AL_ClientData.State": "AL",
     "AL_ClientData.Gender": "M",
     "AL_ClientData.DL Number": "4152778",
@@ -157,7 +159,7 @@
     "AL_ClientData.First Name": "MALCOLM",
     "AL_ClientData.Last Name": "BRITO",
     "AL_ClientData.DOB": "7/30/1963",
-    "AL_ClientData.SSN": "888000800",
+    "AL_ClientData.SSN": "666358818",
     "AL_ClientData.State": "AL",
     "AL_ClientData.Gender": "M",
     "AL_ClientData.DL Number": "4152778"
@@ -1269,7 +1271,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "No Coverage"
+        "value": ""
       },
       {
         "order": 27.01,

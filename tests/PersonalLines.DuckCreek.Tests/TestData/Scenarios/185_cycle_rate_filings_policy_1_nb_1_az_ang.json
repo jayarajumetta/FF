@@ -4,7 +4,7 @@
     "sourceFile": "185_Cycle_Rate_Filings_Policy_1_NB_1_AL.feature",
     "sourceSha256": "b5893fa715d322f01a195daa7ca6bfc88df05b1d82a12fb396c9cb94f2ed972d",
     "sourceRevision": "48026",
-    "application": "PL_DC",
+    "application": "PL_DC", 
     "feature": "Personal Lines Duck Creek - Cycle Rate Filings Policy 1 NB 1",
     "representativeIteration": "AZ ANG",
     "note": "Only the attached representative flow is generated.",
@@ -23,6 +23,7 @@
     "stateVariant": "AZ ANG"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "ARIZONA",
@@ -130,7 +131,7 @@
     "AZ_ClientData.Apartment": "19",
     "AL_ClientData.Apartment": "19",
     "AZ_ClientData.SSN": "888002048",
-    "AL_ClientData.SSN": "888002048",
+    "AL_ClientData.SSN": "666358818",
     "AZ_ClientData.State": "AZ",
     "AL_ClientData.State": "AZ",
     "AZ_ClientData.Gender": "M",

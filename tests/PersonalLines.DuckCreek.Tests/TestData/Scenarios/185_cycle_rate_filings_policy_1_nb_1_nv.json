@@ -23,6 +23,7 @@
     "stateVariant": "NV"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "NEVADA",
@@ -130,7 +131,7 @@
     "NV_ClientData.Apartment": "22L",
     "AL_ClientData.Apartment": "22L",
     "NV_ClientData.SSN": "888019247",
-    "AL_ClientData.SSN": "888019247",
+    "AL_ClientData.SSN": "666358818",
     "NV_ClientData.State": "NV",
     "AL_ClientData.State": "NV",
     "NV_ClientData.Gender": "F",

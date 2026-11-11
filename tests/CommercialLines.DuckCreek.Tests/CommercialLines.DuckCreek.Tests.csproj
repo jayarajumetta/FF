@@ -19,6 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Update="TestData/**/*.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="TestData/Assets/**/*.*" CopyToOutputDirectory="PreserveNewest" />
     <None Update="Runtime/DuckCreekFrameHints.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>

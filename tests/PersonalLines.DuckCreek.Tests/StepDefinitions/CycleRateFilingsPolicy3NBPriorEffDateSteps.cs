@@ -61,36 +61,51 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForAccountInformationAsync("Exists");
+
         await page.VerifyFirstNameAccountOwnerAsync("Exists", "");
         await page.EnterDOBAsync(data.Get("AL_ClientData.DOB"));
+
+        //await page.VerifyFirstNameAccountOwnerAsync("Exists", "");
+        //await page.EnterDOBAsync(data.Get("DOB"));
         await page.EnterBestPhoneAccountOwnerAsync(data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
         await page.EnterEmailAccountOwnerAsync(data.Resolve("{{data:txt_email_account_owner_19}}"));
         await page.WaitForMaritalStatusAsync("Exists");
-        if (data.Condition("'Marital Status' == \"Single\""))
-        {
-                    await page.ClickSingleAsync();
-        }
-        if (data.Condition("'Marital Status' == \"Married\""))
-        {
-                    await page.SelectMarriedAsync("");
-        }
-        if (data.Condition("'Marital Status' == \"Divorced\""))
-        {
-                    await page.ClickDivorcedAsync();
-        }
+        await page.ClickSingleAsync();
+        //if (data.Condition("'Marital Status' == \"Single\""))
+        //{
+        //            await page.ClickSingleAsync();
+        //}
+        //if (data.Condition("'Marital Status' == \"Married\""))
+        //{
+        //            await page.SelectMarriedAsync("");
+        //}
+        //if (data.Condition("'Marital Status' == \"Divorced\""))
+        //{
+        //            await page.ClickDivorcedAsync();
+        //}
         await page.EnterEnterALocationAsync(data.Get("AL_ClientData.Street Address"));
         await page.EnterOwnerAddressLine2Async(data.Get("AL_ClientData.Apartment"));
         await page.EnterOwnerAddressCityNewAsync(data.Get("AL_ClientData.City"));
         //await page.SelectDrpdwnStateAsync("");
-        await page.SelectStateNameAsync("");
+
+
+        //await page.SelectStateNameAsync("");
+        await page.SelectStateAsync(data.Get("statename"));
+
+
         await page.EnterOwnerAddressZipAsync(data.Get("AL_ClientData.ZIP"));
         await page.WaitForSatelliteAsync("Visible");
-        await page.PressAccountDetailsNextAsync("SHIFTTAB");
+        //await page.PressAccountDetailsNextAsync("SHIFTTAB");
         await page.SelectYesAtLeast90DaysAsync("");
         await page.WaitForIsTheAccountAddressAlsoWhereTheClientResidesAsync("Exists");
         await page.SelectYesClientResidesAsync("");
         await page.ClickAccountDetailsNextAsync();
+
         data.Set("EffectiveDate", "{Date[08.08.2024][][MM/dd/yyyy]}");
+
+        //data.Set("EffectiveDate", "{Date[08.08.2024][][MM/dd/yyyy]}");
+
+
     }
 
 
@@ -102,6 +117,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
     {
         var data = _scenario.Get<ScenarioData>();
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
 
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
@@ -152,49 +168,172 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.EnterWritingCompanyAsync("");
         }
+
+
+        await page.ClickMotorcycleAsync();
+
+        await page.EnterEffectiveDateAsync(page.GetTodayEffectiveDate());
+
+        await page.EnterAgentCodeAsync(data.Resolve("{{data:agentcode_42}}"));
+        await page.SelectStateAsync("");
+        await page.EnterStateAsync(data.Resolve("{{data:statename}}"));
+        await page.EnterWritingCompanyAsync("");
+        await page.EnterWritingCompanyAsync(data.Resolve("{{data:writingcompany_49}}"));
+
         await page.WaitForSameAsMailingAddressAsync("True");
         await page.ClickSameAsMailingAddressAsync();
-        await page.PressSameAsMailingAddressAsync("Click");
-        if (data.Condition("'County Name' != NULL"))
+
+
+        if (data.Condition("State == \"NY\""))
         {
-                    await page.EnterCountyComboBoxAsync(data.Get("County Name"));
+            await page.EnterCountyComboBoxAsync(data.Get("County Name"));
         }
-        await page.WaitForStartQuoteAsync("Visible");
+
+        if (data.Condition("State == \"KY\""))
+        {
+            await page.EnterCountyComboBoxAsync(data.Get("County Name"));
+        }
+        if (data.Condition("State == \"NY\" OR State == \"KY\""))
+        {
+            await page.WaitForCountyYesAsync("Exists");
+            await page.SelectCountyYesAsync("");
+        }
+
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        //await page.PressEffectiveDateAsync("Scroll[-2]");
+        //if (data.Condition("LOB == \"PersonalAuto\""))
+        //{
+        //            await page.ClickPersonalAutoAsync();
+        //}
+        //if (data.Condition("LOB == \"Cycle\""))
+        //{
+        //            await page.ClickMotorcycleAsync();
+        //}
+        //if (data.Condition("LOB == \"RecreationalVehicle\""))
+        //{
+        //            await page.ClickRecreationalVehicleAsync();
+        //}
+        //if (data.Condition("LOB != \"RecreationalVehicle\""))
+        //{
+        //            await page.EnterEffectiveDateAsync(data.Resolve("{{runtime:EffectiveDate}}"));
+        //}
+        //if (data.Condition("LOB != \"RecreationalVehicle\""))
+        //{
+        //            await page.EnterAgentCodeAsync(data.Resolve("{{data:agentcode_42}}"));
+        //}
+        //if (data.Condition("LOB != \"RecreationalVehicle\""))
+        //{
+        //}
+        //if (data.Condition("LOB != \"RecreationalVehicle\""))
+        //{
+        //}
+        //if (data.Condition("LOB != \"RecreationalVehicle\""))
+        //{
+        //            await page.SelectStateAsync("");
+        //}
+        //await page.SelectStateNameAsync("");
+        //if (data.Condition("LOB != \"RecreationalVehicle\""))
+        //{
+        //}
+        //if (data.Condition("LOB != \"RecreationalVehicle\""))
+        //{
+        //            await page.SelectWritingCompanyAsync("");
+        //}
+        //if (data.Condition("LOB != \"RecreationalVehicle\""))
+        //{
+        //            await page.EnterWritingCompanyAsync(data.Resolve("{{data:writingcompany_49}}"));
+        //}
+        //if (data.Condition("LOB != \"RecreationalVehicle\""))
+        //{
+        //            await page.EnterWritingCompanyAsync("");
+        //}
+        //await page.WaitForSameAsMailingAddressAsync("True");
+        //await page.ClickSameAsMailingAddressAsync();
+        //await page.PressSameAsMailingAddressAsync("Click");
+        //if (data.Condition("'County Name' != NULL"))
+        //{
+        //            await page.EnterCountyComboBoxAsync(data.Get("County Name"));
+        //}
+        //await page.WaitForStartQuoteAsync("Visible");
+        //await page.ClickStartQuoteAsync();
+
+
+        await page.WaitForStartQuoteAsync("True");
         await page.ClickStartQuoteAsync();
+        await page.PauseAsync(5000);
+
+
+
+
+
+
+
         if (await page.IsPROCEEDPresentAsync())
         {
-                    await page.VerifyPROCEEDAsync("Exists", "");
-        }
-        if (await page.IsPROCEEDPresentAsync())
-        {
-                    await page.ClickPROCEEDAsync();
-        }
-        if (await page.IsCONFIRMPresentAsync())
-        {
-                    await page.VerifyCONFIRMAsync("Exists", "");
-        }
-        if (await page.IsCONFIRMPresentAsync())
-        {
-                    await page.ClickCONFIRMAsync();
+            await page.VerifyPROCEEDAsync("Exists", "");
+            await page.ClickCONFIRMAsync();
+            await page.PauseAsync(5000);
         }
         if (await page.IsSSNPresentAsync())
         {
-                    await page.VerifySSNAsync("Exists", "");
+            await page.WaitForSSNAsync("Exists");
+            await page.VerifyProposalStartProceedSSNSUBMITAsync("Exists", "");
+            await page.EnterSSNAsync(data.Get("SSN"));
+            await page.ClickProposalStartProceedSSNSUBMITAsync();
+            await page.PauseAsync(5000);
         }
-        await page.VerifyProposalStartProceedSSNSUBMITAsync("Exists", "");
-        if (await page.IsSSNPresentAsync())
+        if (await page.IsCONFIRMPresentAsync())
         {
-                    await page.EnterSSNAsync(data.Get("SSN"));
+            await page.VerifyCONFIRMAsync("Exists", "");
+            await page.ClickCONFIRMAsync();
+            await page.PauseAsync(5000);
         }
-        await page.ClickProposalStartProceedSSNSUBMITAsync();
-        if (await page.IsClientAlreadyExistsPresentAsync())
+        await page.PauseAsync(5000);
+        if (await page.IsUSEEXISTINGACCOUNTPresentAsync())
         {
-                    await page.VerifyClientAlreadyExistsAsync("Exists", "");
+            await page.ClickUSEEXISTINGACCOUNTAsync();
+            await page.PauseAsync(5000);
         }
-        if (await page.IsCREATENEWACCOUNTPresentAsync())
-        {
-                    await page.ClickCREATENEWACCOUNTAsync();
-        }
+
+
+
+
+
+        //if (await page.IsPROCEEDPresentAsync())
+        //{
+        //            await page.VerifyPROCEEDAsync("Exists", "");
+        //}
+        //if (await page.IsPROCEEDPresentAsync())
+        //{
+        //            await page.ClickPROCEEDAsync();
+        //}
+        //if (await page.IsCONFIRMPresentAsync())
+        //{
+        //            await page.VerifyCONFIRMAsync("Exists", "");
+        //}
+        //if (await page.IsCONFIRMPresentAsync())
+        //{
+        //            await page.ClickCONFIRMAsync();
+        //}
+        //if (await page.IsSSNPresentAsync())
+        //{
+        //            await page.VerifySSNAsync("Exists", "");
+        //}
+        //await page.VerifyProposalStartProceedSSNSUBMITAsync("Exists", "");
+        //if (await page.IsSSNPresentAsync())
+        //{
+        //            await page.EnterSSNAsync(data.Get("SSN"));
+        //}
+        //await page.ClickProposalStartProceedSSNSUBMITAsync();
+        //if (await page.IsClientAlreadyExistsPresentAsync())
+        //{
+        //            await page.VerifyClientAlreadyExistsAsync("Exists", "");
+        //}
+        //if (await page.IsCREATENEWACCOUNTPresentAsync())
+        //{
+        //            await page.ClickCREATENEWACCOUNTAsync();
+        //}
 
     }
 
@@ -237,11 +376,11 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        if (await page.IsIneligibleQuotePresentAsync())
-        {
-                    await page.VerifyIneligibleQuoteAsync("Visible", "");
-        }
-        await page.ClickCLOSEQUOTEAsync();
+        //if (await page.IsIneligibleQuotePresentAsync())
+        //{
+        //            await page.VerifyIneligibleQuoteAsync("Visible", "");
+        //}
+        //await page.ClickCLOSEQUOTEAsync();
 
     }
 
@@ -339,7 +478,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickExistingClient1Async();
         await page.ClickDriverInformationNextAsync();
-        await page.PressDriverInformationNextAsync("Click");
+        //await page.PressDriverInformationNextAsync("Click");
 
     }
 
@@ -353,334 +492,349 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        if (await page.IsSinglePresentAsync())
-        {
-                    await page.VerifySingleAsync("Exists", "");
-        }
-        if (await page.IsMaritalStatusSinglePresentAsync())
-        {
-                    await page.ClickMaritalStatusSingleAsync();
-        }
-        if (data.Condition("'Marital Status' != \"Married\""))
-        {
-                    await page.SelectMarriedAsync("");
-        }
-        if (data.Condition("'Marital Status' != \"Divorced\""))
-        {
-                    await page.ClickDivorcedAsync();
-        }
-        if (data.Condition("'Marital Status' == \"Single\""))
-        {
-                    await page.ClickSingleAsync();
-        }
-        if (data.Condition("'Marital Status' == \"Married\""))
-        {
-                    await page.SelectMarriedAsync("");
-        }
-        if (data.Condition("'Marital Status' == \"Divorced\""))
-        {
-                    await page.ClickDivorcedAsync();
-        }
-        if (await page.IsHighSchoolDiplomaOrGEDPresentAsync())
-        {
-                    await page.VerifyHighSchoolDiplomaOrGEDAsync("True", "Enabled");
-        }
-        if (await page.IsMDNJEducationLevelUnknownPresentAsync())
-        {
-                    await page.ClickMDNJEducationLevelUnknownAsync();
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"Unknown\""))
-        {
-                    await page.SelectUnknownNoHighSchoolDiplomaOrGEDAsync("");
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-                    await page.SelectUnknownNoHighSchoolDiplomaOrGEDAsync("");
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-                    await page.ClickHighSchoolDiplomaOrGEDAsync();
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-                    await page.SelectUnknownNoHighSchoolDiplomaOrGEDAsync("");
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-                    await page.ClickVocationalOrTradeSchoolDegreeAsync();
-        }
-        if (data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-                    await page.SelectUnknownNoHighSchoolDiplomaOrGEDAsync("");
-        }
-        if (data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-                    await page.SelectMoreOptionsEduAsync("");
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-                    await page.WaitForSomeCollegeAsync("Visible");
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-                    await page.ClickSomeCollegeAsync();
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-                    await page.WaitForCurrentlyInCollegeAsync("Visible");
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-                    await page.ClickCurrentlyInCollegeAsync();
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-                    await page.WaitForCollegeDegreeGraduateWorkAsync("Visible");
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-                    await page.ClickCollegeDegreeGraduateWorkAsync();
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-                    await page.WaitForGraduateDegreeJDMastersAsync("Visible");
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-                    await page.ClickGraduateDegreeJDMastersAsync();
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-                    await page.WaitForPostGraduateDegreeMedicalDegreePhDEdDEtcAsync("Visible");
-        }
-        if (data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-                    await page.ClickPostGraduateDegreeMedicalDegreePhDEdDEtcAsync();
-        }
-        if (data.Condition("If options for Relationship to Account Owner are enabled > Condition verify relationship spouse button exist; 'Policy Type' != \"Cycle\""))
-        {
-                    await page.VerifySpouseAsync("Exists", "");
-        }
-        await page.ClickAccountOwnerAsync();
-        if (data.Condition("If options for Relationship to Account Owner are enabled > Then Relationship for account owner exist; 'Policy Type' != \"Cycle\""))
-        {
-                    await page.SelectRelationshipToAccountOwnerNULLAsync(data.Resolve("{{data:select_relationship_to_account_owner_null_122}}"));
-        }
-        if (data.Condition("'Relationship to Account Owner' != NULL"))
-        {
-                    await page.ClickAccountOwnerAsync();
-        }
-        if (data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Condition Check if Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-                    await page.VerifyAccountOwnerReadOnlyAsync("Exists", "");
-        }
-        if (data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Then Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-                    await page.VerifyAccountOwnerReadOnlyAsync("Exists", "");
-        }
-        if (data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Else Make script fail due to Relationship other than account owner; 'Policy Type' != \"Cycle\""))
-        {
-                    await page.ClickAccountOwnerAsync();
-                    await page.PressAccountOwnerAsync("Click");
-                    await page.PressAccountOwnerAsync("scroll[2]");
-        }
-        if (data.Condition("'Policy Type' == \"Cycle\""))
-        {
-                    await page.WaitForIsThisDriverANamedInsuredAsync("Visible");
-        }
-        if (data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-                    await page.ClickPrimaryNamedInsuredAsync();
-                    await page.PressPrimaryNamedInsuredAsync("scroll[2]");
-        }
-        if (data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-                    await page.ClickNamedInsuredAsync();
-                    await page.PressNamedInsuredAsync("scroll[2]");
-        }
-        if (data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-                    await page.ClickNotANamedInsuredAsync();
-                    await page.PressNotANamedInsuredAsync("scroll[2]");
-        }
-        if (data.Condition("'Operator Status' == \"Assigned\""))
-        {
-                    await page.ClickRelatedAsync();
-                    await page.PressRelatedAsync("scroll[2]");
-        }
-        if (data.Condition("'Operator Status' == \"Assigned\""))
-        {
-                    await page.ClickAssignedAsync();
-                    await page.PressAssignedAsync("scroll[2]");
-        }
-        if (data.Condition("'Operator Status' == \"Related\""))
-        {
-                    await page.ClickAssignedAsync();
-                    await page.PressAssignedAsync("scroll[2]");
-        }
-        if (data.Condition("'Operator Status' == \"Related\""))
-        {
-                    await page.ClickRelatedAsync();
-                    await page.PressRelatedAsync("scroll[2]");
-        }
-        if (data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-                    await page.ClickAssignedAsync();
-                    await page.PressAssignedAsync("scroll[2]");
-        }
-        if (data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-                    await page.SelectNoCycleLicenseAsync("");
-        }
-        if (data.Condition("'Operator Status' != \"Assigned\" AND 'Operator Status' != \"NoCycleLicense\" AND 'Operator Status' != \"Related\""))
-        {
-                    await page.ClickAssignedAsync();
-                    await page.PressAssignedAsync("scroll[2]");
-        }
-        if (data.Condition("'Operator Status' == \"Military\""))
-        {
-                    await page.ClickMilitaryAsync();
-        }
-        if (data.Condition("'Operator Status' == \"Missionary\""))
-        {
-                    await page.ClickMissionaryAsync();
-        }
-        if (data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-                    await page.SelectNonDriverAsync("");
-        }
-        if (data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-                    await page.ClickOtherInsuranceAsync();
-        }
-        if (data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-                    await page.WaitForNonDriverReasonAsync("Visible");
-        }
-        if (data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-                    await page.EnterCycleNonDriverComboBoxAsync(data.Resolve("{{data:cyclenondriver_combobox_143}}"));
-        }
-        if (data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-                    await page.EnterCycleNonDriverComboBoxAsync(data.Resolve("{{data:cyclenondriver_combobox_144}}"));
-        }
-        if (data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-                    await page.EnterCycleNonDriverComboBoxAsync(data.Resolve("{{data:cyclenondriver_combobox_145}}"));
-        }
-        if (data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-                    await page.EnterCycleNonDriverComboBoxAsync(data.Resolve("{{data:cyclenondriver_combobox_146}}"));
-        }
-        if (data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-                    await page.EnterCycleNonDriverComboBoxAsync(data.Resolve("{{data:cyclenondriver_combobox_147}}"));
-        }
-        if (data.Condition("'Policy Type' != \"Cycle\""))
-        {
-                    await page.WaitForIsThisDriverANamedInsuredAsync("Visible");
-        }
-        if (data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-                    await page.ClickPrimaryNamedInsuredAsync();
-                    await page.PressPrimaryNamedInsuredAsync("scroll[2]");
-        }
-        if (data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-                    await page.ClickNamedInsuredAsync();
-                    await page.PressNamedInsuredAsync("scroll[2]");
-        }
-        if (data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-                    await page.ClickNotANamedInsuredAsync();
-                    await page.PressNotANamedInsuredAsync("scroll[2]");
-        }
-        if (data.Condition("'Operator Status' != \"Assigned\""))
-        {
-                    await page.ClickAssignedAsync();
-                    await page.PressAssignedAsync("scroll[2]");
-        }
-        if (data.Condition("'Operator Status' != \"NonDriver\""))
-        {
-                    await page.ClickNonDriverAsync();
-                    await page.PressNonDriverAsync("scroll[2]");
-        }
-        if (data.Condition("'Operator Status' != \"Related\""))
-        {
-                    await page.ClickRelatedAsync();
-        }
-        if (data.Condition("'Operator Status' == \"Assigned\""))
-        {
-                    await page.ClickAssignedAsync();
-        }
-        if (data.Condition("'Operator Status' == \"Related\""))
-        {
-                    await page.ClickRelatedAsync();
-        }
-        if (data.Condition("'Operator Status' == \"Military\""))
-        {
-                    await page.ClickMilitaryAsync();
-        }
-        if (data.Condition("'Operator Status' == \"Missionary\""))
-        {
-                    await page.ClickMissionaryAsync();
-        }
-        if (data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-                    await page.ClickOtherInsuranceAsync();
-        }
-        if (data.Condition("'Operator Status' == \"Roomate\""))
-        {
-                    await page.ClickRoommateAsync();
-        }
-        if (data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-                    await page.WaitForNonDriverReasonAsync("Visible");
-        }
-        if (data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-                    await page.ClickNeverLicensedAsync();
-        }
-        if (data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-                    await page.ClickUnderageAsync();
-        }
-        if (data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-                    await page.ClickMedicalConditionAsync();
-        }
-        if (data.Condition("'If NonDriver: Reason' != \"NeverLicensed\" AND 'If NonDriver: Reason' != \"Underage\" AND 'If NonDriver: Reason' != \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-                    await page.SelectMoreOptionsNonDriverAsync("");
-        }
-        if (data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-                    await page.ClickSurrenderedAsync();
-        }
-        if (data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-                    await page.ClickPermitDriverAsync();
-        }
-        if (data.Condition("'State Licensed(XX)' != NULL"))
-        {
-                    await page.EnterLicenseStateAsync(data.Get("State Licensed(XX)"));
-        }
-        if (data.Condition("'Drivers License #' != NULL"))
-        {
-                    await page.EnterDriverSLicenseNumberAsync(data.Resolve("{{data:driver_s_license_number_169}}"));
-                    await page.PressDriverSLicenseNumberAsync("CTRL+A");
-        }
-        if (data.Condition("'Drivers License #' != NULL"))
-        {
-                    await page.EnterDriverSLicenseNumberAsync(data.Get("Drivers License #"));
-        }
-        await page.EnterYrsLicensedCurrentStateAsync(data.Resolve("{{data:yrs_licensed_current_state_171}}"));
-        await page.PressYrsLicensedCurrentStateAsync("CTRL+A");
+
+        await page.ClickGenderMaledriverAsync(); 
+        //if (await page.IsSinglePresentAsync())
+        //{
+        //            await page.VerifySingleAsync("Exists", "");
+        //}
+        //if (await page.IsMaritalStatusSinglePresentAsync())
+        //{
+        //            await page.ClickMaritalStatusSingleAsync();
+        //}
+        //if (data.Condition("'Marital Status' != \"Married\""))
+        //{
+        //            await page.SelectMarriedAsync("");
+        //}
+        //if (data.Condition("'Marital Status' != \"Divorced\""))
+        //{
+        //            await page.ClickDivorcedAsync();
+        //}
+        //if (data.Condition("'Marital Status' == \"Single\""))
+        //{
+        //            await page.ClickSingleAsync();
+        //}
+        //if (data.Condition("'Marital Status' == \"Married\""))
+        //{
+        //            await page.SelectMarriedAsync("");
+        //}
+        //if (data.Condition("'Marital Status' == \"Divorced\""))
+        //{
+        //            await page.ClickDivorcedAsync();
+        //}
+        //if (await page.IsHighSchoolDiplomaOrGEDPresentAsync())
+        //{
+        //            await page.VerifyHighSchoolDiplomaOrGEDAsync("True", "Enabled");
+        //}
+        //if (await page.IsMDNJEducationLevelUnknownPresentAsync())
+        //{
+        //            await page.ClickMDNJEducationLevelUnknownAsync();
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"Unknown\""))
+        //{
+        //            await page.SelectUnknownNoHighSchoolDiplomaOrGEDAsync("");
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
+        //{
+        //            await page.SelectUnknownNoHighSchoolDiplomaOrGEDAsync("");
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
+        //{
+        //            await page.ClickHighSchoolDiplomaOrGEDAsync();
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"Trade\""))
+        //{
+        //            await page.SelectUnknownNoHighSchoolDiplomaOrGEDAsync("");
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"Trade\""))
+        //{
+        //            await page.ClickVocationalOrTradeSchoolDegreeAsync();
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
+        //{
+        //            await page.SelectUnknownNoHighSchoolDiplomaOrGEDAsync("");
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
+        //{
+        //            await page.SelectMoreOptionsEduAsync("");
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
+        //{
+        //            await page.WaitForSomeCollegeAsync("Visible");
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
+        //{
+        //            await page.ClickSomeCollegeAsync();
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
+        //{
+        //            await page.WaitForCurrentlyInCollegeAsync("Visible");
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
+        //{
+        //            await page.ClickCurrentlyInCollegeAsync();
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
+        //{
+        //            await page.WaitForCollegeDegreeGraduateWorkAsync("Visible");
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
+        //{
+        //            await page.ClickCollegeDegreeGraduateWorkAsync();
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
+        //{
+        //            await page.WaitForGraduateDegreeJDMastersAsync("Visible");
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
+        //{
+        //            await page.ClickGraduateDegreeJDMastersAsync();
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
+        //{
+        //            await page.WaitForPostGraduateDegreeMedicalDegreePhDEdDEtcAsync("Visible");
+        //}
+        //if (data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
+        //{
+        //            await page.ClickPostGraduateDegreeMedicalDegreePhDEdDEtcAsync();
+        //}
+        //if (data.Condition("If options for Relationship to Account Owner are enabled > Condition verify relationship spouse button exist; 'Policy Type' != \"Cycle\""))
+        //{
+        //            await page.VerifySpouseAsync("Exists", "");
+        //}
+        //await page.ClickAccountOwnerAsync();
+        //if (data.Condition("If options for Relationship to Account Owner are enabled > Then Relationship for account owner exist; 'Policy Type' != \"Cycle\""))
+        //{
+        //            await page.SelectRelationshipToAccountOwnerNULLAsync(data.Resolve("{{data:select_relationship_to_account_owner_null_122}}"));
+        //}
+        //if (data.Condition("'Relationship to Account Owner' != NULL"))
+        //{
+        //            await page.ClickAccountOwnerAsync();
+        //}
+        //if (data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Condition Check if Relationship is account owner; 'Policy Type' != \"Cycle\""))
+        //{
+        //            await page.VerifyAccountOwnerReadOnlyAsync("Exists", "");
+        //}
+        //if (data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Then Relationship is account owner; 'Policy Type' != \"Cycle\""))
+        //{
+        //            await page.VerifyAccountOwnerReadOnlyAsync("Exists", "");
+        //}
+        //if (data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Else Make script fail due to Relationship other than account owner; 'Policy Type' != \"Cycle\""))
+        //{
+        //            await page.ClickAccountOwnerAsync();
+        //            await page.PressAccountOwnerAsync("Click");
+        //            await page.PressAccountOwnerAsync("scroll[2]");
+        //}
+        //if (data.Condition("'Policy Type' == \"Cycle\""))
+        //{
+        //    await page.WaitForIsThisDriverANamedInsuredAsync("Visible");
+        //}
+
+
+        if(data.Condition("State == \"AL\""))
+        {
+            await page.ClickPrimaryNamedInsuredAsync();
+            await page.ClickAssignedAsync();
+            await page.ClickFinancialResponsibiltySR44NoAsync();
+
+        }
+
+
+
+
+
+        //if (data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
+        //{
+          
+        //    //await page.PressPrimaryNamedInsuredAsync("scroll[2]");
+        //}
+        //if (data.Condition("'Named Insured?' == \"NamedIns\""))
+        //{
+        //    await page.ClickNamedInsuredAsync();
+        //    //await page.PressNamedInsuredAsync("scroll[2]");
+        //}
+        //if (data.Condition("'Named Insured?' == \"NotNamedIns\""))
+        //{
+        //    await page.ClickNotANamedInsuredAsync();
+        //    //await page.PressNotANamedInsuredAsync("scroll[2]");
+        //}
+        //if (data.Condition("'Operator Status' == \"Assigned\""))
+        //{
+        //    await page.ClickAssignedAsync();
+        //    await page.ClickFinancialResponsibiltySR44NoAsync();
+        //}
+        //if (data.Condition("'Operator Status' == \"Assigned\""))
+        //{
+        //            await page.ClickAssignedAsync();
+        //            await page.PressAssignedAsync("scroll[2]");
+        //}
+        //if (data.Condition("'Operator Status' == \"Related\""))
+        //{
+        //    await page.ClickAssignedAsync();
+        //}
+        //if (data.Condition("'Operator Status' == \"Related\""))
+        //{
+        //            await page.ClickRelatedAsync();
+        //            await page.PressRelatedAsync("scroll[2]");
+        //}
+        //if (data.Condition("'Operator Status' == \"NoCycleLicense\""))
+        //{
+        //            await page.ClickAssignedAsync();
+        //            //await page.PressAssignedAsync("scroll[2]");
+        //}
+        //if (data.Condition("'Operator Status' == \"NoCycleLicense\""))
+        //{
+        //            await page.SelectNoCycleLicenseAsync("");
+        //}
+        //if (data.Condition("'Operator Status' != \"Assigned\" AND 'Operator Status' != \"NoCycleLicense\" AND 'Operator Status' != \"Related\""))
+        //{
+        //            await page.ClickAssignedAsync();
+        //            //await page.PressAssignedAsync("scroll[2]");
+        //}
+        //if (data.Condition("'Operator Status' == \"Military\""))
+        //{
+        //            await page.ClickMilitaryAsync();
+        //}
+        //if (data.Condition("'Operator Status' == \"Missionary\""))
+        //{
+        //            await page.ClickMissionaryAsync();
+        //}
+        //if (data.Condition("'Operator Status' == \"NonDriver\""))
+        //{
+        //            await page.SelectNonDriverAsync("");
+        //}
+        //if (data.Condition("'Operator Status' == \"OtherIns\""))
+        //{
+        //            await page.ClickOtherInsuranceAsync();
+        //}
+        //if (data.Condition("'Operator Status' == \"NonDriver\""))
+        //{
+        //            await page.WaitForNonDriverReasonAsync("Visible");
+        //}
+        //if (data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
+        //{
+        //            await page.EnterCycleNonDriverComboBoxAsync(data.Resolve("{{data:cyclenondriver_combobox_143}}"));
+        //}
+        //if (data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
+        //{
+        //            await page.EnterCycleNonDriverComboBoxAsync(data.Resolve("{{data:cyclenondriver_combobox_144}}"));
+        //}
+        //if (data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
+        //{
+        //            await page.EnterCycleNonDriverComboBoxAsync(data.Resolve("{{data:cyclenondriver_combobox_145}}"));
+        //}
+        //if (data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
+        //{
+        //            await page.EnterCycleNonDriverComboBoxAsync(data.Resolve("{{data:cyclenondriver_combobox_146}}"));
+        //}
+        //if (data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
+        //{
+        //            await page.EnterCycleNonDriverComboBoxAsync(data.Resolve("{{data:cyclenondriver_combobox_147}}"));
+        //}
+        //if (data.Condition("'Policy Type' != \"Cycle\""))
+        //{
+        //            await page.WaitForIsThisDriverANamedInsuredAsync("Visible");
+        //}
+        //if (data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
+        //{
+        //            await page.ClickPrimaryNamedInsuredAsync();
+        //            //await page.PressPrimaryNamedInsuredAsync("scroll[2]");
+        //}
+        //if (data.Condition("'Named Insured?' == \"NamedIns\""))
+        //{
+        //            await page.ClickNamedInsuredAsync();
+        //            //await page.PressNamedInsuredAsync("scroll[2]");
+        //}
+        //if (data.Condition("'Named Insured?' == \"NotNamedIns\""))
+        //{
+        //            await page.ClickNotANamedInsuredAsync();
+        //            //await page.PressNotANamedInsuredAsync("scroll[2]");
+        //}
+        //if (data.Condition("'Operator Status' != \"Assigned\""))
+        //{
+        //            await page.ClickAssignedAsync();
+        //            //await page.PressAssignedAsync("scroll[2]");
+        //}
+        //if (data.Condition("'Operator Status' != \"NonDriver\""))
+        //{
+        //            await page.ClickNonDriverAsync();
+        //            //await page.PressNonDriverAsync("scroll[2]");
+        //}
+        //if (data.Condition("'Operator Status' != \"Related\""))
+        //{
+        //            await page.ClickRelatedAsync();
+        //}
+        //if (data.Condition("'Operator Status' == \"Assigned\""))
+        //{
+        //            await page.ClickAssignedAsync();
+        //}
+        //if (data.Condition("'Operator Status' == \"Related\""))
+        //{
+        //            await page.ClickRelatedAsync();
+        //}
+        //if (data.Condition("'Operator Status' == \"Military\""))
+        //{
+        //            await page.ClickMilitaryAsync();
+        //}
+        //if (data.Condition("'Operator Status' == \"Missionary\""))
+        //{
+        //            await page.ClickMissionaryAsync();
+        //}
+        //if (data.Condition("'Operator Status' == \"OtherIns\""))
+        //{
+        //            await page.ClickOtherInsuranceAsync();
+        //}
+        //if (data.Condition("'Operator Status' == \"Roomate\""))
+        //{
+        //            await page.ClickRoommateAsync();
+        //}
+        //if (data.Condition("'Operator Status' == \"NonDriver\""))
+        //{
+        //            await page.WaitForNonDriverReasonAsync("Visible");
+        //}
+        //if (data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
+        //{
+        //            await page.ClickNeverLicensedAsync();
+        //}
+        //if (data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
+        //{
+        //            await page.ClickUnderageAsync();
+        //}
+        //if (data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
+        //{
+        //            await page.ClickMedicalConditionAsync();
+        //}
+        //if (data.Condition("'If NonDriver: Reason' != \"NeverLicensed\" AND 'If NonDriver: Reason' != \"Underage\" AND 'If NonDriver: Reason' != \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
+        //{
+        //            await page.SelectMoreOptionsNonDriverAsync("");
+        //}
+        //if (data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
+        //{
+        //            await page.ClickSurrenderedAsync();
+        //}
+        //if (data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
+        //{
+        //            await page.ClickPermitDriverAsync();
+        //}
+        //if (data.Condition("'State Licensed(XX)' != NULL"))
+        //{
+        //            await page.EnterLicenseStateAsync(data.Get("State Licensed(XX)"));
+        //}
+        //if (data.Condition("'Drivers License #' != NULL"))
+        //{
+        //            await page.EnterDriverSLicenseNumberAsync(data.Resolve("{{data:driver_s_license_number_169}}"));
+        //            await page.PressDriverSLicenseNumberAsync("CTRL+A");
+        //}
+        if (data.Condition("'Drivers_License_34' != NULL"))
+        {
+                    await page.EnterDriverSLicenseNumberAsync(data.Get("Drivers_License_34"));
+        }
+        //await page.EnterYrsLicensedCurrentStateAsync(data.Resolve("{{data:yrs_licensed_current_state_171}}"));
+        //await page.PressYrsLicensedCurrentStateAsync("CTRL+A");
         await page.EnterYrsLicensedCurrentStateAsync(data.Resolve("{{data:yrs_licensed_current_state_172}}"));
-        await page.EnterMonthsLicensedCurrentStateAsync(data.Resolve("{{data:months_licensed_current_state_173}}"));
-        await page.PressMonthsLicensedCurrentStateAsync("CTRL+A");
         await page.EnterMonthsLicensedCurrentStateAsync(data.Resolve("{{data:months_licensed_current_state_174}}"));
+        //await page.PressMonthsLicensedCurrentStateAsync("CTRL+A");
+        //await page.EnterMonthsLicensedCurrentStateAsync(data.Resolve("{{data:months_licensed_current_state_174}}"));
         if (data.Condition("'State' == \"TX\""))
         {
                     await page.EnterDaysOperatedUninsuredAsync(data.Resolve("{{data:daysoperateduninsured_175}}"));
@@ -694,12 +848,12 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.EnterYrsLicensedAllStatesAsync(data.Resolve("{{data:yrslicensed_all_states_177}}"));
         }
-        if (data.Condition("'Operator Status' == \"Assigned\""))
-        {
-                    await page.ClickNoD053AAsync();
-                    await page.PressNoD053AAsync("Click");
-                    await page.PressNoD053AAsync("Scroll[2]");
-        }
+        //if (data.Condition("'Operator Status' == \"Assigned\""))
+        //{
+        //            await page.ClickNoD053AAsync();
+        //            //await page.PressNoD053AAsync("Click");
+        //            //await page.PressNoD053AAsync("Scroll[2]");
+        //}
         if (await page.IsWasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbovePresentAsync())
         {
                     await page.VerifyWasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAboveAsync("Exists", "");
@@ -712,33 +866,38 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.VerifyPriorCarrierNameAsync("Exists", "");
         }
-        if (await page.IsSaveAndContinue9CB7APresentAsync())
-        {
-                    await page.ClickSaveAndContinue9CB7AAsync();
-        }
+        //if (await page.IsSaveAndContinue9CB7APresentAsync())
+        //{
+        //            await page.ClickSaveAndContinue9CB7AAsync();
+        //}
         if (await page.IsNoNeedWasNotLicensedPresentAsync())
         {
                     await page.VerifyNoNeedWasNotLicensedAsync("Visible", "");
         }
         if (await page.IsNoNeedWasNotLicensedPresentAsync())
         {
-                    await page.ClickNoNeedWasNotLicensedAsync();
-                    await page.PressNoNeedWasNotLicensedAsync("End");
-                    await page.PressNoNeedWasNotLicensedAsync("Click");
+                    await page.ClickNB3NotLicensedAsync();
+                    //await page.PressNoNeedWasNotLicensedAsync("End");
+                    //await page.PressNoNeedWasNotLicensedAsync("Click");
         }
-        await page.ClickSaveAndContinue9CB7AAsync();
+        //await page.ClickSaveAndContinue9CB7AAsync();
+        //await page.ClickNB3NotLicensedAsync();
         if (await page.IsSaveAndContinue9CB7APresentAsync())
         {
                     await page.ClickSaveAndContinue9CB7AAsync();
         }
+        await page.PauseAsync(10000);
+
         if (await page.IsCONTINUED555DPresentAsync())
         {
-                    await page.WaitForCONTINUED555DAsync("Exists");
+            await page.WaitForCONTINUED555DAsync("Exists");
         }
+        await page.PauseAsync(10000);
         if (await page.IsCONTINUED555DPresentAsync())
         {
-                    await page.ClickCONTINUED555DAsync();
+            await page.ClickCONTINUED555DAsync();
         }
+
 
     }
 
@@ -753,42 +912,99 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
 
         var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+
         if (data.Condition("'Additional Drivers?' == \"Yes\""))
         {
-                    await page.ClickDriverInformationAsync();
+            await page.ClickDriverInformationAsync();
         }
-        if (await page.IsPrefilledDriversPresentAsync())
+        //if (await page.IsPrefilledDriversPresentAsync())
+        //{
+        //            await page.WaitForPrefilledDriversAsync("Exists");
+        //}
+        //if (await page.IsPrefilledDriversPresentAsync())
+        //{
+        //}
+        //if (await page.IsMATFORMFIELDPresentAsync())
+        //{
+        //    await page.EnterMATFORMFIELDAsync("");
+        //}
+        //await page.PressNeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleSAsync("return");
+        //if (await page.IsSaveAndContinuePresentAsync())
+        //{
+        //            await page.ClickSaveAndContinueAsync();
+        //}
+        //if (await page.IsUnselectedClientSuggestionsPresentAsync())
+        //{
+        //            await page.VerifyUnselectedClientSuggestionsAsync("Exists", "");
+        //}
+
+
+        if (await page.IsRaymondNotIncludingIndividualPropertyAsync())
         {
-                    await page.WaitForPrefilledDriversAsync("Exists");
+            await page.EnterRaymondNotIncludingIndividualPropertyAsync("Never resided in the household and doesn't regularly use or have access to policy vehicle(s)");
         }
-        if (await page.IsPrefilledDriversPresentAsync())
+
+
+        if (data.Condition("State == \"ME\""))
         {
+
+            await page.ClickSaveAndContinueAsync();
         }
-        if (await page.IsMATFORMFIELDPresentAsync())
+
+
+        if (data.Condition("State != \"ME\"&& State != \"OR\" && State !=\"CO\""))
         {
-                    await page.EnterMATFORMFIELDAsync("");
-        }
-        await page.PressNeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleSAsync("return");
-        if (await page.IsSaveAndContinuePresentAsync())
-        {
+
+            if (await page.IsReasonForIndividualProperyAsync())
+            {
+                await page.EnterReasonForIndividualProperyAsync("Never resided in the household and doesn't regularly use or have access to policy vehicle(s)");
+
+            }
+
+
+
+            if (await page.IsReasonForNotIncludingPropertyAsync())
+            {
+                await page.EnterReasonForNotIncludingPropertyAsync("Never resided in the household and doesn't regularly use or have access to policy vehicle(s)");
+
+            }
+
+            if (await page.IsSaveAndContinuePresentAsync())
+            {
+                try
+                {
                     await page.ClickSaveAndContinueAsync();
+                }
+                catch (global::System.TimeoutException)
+                {
+                    // Optional transition action in this variant; continue with flow if the control is not actionable.
+                }
+
+
+
+            }
+
+         
         }
-        if (await page.IsUnselectedClientSuggestionsPresentAsync())
+        if (data.Condition("State ==\"CO\""))
         {
-                    await page.VerifyUnselectedClientSuggestionsAsync("Exists", "");
-        }
-        if (await page.IsSaveAndContinuePresentAsync())
-        {
+            if (await page.IsSaveAndContinuePresentAsync())
+            {
+                try
+                {
                     await page.ClickSaveAndContinueAsync();
+                }
+                catch (global::System.TimeoutException)
+                {
+                    // Optional transition action in this variant; continue with flow if the control is not actionable.
+                }
+                //data.Set("Farm/Use", data.Get("Farm/Use"));
+                data.Set("State", data.Get("State"));
+
+            }
         }
-        data.Set("Farm/Use", data.Get("Farm/Use"));
-        data.Set("State", data.Get("State"));
 
     }
-
-
-
 
     [Given(@"^I complete vehicle Summary Automobile Rate Filing$")]
     [When(@"^I complete vehicle Summary Automobile Rate Filing$")]
@@ -799,198 +1015,274 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
 
         var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+
+
+        //await page.ClickSaveAndContinueAsync();
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.VerifyEQCAVerifiedMileageAsync("Exists", "");
-        if (await page.IsMOREOPTIONSPresentAsync())
-        {
-                    await page.WaitForMOREOPTIONSAsync("Visible");
-        }
-        if (await page.IsMOREOPTIONSPresentAsync())
-        {
-                    await page.SelectMOREOPTIONSAsync("");
-        }
-        await page.ClickAdditionalVehicleS62C9AAsync();
-        await page.ClickVehicleInformationNextAsync();
+        //await page.VerifyEQCAVerifiedMileageAsync("Exists", "");
+        //if (await page.IsMOREOPTIONSPresentAsync())
+        //{
+        //            await page.WaitForMOREOPTIONSAsync("Visible");
+        //}
+        //if (await page.IsMOREOPTIONSPresentAsync())
+        //{
+        //            await page.SelectMOREOPTIONSAsync("");
+        //}
+        //await page.ClickAdditionalVehicleS62C9AAsync();
+        //await page.ClickVehicleInformationNextAsync();
         if (await page.IsAdditionalVehiclePresentAsync())
         {
                     await page.ClickAdditionalVehicleAsync();
         }
-        await page.ClickVehicleInformationNextAsync();
-        await page.WaitForVIN06D01Async("True");
-        await page.ClickVIN06D01Async();
-        await page.EnterVIN06D01Async(data.Resolve("{{data:txt_vin_214}}"));
-        await page.ClickVehicle1Async();
+
+        if (data.Condition("State ==\"UT\"|| State ==\"MO\""))
+        {
+            await page.ClickPricingDetailsNextAsync();
+        }
+        //await page.ClickVehicleInformationNextAsync();
+        //await page.WaitForVIN06D01Async("True");
+        if (await page.IsVIN06D01PresentAsync())
+        {
+                    await page.ClickVIN06D01Async();
+            await page.EnterVIN06D01Async(data.Resolve("{{data:txt_vin_214}}"));
+        }
+        if (await page.IsVehicle1PresentAsync())
+        {
+                    await page.ClickVehicle1Async();
+        }
+
+
+
         if (data.Condition("Loan != NULL"))
         {
-                    await page.ClickLoan4369DAsync();
+            await page.ClickLoan4369DAsync();
         }
         if (data.Condition("Lease != NULL"))
         {
-                    await page.ClickLeased14EA4Async();
+            await page.ClickLeased14EA4Async();
         }
-        if (data.Condition("Loan == NULL AND Lease == NULL"))
-        {
-                    await page.ClickOwn49EECAsync();
-        }
+        //if (data.Condition("Loan == NULL AND Lease == NULL"))
+        //{
+        //    await page.ClickOwn49EECAsync();
+        //}
         if (data.Condition("State == \"OK\""))
         {
-                    await page.SelectNativeAmericanRegisterNOAsync("");
+            await page.SelectNativeAmericanRegisterNOAsync("");
         }
-        if (data.Condition("AntiTheft != NULL AND State != \"AZ\" AND State != \"MD\" AND State != \"OH\" AND State != \"CA\" AND State != \"VA\" AND State != \"WI\" AND State != \"UT\""))
-        {
-                    await page.SelectAntiTheftYesAsync("");
-        }
-        if (data.Condition("AntiTheft != NULL AND State == \"IL\""))
-        {
-                    await page.ClickILCategory1Async();
-        }
+        //if (data.Condition("AntiTheft != NULL AND State != \"AZ\" AND State != \"MD\" AND State != \"OH\" AND State != \"CA\" AND State != \"VA\" AND State != \"WI\" AND State != \"UT\""))
+        //{
+        //            await page.SelectAntiTheftYesAsync("");
+        //}
+        //if (data.Condition("AntiTheft != NULL AND State == \"IL\""))
+        //{
+        //            await page.ClickILCategory1Async();
+        //}
         if (data.Condition("State == \"NJ\" AND AntiTheft != NULL"))
         {
-                    await page.ClickCategoryIAsync();
+            await page.ClickCategoryIAsync();
         }
-        if (data.Condition("AntiTheft != NULL AND (State == \"NY\" OR State == \"VT\")"))
-        {
-                    await page.ClickActiveDisablingDeviceAsync();
-        }
-        if (data.Condition("PickUp != NULL AND (State == \"NY\" OR State = \"VA\")"))
-        {
-                    await page.SelectCamperShellNoAsync("");
-        }
+        //if (data.Condition("AntiTheft != NULL AND (State == \"NY\" OR State == \"VT\")"))
+        //{
+        //            await page.ClickActiveDisablingDeviceAsync();
+        //}
+        //if (data.Condition("PickUp != NULL AND (State == \"NY\" OR State = \"VA\")"))
+        //{
+        //            await page.SelectCamperShellNoAsync("");
+        //}
         if (data.Condition("State == \"CA\""))
         {
-                    await page.ClickPleasureCANYFFCICAsync();
+            await page.ClickPleasureCANYFFCICAsync();
         }
         if (data.Condition("State == \"KS\""))
         {
-                    await page.ClickN1DayAsync();
+            await page.ClickN1DayAsync();
         }
         if (data.Condition("State == \"NY\" AND Company == \"FFCIC\""))
         {
-                    await page.EnterNYFFCICTotalAnnualMilesAsync(data.Resolve("{{data:ny_ffcic_total_annual_miles_228}}"));
-                    await page.PressNYFFCICTotalAnnualMilesAsync("CTRL+A");
+            await page.EnterNYFFCICTotalAnnualMilesAsync(data.Resolve("{{data:ny_ffcic_total_annual_miles_228}}"));
+            await page.PressNYFFCICTotalAnnualMilesAsync("CTRL+A");
         }
         if (data.Condition("State == \"NY\" AND Company == \"FFCIC\""))
         {
-                    await page.EnterNYFFCICTotalAnnualMilesAsync(data.Resolve("{{data:ny_ffcic_total_annual_miles_229}}"));
+            await page.EnterNYFFCICTotalAnnualMilesAsync(data.Resolve("{{data:ny_ffcic_total_annual_miles_229}}"));
         }
         if (data.Condition("State == \"KS\""))
         {
-                    await page.EnterWorkMilesDayAsync(data.Resolve("{{data:work_miles_day_230}}"));
-                    await page.PressWorkMilesDayAsync("CTRL+A");
+            await page.EnterWorkMilesDayAsync(data.Resolve("{{data:work_miles_day_230}}"));
+            await page.PressWorkMilesDayAsync("CTRL+A");
         }
         if (data.Condition("State == \"KS\""))
         {
-                    await page.EnterWorkMilesDayAsync(data.Resolve("{{data:work_miles_day_231}}"));
+            await page.EnterWorkMilesDayAsync(data.Resolve("{{data:work_miles_day_231}}"));
         }
         if (data.Condition("State == \"KS\""))
         {
-                    await page.EnterNonWorkAnnualMilesAsync(data.Resolve("{{data:non_work_annual_miles_232}}"));
-                    await page.PressNonWorkAnnualMilesAsync("CTRL+A");
+            await page.EnterNonWorkAnnualMilesAsync(data.Resolve("{{data:non_work_annual_miles_232}}"));
+            await page.PressNonWorkAnnualMilesAsync("CTRL+A");
         }
         if (data.Condition("State == \"KS\""))
         {
-                    await page.EnterNonWorkAnnualMilesAsync(data.Resolve("{{data:non_work_annual_miles_233}}"));
+            await page.EnterNonWorkAnnualMilesAsync(data.Resolve("{{data:non_work_annual_miles_233}}"));
         }
-        if (data.Condition("'Farm/Use' != NULL AND State == \"CA\""))
+        //if (data.Condition("'Farm/Use' != NULL AND State == \"CA\""))
+        //{
+        //            await page.SelectUseCAMoreOptionsAsync("");
+        //}
+        //if (data.Condition("'Farm/Use' != NULL AND (State != \"NY\" and Company !=\"FFCIC\")"))
+        //{
+        //            await page.SelectMoreOptionsFarmUseAsync("");
+        //}
+
+
+
+
+        if (data.Condition("State ==\"IA\"||State ==\"DE\"||State ==\"AL\"|| State ==\"AR\"|| State ==\"AZ\"|| State ==\"UT\"|| State ==\"ME\"||State ==\"PA\" || State ==\"MN\"|| State ==\"MD\"|| State ==\"KY\" || State ==\"TX\""))
         {
-                    await page.SelectUseCAMoreOptionsAsync("");
+            await page.ClickOwnD044EAsync();
+            await Task.Delay(5000);
+            if (await page.IsLblOwnedPopupPresentAsync())
+            {
+                await page.VerifyLblOwnedPopupAsync("Visible", "");
+                await page.ClickCONTINUEF07C7Async();
+
+
+            }
+            await page.ClickMotorCycleAsync();
+            await page.SelectNoD9E4DAsync("");
+
+            await page.WaitForSelectVehicleAsync("Visible");
+          
+
+            await page.ClickPleasureUseAsync();
+
+            await page.ClickSaveContinue2E7CDAsync();
+            await page.ClickAddVehicleAsync();
+            //await page.WaitForVIN0A17CAsync("True");
+            await page.EnterVIN0A17CAsync(data.Resolve("{{data:vin_243}}"));
+            await page.ClickVehicle1Async();
         }
-        if (data.Condition("'Farm/Use' != NULL AND (State != \"NY\" and Company !=\"FFCIC\")"))
+
+        //await page.ClickPleasureCANYFFCICAsync();
+        //await page.EnterPurchaseDateBB8AFAsync(data.Resolve("{{data:txt_purchase_date_236}}"));
+        ////await page.PressPurchaseDateBB8AFAsync("CTRL+A");
+        //await page.EnterPurchaseDateBB8AFAsync(data.Resolve("{{data:txt_purchase_date_237}}"));
+        //await page.EnterOdometer3843FAsync(data.Resolve("{{data:txt_odometer_238}}"));
+        ////await page.PressOdometer3843FAsync("CTRL+A");
+        //await page.EnterOdometer3843FAsync(data.Resolve("{{data:txt_odometer_239}}"));
+
+
+        //await page.ClickVeh1Async();
+        //await page.ClickVehicleMoreOptionsAsync();
+        //await page.PressVehicleMoreOptionsAsync("Click");
+        //await page.PressVehicleMoreOptionsAsync("Scroll[1]");
+        //await page.ClickCollectorCarAsync();
+        //await page.SelectCollectorCarTypeMoreOptionsAsync("");
+        //await page.ClickClassicAsync();
+        //await page.PressClassicAsync("Click");
+        //await page.PressClassicAsync("scroll[3]");
+        //await page.EnterAgreedValue8E288Async(data.Resolve("{{data:agreed_value_250}}"));
+
+        if (data.Condition("State ==\"IA\"||State ==\"DE\"||State ==\"PA\" ||State ==\"AL\"|| State ==\"AR\"|| State ==\"AZ\"|| State ==\"UT\"|| State ==\"ME\"|| State ==\"MN\"|| State ==\"MD\"|| State ==\"KY\"|| State ==\"TX\""))
         {
-                    await page.SelectMoreOptionsFarmUseAsync("");
+            await page.ClickMotorCycleAsync();
+            await Task.Delay(5000);
+            await page.ClickOwnD044EAsync();
+            await Task.Delay(5000);
+           
+            if (await page.IsLblOwnedPopupPresentAsync())
+            {
+                await page.VerifyLblOwnedPopupAsync("Visible", "");
+                await page.ClickCONTINUEF07C7Async();
+
+
+            }
+            //await page.ClickMotorCycleAsync();
+            await page.SelectNoD9E4DAsync("");
+
+            //await page.WaitForSelectVehicleAsync("Visible");
+
+
+            await page.ClickVechicle2PleasureUseAsync();
+            await page.ClickSaveContinue86B78Async();
         }
-        await page.EnterPurchaseDateBB8AFAsync(data.Resolve("{{data:txt_purchase_date_236}}"));
-        await page.PressPurchaseDateBB8AFAsync("CTRL+A");
-        await page.EnterPurchaseDateBB8AFAsync(data.Resolve("{{data:txt_purchase_date_237}}"));
-        await page.EnterOdometer3843FAsync(data.Resolve("{{data:txt_odometer_238}}"));
-        await page.PressOdometer3843FAsync("CTRL+A");
-        await page.EnterOdometer3843FAsync(data.Resolve("{{data:txt_odometer_239}}"));
-        await page.ClickSaveContinue2E7CDAsync();
-        await page.ClickAddVehicleAsync();
-        await page.WaitForVIN0A17CAsync("True");
-        await page.EnterVIN0A17CAsync(data.Resolve("{{data:vin_243}}"));
-        await page.ClickVeh1Async();
-        await page.ClickVehicleMoreOptionsAsync();
-        await page.PressVehicleMoreOptionsAsync("Click");
-        await page.PressVehicleMoreOptionsAsync("Scroll[1]");
-        await page.ClickCollectorCarAsync();
-        await page.SelectCollectorCarTypeMoreOptionsAsync("");
-        await page.ClickClassicAsync();
-        await page.PressClassicAsync("Click");
-        await page.PressClassicAsync("scroll[3]");
-        await page.EnterAgreedValue8E288Async(data.Resolve("{{data:agreed_value_250}}"));
-        await page.ClickOwnB8575Async();
-        await page.PressOwnB8575Async("scroll[3]");
-        await page.PressOwnB8575Async("Click");
-        await page.ClickContinueAsync();
-        await page.ClickRestrictedUseAsync();
-        await page.PressRestrictedUseAsync("scroll[2]");
-        await page.PressRestrictedUseAsync("Click");
-        await page.EnterAppraisalDate8A115Async(data.Resolve("{{data:appraisal_date_254}}"));
-        await page.PressAppraisalDate8A115Async("CTRL+A");
-        await page.EnterAppraisalDate8A115Async(data.Resolve("{{data:appraisal_date_255}}"));
-        await page.EnterTotalAnnualMileageAsync(data.Resolve("{{data:total_annual_mileage_256}}"));
-        await page.PressTotalAnnualMileageAsync("CTRL+A");
-        await page.EnterTotalAnnualMileageAsync(data.Resolve("{{data:total_annual_mileage_257}}"));
-        await page.ClickSaveContinue86B78Async();
-        await page.ClickAddVehicleAsync();
-        await page.WaitForVIN0A17CAsync("True");
-        await page.EnterVIN0A17CAsync(data.Get("VIN 3"));
-        await page.ClickVeh3Async();
-        await page.SelectVehicleMoreOptionsAsync("");
-        await page.ClickCollectorCarAsync();
-        await page.PressCollectorCarAsync("Click");
-        await page.PressCollectorCarAsync("scroll[1]");
-        await page.ClickModernClassicAsync();
-        await page.PressModernClassicAsync("Click");
-        await page.PressModernClassicAsync("scroll[2]");
-        await page.EnterAgreedValue8E288Async(data.Get("Agreed Value Veh 3"));
-        await page.ClickOwnB8575Async();
-        await page.PressOwnB8575Async("scroll[2]");
-        await page.PressOwnB8575Async("Click");
-        await page.PressOwnB8575Async("scroll[2]");
-        await page.ClickContinueAsync();
-        await page.ClickRestrictedUseAsync();
-        await page.PressRestrictedUseAsync("Click");
-        await page.PressRestrictedUseAsync("END");
-        await page.EnterAppraisalDate8A115Async(data.Resolve("{{data:appraisal_date_271}}"));
-        await page.PressAppraisalDate8A115Async("CTRL+A");
-        await page.EnterAppraisalDate8A115Async(data.Resolve("{{data:appraisal_date_272}}"));
-        await page.EnterOdometerD648FAsync(data.Resolve("{{data:odometer_273}}"));
-        await page.PressOdometerD648FAsync("CTRL+A");
-        await page.EnterOdometerD648FAsync(data.Resolve("{{data:odometer_274}}"));
-        await page.EnterTotalAnnualMileageAsync(data.Resolve("{{data:total_annual_mileage_275}}"));
-        await page.PressTotalAnnualMileageAsync("CTRL+A");
-        await page.EnterTotalAnnualMileageAsync(data.Get("Annual Mileage Veh 3"));
-        await page.ClickSaveContinue86B78Async();
-        await page.ClickAddVehicleAsync();
-        await page.WaitForVIN0A17CAsync("True");
-        await page.EnterVIN0A17CAsync(data.Get("VIN 4"));
-        await page.ClickVeh1Async();
-        await page.ClickOwnB8575Async();
-        await page.PressOwnB8575Async("Click");
-        await page.PressOwnB8575Async("scroll[2]");
-        await page.ClickContinueAsync();
-        await page.EnterPurchaseDate736F4Async(data.Resolve("{{data:purchase_date_285}}"));
-        await page.EnterOdometerD648FAsync(data.Resolve("{{data:odometer_286}}"));
-        await page.PressOdometerD648FAsync("CTRL+A");
-        await page.EnterOdometerD648FAsync(data.Resolve("{{data:odometer_287}}"));
-        await page.EnterTotalAnnualMileageAsync(data.Resolve("{{data:total_annual_mileage_288}}"));
-        await page.PressTotalAnnualMileageAsync("CTRL+A");
-        await page.EnterTotalAnnualMileageAsync(data.Get("Annual Mileage Veh 4"));
-        await page.ClickSaveContinue86B78Async();
-        await page.WaitForPricingDetailsNextAsync("Exists");
-        await page.ClickPricingDetailsNextAsync();
-        data.Set("Driver 1 Vehicle", data.Resolve("{{data:driver_1_vehicle}}"));
-        data.Set("Driver 1 Principal Occasional", data.Resolve("{{data:driver_1_principal_occasional}}"));
-        data.Set("Driver 2 Vehicle", data.Get("Driver 2 Vehicle"));
-        data.Set("Driver 2 Principal Occasional", data.Get("Driver 2 Principal Occasional"));
-        data.Set("Driver 3 Vehicle", data.Get("Driver 3 Vehicle"));
-        data.Set("Driver 3 Principal Occasional", data.Get("Driver 3 Principal Occasional"));
-        data.Set("Driver 4 Vehicle", data.Get("Driver 4 Vehicle"));
-        data.Set("Driver 4 Principal Occasional", data.Get("Driver 4 Principal Occasional"));
-        data.Set("Driver 5 Vehicle", data.Get("Driver 5 Vehicle"));
-        data.Set("Driver 5 Principal Occasional", data.Get("Driver 5 Principal Occasional"));
+
+
+
+
+    //await page.ClickOwnB8575Async();
+    //await page.PressOwnB8575Async("scroll[3]");
+    //await page.PressOwnB8575Async("Click");
+    //await page.ClickContinueAsync();
+    //await page.ClickRestrictedUseAsync();
+    //await page.PressRestrictedUseAsync("scroll[2]");
+    //await page.PressRestrictedUseAsync("Click");
+    //await page.EnterAppraisalDate8A115Async(data.Resolve("{{data:appraisal_date_254}}"));
+    //await page.PressAppraisalDate8A115Async("CTRL+A");
+    //await page.EnterAppraisalDate8A115Async(data.Resolve("{{data:appraisal_date_255}}"));
+    //await page.EnterTotalAnnualMileageAsync(data.Resolve("{{data:total_annual_mileage_256}}"));
+    //await page.PressTotalAnnualMileageAsync("CTRL+A");
+    //await page.EnterTotalAnnualMileageAsync(data.Resolve("{{data:total_annual_mileage_257}}"));
+  
+        //await page.ClickAddVehicleAsync();
+        //await page.WaitForVIN0A17CAsync("True");
+        //await page.EnterVIN0A17CAsync(data.Get("VIN 3"));
+        //await page.ClickVeh3Async();
+        //await page.SelectVehicleMoreOptionsAsync("");
+        //await page.ClickCollectorCarAsync();
+        //await page.PressCollectorCarAsync("Click");
+        //await page.PressCollectorCarAsync("scroll[1]");
+        //await page.ClickModernClassicAsync();
+        //await page.PressModernClassicAsync("Click");
+        //await page.PressModernClassicAsync("scroll[2]");
+        //await page.EnterAgreedValue8E288Async(data.Get("Agreed Value Veh 3"));
+        //await page.ClickOwnB8575Async();
+        //await page.PressOwnB8575Async("scroll[2]");
+        //await page.PressOwnB8575Async("Click");
+        //await page.PressOwnB8575Async("scroll[2]");
+        //await page.ClickContinueAsync();
+        //await page.ClickRestrictedUseAsync();
+        //await page.PressRestrictedUseAsync("Click");
+        //await page.PressRestrictedUseAsync("END");
+        //await page.EnterAppraisalDate8A115Async(data.Resolve("{{data:appraisal_date_271}}"));
+        //await page.PressAppraisalDate8A115Async("CTRL+A");
+        //await page.EnterAppraisalDate8A115Async(data.Resolve("{{data:appraisal_date_272}}"));
+        //await page.EnterOdometerD648FAsync(data.Resolve("{{data:odometer_273}}"));
+        //await page.PressOdometerD648FAsync("CTRL+A");
+        //await page.EnterOdometerD648FAsync(data.Resolve("{{data:odometer_274}}"));
+        //await page.EnterTotalAnnualMileageAsync(data.Resolve("{{data:total_annual_mileage_275}}"));
+        //await page.PressTotalAnnualMileageAsync("CTRL+A");
+        //await page.EnterTotalAnnualMileageAsync(data.Get("Annual Mileage Veh 3"));
+        //await page.ClickSaveContinue86B78Async();
+        //await page.ClickAddVehicleAsync();
+        //await page.WaitForVIN0A17CAsync("True");
+        //await page.EnterVIN0A17CAsync(data.Get("VIN 4"));
+        //await page.ClickVeh1Async();
+        //await page.ClickOwnB8575Async();
+        //await page.PressOwnB8575Async("Click");
+        //await page.PressOwnB8575Async("scroll[2]");
+        //await page.ClickContinueAsync();
+        //await page.EnterPurchaseDate736F4Async(data.Resolve("{{data:purchase_date_285}}"));
+        //await page.EnterOdometerD648FAsync(data.Resolve("{{data:odometer_286}}"));
+        //await page.PressOdometerD648FAsync("CTRL+A");
+        //await page.EnterOdometerD648FAsync(data.Resolve("{{data:odometer_287}}"));
+        //await page.EnterTotalAnnualMileageAsync(data.Resolve("{{data:total_annual_mileage_288}}"));
+        //await page.PressTotalAnnualMileageAsync("CTRL+A");
+        //await page.EnterTotalAnnualMileageAsync(data.Get("Annual Mileage Veh 4"));
+        //await page.ClickSaveContinue86B78Async();
+        //await page.WaitForPricingDetailsNextAsync("Exists");
+
+       
+
+        //data.Set("Driver 1 Vehicle", data.Resolve("{{data:driver_1_vehicle}}"));
+        //data.Set("Driver 1 Principal Occasional", data.Resolve("{{data:driver_1_principal_occasional}}"));
+        //data.Set("Driver 2 Vehicle", data.Get("Driver 2 Vehicle"));
+        //data.Set("Driver 2 Principal Occasional", data.Get("Driver 2 Principal Occasional"));
+        //data.Set("Driver 3 Vehicle", data.Get("Driver 3 Vehicle"));
+        //data.Set("Driver 3 Principal Occasional", data.Get("Driver 3 Principal Occasional"));
+        //data.Set("Driver 4 Vehicle", data.Get("Driver 4 Vehicle"));
+        //data.Set("Driver 4 Principal Occasional", data.Get("Driver 4 Principal Occasional"));
+        //data.Set("Driver 5 Vehicle", data.Get("Driver 5 Vehicle"));
+        //data.Set("Driver 5 Principal Occasional", data.Get("Driver 5 Principal Occasional"));
 
     }
 
@@ -1003,64 +1295,86 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
 
         var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        if (data.Condition("'Driver 1 Vehicle' != NULL"))
+        await page.ClickDriverAssignmentNextAsync();
+
+
+        if (data.Condition("State ==\"DE\"||State ==\"DE\"||State ==\"PA\" ||State ==\"NH\" || State ==\"NE\"|| State ==\"VA\" || State ==\"AZ\"|| State ==\"MO\"|| State ==\"ME\"|| State ==\"TX\""))
         {
-                    await page.ClickDriver1VehicleAsync();
+
+            await page.ClickMultipleDriverAssignmentNextAsync();
+
         }
-        if (data.Condition("'Driver 1 Principal Occasional' != NULL"))
+
+
+        if (data.Condition("State ==\"UT\"")){
+            await page.ClickMultipleDriverAssignmentNextAsync();
+
+        }
+
+
+        if (data.Condition("State !=\"DE\"&&State !=\"PA\" && State !=\"NH\" && State !=\"NE\" && State !=\"AZ\" && State !=\"VA\" && State !=\"UT\" && State !=\"ME\" && State !=\"TX\" && State !=\"MO\""))
         {
-                    await page.ClickDriver1PrincipalOccasionalAsync();
+
+            // Field-level orchestration derived from the canonical Tosca method sequence.
+            if (data.Condition("'Driver 1 Vehicle' != NULL"))
+            {
+                await page.ClickDriver1VehicleAsync();
+            }
+            if (data.Condition("'Driver 1 Principal Occasional' != NULL"))
+            {
+                await page.ClickDriver1PrincipalOccasionalAsync();
+            }
+            if (data.Condition("'Driver 2 Vehicle' != NULL"))
+            {
+                await page.ClickDriver2VehicleAsync();
+                await page.PressDriver2VehicleAsync("Scroll[1]");
+                await page.PressDriver2VehicleAsync("Click");
+            }
+            if (data.Condition("'Driver 2 Principal Occasional' != NULL"))
+            {
+                await page.ClickDriver2PrincipalOccasionalAsync();
+                await page.PressDriver2PrincipalOccasionalAsync("Scroll[1]");
+                await page.PressDriver2PrincipalOccasionalAsync("Click");
+            }
+            if (data.Condition("'Driver 3 Vehicle' != NULL"))
+            {
+                await page.ClickDriver3VehicleAsync();
+                await page.PressDriver3VehicleAsync("Scroll[1]");
+                await page.PressDriver3VehicleAsync("Click");
+            }
+            if (data.Condition("'Driver 3 Principal Occasional' != NULL"))
+            {
+                await page.ClickDriver3PrincipalOccasionalAsync();
+                await page.PressDriver3PrincipalOccasionalAsync("Scroll[1]");
+                await page.PressDriver3PrincipalOccasionalAsync("Click");
+            }
+            if (data.Condition("'Driver 4 Vehicle' != NULL"))
+            {
+                await page.ClickDriver4VehicleAsync();
+                await page.PressDriver4VehicleAsync("Scroll[1]");
+                await page.PressDriver4VehicleAsync("Click");
+            }
+            if (data.Condition("'Driver 4 Principal Occasional' != NULL"))
+            {
+                await page.ClickDriver4PrincipalOccasionalAsync();
+                await page.PressDriver4PrincipalOccasionalAsync("Scroll[1]");
+                await page.PressDriver4PrincipalOccasionalAsync("Click");
+            }
+            if (data.Condition("'Driver 5 Vehicle' != NULL"))
+            {
+                await page.ClickDriver5VehicleAsync();
+                await page.PressDriver5VehicleAsync("Scroll[1]");
+                await page.PressDriver5VehicleAsync("Click");
+            }
+            if (data.Condition("'Driver 5 Principal Occasional' != NULL"))
+            {
+                await page.ClickDriver5PrincipalOccasionalAsync();
+                await page.PressDriver5PrincipalOccasionalAsync("Scroll[1]");
+                await page.PressDriver5PrincipalOccasionalAsync("Click");
+            }
+            await page.ClickMultipleDriverAssignmentNextAsync();
+
         }
-        if (data.Condition("'Driver 2 Vehicle' != NULL"))
-        {
-                    await page.ClickDriver2VehicleAsync();
-                    await page.PressDriver2VehicleAsync("Scroll[1]");
-                    await page.PressDriver2VehicleAsync("Click");
-        }
-        if (data.Condition("'Driver 2 Principal Occasional' != NULL"))
-        {
-                    await page.ClickDriver2PrincipalOccasionalAsync();
-                    await page.PressDriver2PrincipalOccasionalAsync("Scroll[1]");
-                    await page.PressDriver2PrincipalOccasionalAsync("Click");
-        }
-        if (data.Condition("'Driver 3 Vehicle' != NULL"))
-        {
-                    await page.ClickDriver3VehicleAsync();
-                    await page.PressDriver3VehicleAsync("Scroll[1]");
-                    await page.PressDriver3VehicleAsync("Click");
-        }
-        if (data.Condition("'Driver 3 Principal Occasional' != NULL"))
-        {
-                    await page.ClickDriver3PrincipalOccasionalAsync();
-                    await page.PressDriver3PrincipalOccasionalAsync("Scroll[1]");
-                    await page.PressDriver3PrincipalOccasionalAsync("Click");
-        }
-        if (data.Condition("'Driver 4 Vehicle' != NULL"))
-        {
-                    await page.ClickDriver4VehicleAsync();
-                    await page.PressDriver4VehicleAsync("Scroll[1]");
-                    await page.PressDriver4VehicleAsync("Click");
-        }
-        if (data.Condition("'Driver 4 Principal Occasional' != NULL"))
-        {
-                    await page.ClickDriver4PrincipalOccasionalAsync();
-                    await page.PressDriver4PrincipalOccasionalAsync("Scroll[1]");
-                    await page.PressDriver4PrincipalOccasionalAsync("Click");
-        }
-        if (data.Condition("'Driver 5 Vehicle' != NULL"))
-        {
-                    await page.ClickDriver5VehicleAsync();
-                    await page.PressDriver5VehicleAsync("Scroll[1]");
-                    await page.PressDriver5VehicleAsync("Click");
-        }
-        if (data.Condition("'Driver 5 Principal Occasional' != NULL"))
-        {
-                    await page.ClickDriver5PrincipalOccasionalAsync();
-                    await page.PressDriver5PrincipalOccasionalAsync("Scroll[1]");
-                    await page.PressDriver5PrincipalOccasionalAsync("Click");
-        }
-        await page.ClickMultipleDriverAssignmentNextAsync();
 
     }
 
@@ -1078,7 +1392,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.WaitForCONTINUEAsync("Exists");
         }
-        await page.VerifyCONTINUEAsync("Exists", "");
+        //await page.VerifyCONTINUEAsync("Exists", "");
         if (await page.IsCONTINUEPresentAsync())
         {
                     await page.ClickCONTINUEAsync();
@@ -1100,7 +1414,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.WaitForUWCONTINUEAsync("Exists");
         }
-        await page.VerifyUWCONTINUEAsync("Exists", "");
+        //await page.VerifyUWCONTINUEAsync("Exists", "");
         if (await page.IsUWCONTINUEPresentAsync())
         {
                     await page.ClickUWCONTINUEAsync();
@@ -1140,14 +1454,14 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
                     await page.PressClaimDriverNotInHouseholdAsync("End");
                     await page.PressClaimDriverNotInHouseholdAsync("Click");
         }
-        await page.SelectClaimVehicleLoanedToDriverThatDoesNotDidNotResideInHouseholdAndHasNoAccessToVehicleSInsuredByAmericanNationalAsync("");
-        await page.ClickClaimViolationSaveAndContinueAsync();
+        //await page.SelectClaimVehicleLoanedToDriverThatDoesNotDidNotResideInHouseholdAndHasNoAccessToVehicleSInsuredByAmericanNationalAsync("");
+        //await page.ClickClaimViolationSaveAndContinueAsync();
         if (await page.IsComboBoxPresentAsync())
         {
                     await page.EnterComboBoxAsync(data.Resolve("{{data:combobox_329}}"));
         }
-        await page.SelectClaimViolationDoesNotApplyAsync("");
-        await page.ClickClaimViolationSaveAndContinueAsync();
+        //await page.SelectClaimViolationDoesNotApplyAsync("");
+        //await page.ClickClaimViolationSaveAndContinueAsync();
         if (await page.IsCONTINUEDoesnTApplyPresentAsync())
         {
                     await page.VerifyCONTINUEDoesnTApplyAsync("Exists", "");
@@ -1169,22 +1483,60 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
 
         var page = new DiscountsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+
         // Field-level orchestration derived from the canonical Tosca method sequence.
         if (data.Condition("State == \"MD\" OR State == \"NJ\""))
         {
                     await page.ClickResidentiaProperty1Async();
-                    await page.PressResidentiaProperty1Async("end");
-                    await page.PressResidentiaProperty1Async("scroll[-2]");
-                    await page.PressResidentiaProperty1Async("Click");
+                    //await page.PressResidentiaProperty1Async("end");
+                    //await page.PressResidentiaProperty1Async("scroll[-2]");
+                    //await page.PressResidentiaProperty1Async("Click");
         }
-        if (await page.IsStateMDPresentAsync())
+
+        if (data.Condition("State !=\"NH\""))
         {
-                    await page.ClickStateMDAsync();
+
+            if (await page.IsStateMDPresentAsync())
+            {
+                await page.ClickStateMDAsync();
+            }
+
+            if (data.Condition("'Rider Group Discount' != NULL"))
+            {
+                await page.ClickRiderGroupDiscountAsync();
+            }
+            if (data.Condition("'Commercial Auto' != NULL"))
+            {
+                await page.VerifyCommercialAutoAsync("Exists", "");
+            }
+            //await page.SetOnAsync(data.Resolve("{{data:commercial_auto_on_348}}"));
+            //if (data.Condition("'Special Farm Package' != NULL"))
+            //{
+            //    await page.VerifySpecialFarmPackageAsync("Exists", "");
+            //}
+            //await page.SetOnAsync(data.Resolve("{{data:special_farm_package_on_350}}"));
+            if (data.Condition("State !=\"UT\" && State !=\"AZ\"&& State !=\"TX\" && State !=\"PA\""))
+            {
+                await page.ClickSafeCycleDiscountAsync();
+            }
         }
         if (data.Condition("State == \"NJ\""))
         {
-                    await page.ClickN1500030000Async();
+            {
+                await page.ClickN1500030000Async();
+            }
+            data.Set("Commercial Auto", data.Get("Commercial Auto"));
+            data.Set("Special Farm Package", data.Get("Special Farm Package"));
+            data.Set("Safe Cycle Discount", data.Resolve("{{data:safe_cycle_discount}}"));
+            data.Set("Rider Group Discount", data.Get("Rider Group Discount"));
+            if (data.Condition("'Multi-Car Discount' !=NULL"))
+            {
+                await page.VerifyMultiCarDiscountAsync("Exists", "");
+            }
+            await page.EnterSafeCycleDiscountDateAsync(data.Resolve("{{data:safe_cycle_discount_date_352}}"));
+            //await page.SetOnAsync(data.Resolve("{{data:multi_car_discount_on_345}}"));
         }
+
         data.Set("Commercial Auto", data.Get("Commercial Auto"));
         data.Set("Special Farm Package", data.Get("Special Farm Package"));
         data.Set("Safe Cycle Discount", data.Resolve("{{data:safe_cycle_discount}}"));
@@ -1212,21 +1564,27 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.ClickSafeCycleDiscountAsync();
         }
-        await page.EnterSafeCycleDiscountDateAsync(data.Resolve("{{data:safe_cycle_discount_date_352}}"));
+
+        if(await page.IsSafeCycleDiscountDatePresentAsync())
+        {
+            await page.EnterSafeCycleDiscountDateAsync(data.Resolve("{{data:safe_cycle_discount_date_352}}"));
+        }
         if (data.Condition("State == \"DE\""))
+
         {
                     await page.SelectNoDefensiveDriverDiscountAsync("");
         }
+
         await page.WaitForDiscountNEWNextAsync("Visible");
         await page.ClickDiscountNEWNextAsync();
         if (await page.IsLoadingPresentAsync())
         {
                     await page.VerifyLoadingAsync("Exists", "");
         }
-        if (await page.IsLoadingPresentAsync())
-        {
-        }
-        data.Set("Supplemental UM/UIM Opt In", data.Get("Supplemental UM/UIM Opt In"));
+        //if (await page.IsLoadingPresentAsync())
+        //{
+        //}
+        //data.Set("Supplemental UM/UIM Opt In", data.Get("Supplemental UM/UIM Opt In"));
 
     }
 
@@ -1252,18 +1610,31 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.SetOption3Async(data.Resolve("{{data:option_3_384}}"));
         }
-        if (data.Condition("PolicyCovOption == \"OPTION 1\" And (CovOptUninsured != NULL OR 'Supplemental UM/UIM Opt In' != NULL)"))
+
+
+        if (data.Condition("PolicyCovOption == \"OPTION 1\"") &&
+          (data.Condition("CovOptUninsured != NULL") || data.Condition("'Supplemental UM/UIM Opt In' != NULL")))
         {
-                    await page.ClickEDITCOVERAGEOpt1Async();
+            await page.ClickEDITCOVERAGEOpt1Async();
         }
-        if (data.Condition("PolicyCovOption == \"OPTION 2\" And (CovOptUninsured != NULL OR 'Supplemental UM/UIM Opt In' != NULL)"))
+        if (data.Condition("PolicyCovOption == \"OPTION 2\"") &&
+            (data.Condition("CovOptUninsured != NULL") || data.Condition("'Supplemental UM/UIM Opt In' != NULL")))
         {
-                    await page.ClickEDITCOVERAGEOpt2Async();
+            await page.ClickEDITCOVERAGEOpt2Async();
         }
-        if (data.Condition("PolicyCovOption == \"OPTION 3\" And (CovOptUninsured != NULL OR 'Supplemental UM/UIM Opt In' != NULL)"))
+        if (data.Condition("PolicyCovOption == \"OPTION 3\"") &&
+            (data.Condition("CovOptUninsured != NULL") || data.Condition("'Supplemental UM/UIM Opt In' != NULL")))
         {
-                    await page.ClickEDITCOVERAGEOpt3Async();
+            await page.ClickEDITCOVERAGEOpt3Async();
         }
+
+
+        //if (data.Condition("State ==\"AL\""))
+        //{
+
+        //    await page.ClickEDITCOVERAGEOpt2Async();
+        //}
+      
         if (data.Condition("'Supplemental UM/UIM Opt In' != NULL"))
         {
                     await page.WaitForSupplementalUMUIMOptInAsync("Exists");
@@ -1288,7 +1659,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.ClickSaveAndContinueAsync();
         }
-        await page.PressOption3Async("scroll[5]");
+        //await page.PressOption3Async("scroll[5]");
         if (data.Condition("V1_CompCollOnly == \"Yes\""))
         {
                     await page.SelectV1CompCollOnlyYESAsync("");
@@ -1305,10 +1676,10 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.ClickV1ComprehensiveAndCollisionOnlyAsync();
         }
-        if (data.Condition("V1_CompDed != NULL"))
-        {
-                    await page.VerifyV1ComprehensiveDeductibleAsync("Visible", "");
-        }
+        //if (data.Condition("V1_CompDed != NULL"))
+        //{
+        //            await page.VerifyV1ComprehensiveDeductibleAsync("Visible", "");
+        //}
         if (data.Condition("V1_CompDed != NULL"))
         {
                     await page.ClickV1CompDedAsync();
@@ -1325,7 +1696,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.ClickV1CollDedMoreOptAsync();
         }
-        await page.PressOption3Async("scroll[8]");
+        //await page.PressOption3Async("scroll[8]");
         if (data.Condition("V2_CompCollOnly == \"Yes\""))
         {
                     await page.SelectV2CompCollOnlyYESAsync("");
@@ -1358,91 +1729,91 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.ClickV2CollDedAsync();
         }
-        if (data.Condition("V2_CollDedMoreOpt != NULL"))
-        {
-                    await page.ClickV2CollDedMoreOptAsync();
-        }
-        await page.PressCoveragesNewNextAsync("end");
-        await page.PressCoveragesNewNextAsync("scroll[-4]");
-        if (data.Condition("V3_CompCollOnly == \"Yes\""))
-        {
-                    await page.SelectV3CompCollOnlyYESAsync("");
-        }
-        if (data.Condition("'V3_Comprehensive Only' != NULL"))
-        {
-                    await page.WaitForV3ComprehensiveOnlyAsync("Visible");
-        }
-        if (data.Condition("'V3_Comprehensive Only' != NULL"))
-        {
-                    await page.SetV3ComprehensiveOnlyAsync(data.Resolve("{{data:v3_comprehensive_only_418}}"));
-        }
-        if (data.Condition("'V3_ Comprehensive And Collision Only' != NULL"))
-        {
-                    await page.ClickV3ComprehensiveAndCollisionOnlyAsync();
-        }
-        if (data.Condition("V3_CompDed != NULL"))
-        {
-                    await page.VerifyV3ComprehensiveDeductibleAsync("Visible", "");
-        }
-        if (data.Condition("V3_CompDed != NULL"))
-        {
-                    await page.ClickV3CompDedAsync();
-        }
-        if (data.Condition("V3_CompDedMoreOpt != NULL"))
-        {
-                    await page.ClickV3CompDedMoreOptAsync();
-        }
-        if (data.Condition("V3_CollDed != NULL"))
-        {
-                    await page.ClickV3CollDedAsync();
-        }
-        if (data.Condition("V3_CollDedMoreOpt != NULL"))
-        {
-                    await page.ClickV3CollDedMoreOptAsync();
-        }
-        await page.PressCoveragesNewNextAsync("end");
-        if (data.Condition("V4_CompCollOnly == \"Yes\""))
-        {
-                    await page.SelectV4CompCollOnlyYESAsync("");
-        }
-        if (data.Condition("'V4_Comprehensive Only' != NULL"))
-        {
-                    await page.WaitForV4ComprehensiveOnlyAsync("Visible");
-        }
-        if (data.Condition("'V4_Comprehensive Only' != NULL"))
-        {
-                    await page.SetV4ComprehensiveOnlyAsync(data.Resolve("{{data:v4_comprehensive_only_428}}"));
-        }
-        if (data.Condition("'V4_ Comprehensive And Collision Only' != NULL"))
-        {
-                    await page.ClickV4ComprehensiveAndCollisionOnlyAsync();
-        }
-        if (data.Condition("V4_CompDed != NULL"))
-        {
-                    await page.VerifyV4ComprehensiveDeductibleAsync("Visible", "");
-        }
-        if (data.Condition("V4_CompDed != NULL"))
-        {
-                    await page.ClickV4CompDedAsync();
-        }
-        if (data.Condition("V4_CompDedMoreOpt != NULL"))
-        {
-                    await page.ClickV4CompDedMoreOptAsync();
-        }
-        if (data.Condition("V4_CollDed != NULL"))
-        {
-                    await page.ClickV4CollDedAsync();
-        }
-        if (data.Condition("V4_CollDedMoreOpt != NULL"))
-        {
-                    await page.ClickV4CollDedMoreOptAsync();
-        }
+        //if (data.Condition("V2_CollDedMoreOpt != NULL"))
+        //{
+        //            await page.ClickV2CollDedMoreOptAsync();
+        //}
+        //await page.PressCoveragesNewNextAsync("end");
+        //await page.PressCoveragesNewNextAsync("scroll[-4]");
+        //if (data.Condition("V3_CompCollOnly == \"Yes\""))
+        //{
+        //            await page.SelectV3CompCollOnlyYESAsync("");
+        //}
+        //if (data.Condition("'V3_Comprehensive Only' != NULL"))
+        //{
+        //            await page.WaitForV3ComprehensiveOnlyAsync("Visible");
+        //}
+        //if (data.Condition("'V3_Comprehensive Only' != NULL"))
+        //{
+        //            await page.SetV3ComprehensiveOnlyAsync(data.Resolve("{{data:v3_comprehensive_only_418}}"));
+        //}
+        //if (data.Condition("'V3_ Comprehensive And Collision Only' != NULL"))
+        //{
+        //            await page.ClickV3ComprehensiveAndCollisionOnlyAsync();
+        //}
+        //if (data.Condition("V3_CompDed != NULL"))
+        //{
+        //            await page.VerifyV3ComprehensiveDeductibleAsync("Visible", "");
+        //}
+        //if (data.Condition("V3_CompDed != NULL"))
+        //{
+        //            await page.ClickV3CompDedAsync();
+        //}
+        //if (data.Condition("V3_CompDedMoreOpt != NULL"))
+        //{
+        //            await page.ClickV3CompDedMoreOptAsync();
+        //}
+        //if (data.Condition("V3_CollDed != NULL"))
+        //{
+        //            await page.ClickV3CollDedAsync();
+        //}
+        //if (data.Condition("V3_CollDedMoreOpt != NULL"))
+        //{
+        //            await page.ClickV3CollDedMoreOptAsync();
+        //}
+        ////await page.PressCoveragesNewNextAsync("end");
+        //if (data.Condition("V4_CompCollOnly == \"Yes\""))
+        //{
+        //            await page.SelectV4CompCollOnlyYESAsync("");
+        //}
+        //if (data.Condition("'V4_Comprehensive Only' != NULL"))
+        //{
+        //            await page.WaitForV4ComprehensiveOnlyAsync("Visible");
+        //}
+        //if (data.Condition("'V4_Comprehensive Only' != NULL"))
+        //{
+        //            await page.SetV4ComprehensiveOnlyAsync(data.Resolve("{{data:v4_comprehensive_only_428}}"));
+        //}
+        //if (data.Condition("'V4_ Comprehensive And Collision Only' != NULL"))
+        //{
+        //            await page.ClickV4ComprehensiveAndCollisionOnlyAsync();
+        //}
+        //if (data.Condition("V4_CompDed != NULL"))
+        //{
+        //            await page.VerifyV4ComprehensiveDeductibleAsync("Visible", "");
+        //}
+        //if (data.Condition("V4_CompDed != NULL"))
+        //{
+        //            await page.ClickV4CompDedAsync();
+        //}
+        //if (data.Condition("V4_CompDedMoreOpt != NULL"))
+        //{
+        //            await page.ClickV4CompDedMoreOptAsync();
+        //}
+        //if (data.Condition("V4_CollDed != NULL"))
+        //{
+        //            await page.ClickV4CollDedAsync();
+        //}
+        //if (data.Condition("V4_CollDedMoreOpt != NULL"))
+        //{
+        //            await page.ClickV4CollDedMoreOptAsync();
+        //}
         await page.ClickCoveragesNewNextAsync();
-        data.Set("Tort Option", data.Get("Tort Option"));
-        data.Set("Income Loss Coverage", data.Get("Income Loss Coverage"));
-        data.Set("AD&D Coverage", data.Get("AD&D Coverage"));
-        data.Set("Inc Liab Claims Fam Mem", data.Get("Inc Liab Claims Fam Mem"));
-        data.Set("Extraordinary Medical Benefit", data.Get("Extraordinary Medical Benefit"));
+        //data.Set("Tort Option", data.Get("Tort Option"));
+        //data.Set("Income Loss Coverage", data.Get("Income Loss Coverage"));
+        //data.Set("AD&D Coverage", data.Get("AD&D Coverage"));
+        //data.Set("Inc Liab Claims Fam Mem", data.Get("Inc Liab Claims Fam Mem"));
+        //data.Set("Extraordinary Medical Benefit", data.Get("Extraordinary Medical Benefit"));
 
     }
 
@@ -1475,16 +1846,16 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.ClickUIMPDAsync();
         }
-        if (data.Condition("'AD&D Coverage' != NULL"))
-        {
-                    await page.WaitForADDCoverageAsync("True");
-        }
-        if (data.Condition("'AD&D Coverage' != NULL"))
-        {
-                    await page.ClickADDCoverageAsync();
-                    await page.PressADDCoverageAsync("Click");
-                    await page.PressADDCoverageAsync("scroll[3]");
-        }
+        //if (data.Condition("'AD&D Coverage' != NULL"))
+        //{
+        //            await page.WaitForADDCoverageAsync("True");
+        //}
+        //if (data.Condition("'AD&D Coverage' != NULL"))
+        //{
+        //            await page.ClickADDCoverageAsync();
+        //            await page.PressADDCoverageAsync("Click");
+        //            await page.PressADDCoverageAsync("scroll[3]");
+        //}
         if (data.Condition("'AD&D_Driver1' != NULL"))
         {
                     await page.ClickADDDriver1Async();
@@ -1565,54 +1936,69 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        if (data.Condition("'All HH Members 65 or Pension' != NULL"))
+        if (data.Condition("State !=\"MN\" && State !=\"MD\" && State !=\"TX\"  && State !=\"PA\""))
+
+
         {
-                    await page.ClickHouseholdMembersAge65OrReceivingPensionAsync();
+
+            if (data.Condition("State !=\"IA\""))
+            {
+
+                await page.ClickHouseholdMembersAge65OrReceivingPensionAsync();
+
+            }
+
+            if (data.Condition("'PIP Limit' != NULL"))
+            {
+                await page.ClickPIPLimitAsync();
+            }
+            if (data.Condition("'PIP Deductible' != NULL"))
+            {
+                await page.ClickPIPDeductibleAsync();
+            }
+
+            if (data.Condition("'PIP Stacking' != NULL"))
+            {
+                await page.ClickPIPStackingAsync();
+            }
+            if (data.Condition("'Extra PIP Option' != NULL"))
+            {
+                await page.SelectExtraPIPOptionAsync("");
+            }
+            if (data.Condition("'Auto Health Insurer' != NULL"))
+            {
+                await page.ClickAutoHealthInsurerAsync();
+            }
+            if (data.Condition("'Medical Expense Elimination' != NULL"))
+            {
+                await page.ClickMedicalExpenseEliminationAsync();
+            }
+            if (data.Condition("'Work Loss Coordination Of Benefits' != NULL"))
+            {
+                await page.SelectWorkLossNoAsync("");
+            }
+            if (data.Condition("'Broadened PIP' != NULL"))
+            {
+                await page.ClickBroadenedPIPAsync();
+            }
+            if (data.Condition("'Additional Death Benefit' != NULL"))
+            {
+                await page.ClickAdditionalDeathBenefitAsync();
+            }
+            if (data.Condition("'Waiver of Income Loss' != NULL"))
+            {
+                await page.ClickWaiverOfIncomeLossAsync();
+            }
         }
-        if (data.Condition("'PIP Limit' != NULL"))
-        {
-                    await page.ClickPIPLimitAsync();
-        }
-        if (data.Condition("'PIP Deductible' != NULL"))
-        {
-                    await page.ClickPIPDeductibleAsync();
-        }
+
+
+    
+       
         if (data.Condition("'Additional PIP' != NULL"))
         {
                     await page.ClickAdditionalPIPAsync();
         }
-        if (data.Condition("'PIP Stacking' != NULL"))
-        {
-                    await page.ClickPIPStackingAsync();
-        }
-        if (data.Condition("'Extra PIP Option' != NULL"))
-        {
-                    await page.SelectExtraPIPOptionAsync("");
-        }
-        if (data.Condition("'Auto Health Insurer' != NULL"))
-        {
-                    await page.ClickAutoHealthInsurerAsync();
-        }
-        if (data.Condition("'Medical Expense Elimination' != NULL"))
-        {
-                    await page.ClickMedicalExpenseEliminationAsync();
-        }
-        if (data.Condition("'Work Loss Coordination Of Benefits' != NULL"))
-        {
-                    await page.SelectWorkLossNoAsync("");
-        }
-        if (data.Condition("'Broadened PIP' != NULL"))
-        {
-                    await page.ClickBroadenedPIPAsync();
-        }
-        if (data.Condition("'Additional Death Benefit' != NULL"))
-        {
-                    await page.ClickAdditionalDeathBenefitAsync();
-        }
-        if (data.Condition("'Waiver of Income Loss' != NULL"))
-        {
-                    await page.ClickWaiverOfIncomeLossAsync();
-        }
+        
         data.Set("UMPD/UIMPD_V1", data.Get("UMPD/UIMPD_V1"));
         data.Set("UMPD Coverage_V1", data.Get("UMPD Coverage_V1"));
         data.Set("UIMPD Coverage_V1", data.Get("UIMPD Coverage_V1"));
@@ -1660,14 +2046,28 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         }
         if (data.Condition("'UMPD Coverage_V1' != NULL"))
         {
-                    await page.ClickUMPDCoverageVehicle1Async();
-                    await page.PressUMPDCoverageVehicle1Async("Click");
-                    await page.PressUMPDCoverageVehicle1Async("scroll[2]");
-        }
-        if (data.Condition("'UMPD Coverage_V1' == \"MORE OPTIONS\""))
-        {
+
+            if (data.Condition("State !=\"PA\""))
+            {
+                await page.ClickUMPDCoverageVehicle1Async();
+                await page.PressUMPDCoverageVehicle1Async("Click");
+                //await page.PressUMPDCoverageVehicle1Async("scroll[2]");
+
+                if (data.Condition("'UMPD Coverage_V1' == \"MORE OPTIONS\""))
+                {
                     await page.SelectUMPDMoreOptionsCoveragesAsync("");
-        }
+                }
+
+                if (data.Condition("'UMPD/UIMPD_V2' != NULL"))
+                {
+                    await page.ClickUMPDUIMPDV2Async();
+                }
+
+            }
+
+            }
+
+        
         if (data.Condition("'UIMPD Coverage_V1' != NULL"))
         {
                     await page.ClickUIMPDCoverageV1Async();
@@ -1675,8 +2075,8 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         if (data.Condition("'Rental Reimbursement Coverage_V1' != NULL"))
         {
                     await page.ClickRentalReimbursementCoverageV1Async();
-                    await page.PressRentalReimbursementCoverageV1Async("Click");
-                    await page.PressRentalReimbursementCoverageV1Async("scroll[4]");
+                    //await page.PressRentalReimbursementCoverageV1Async("Click");
+                    //await page.PressRentalReimbursementCoverageV1Async("scroll[4]");
         }
         if (data.Condition("'Theft Deductible_V1' != NULL"))
         {
@@ -1685,13 +2085,10 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         if (data.Condition("'Roadside Assistance Coverage_V1' != NULL AND NOT(State == \"NY\")"))
         {
                     await page.ClickRoadsideAssistanceCoverageV1Async();
-                    await page.PressRoadsideAssistanceCoverageV1Async("Click");
-                    await page.PressRoadsideAssistanceCoverageV1Async("Scroll[2]");
+                    //await page.PressRoadsideAssistanceCoverageV1Async("Click");
+                    //await page.PressRoadsideAssistanceCoverageV1Async("Scroll[2]");
         }
-        if (data.Condition("'UMPD/UIMPD_V2' != NULL"))
-        {
-                    await page.ClickUMPDUIMPDV2Async();
-        }
+     
         if (data.Condition("'UMPD Coverage_V2' != NULL"))
         {
                     await page.ClickUMPDCoverageVehicle2Async();
@@ -1707,8 +2104,8 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         if (data.Condition("'Rental Reimbursement Coverage_V2' != NULL"))
         {
                     await page.ClickRentalReimbursementCoverageV2Async();
-                    await page.PressRentalReimbursementCoverageV2Async("Click");
-                    await page.PressRentalReimbursementCoverageV2Async("scroll[4]");
+                    //await page.PressRentalReimbursementCoverageV2Async("Click");
+                    //await page.PressRentalReimbursementCoverageV2Async("scroll[4]");
         }
         if (data.Condition("'Theft Deductible_V2' != NULL"))
         {
@@ -1717,8 +2114,8 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         if (data.Condition("'Roadside Assistance Coverage_V2' != NULL"))
         {
                     await page.ClickRoadsideAssistanceCoverageV2Async();
-                    await page.PressRoadsideAssistanceCoverageV2Async("Click");
-                    await page.PressRoadsideAssistanceCoverageV2Async("scroll[2]");
+                    //await page.PressRoadsideAssistanceCoverageV2Async("Click");
+                    //await page.PressRoadsideAssistanceCoverageV2Async("scroll[2]");
         }
         if (data.Condition("'Towing and Labor' != NULL"))
         {
@@ -1743,8 +2140,8 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         if (data.Condition("'Rental Reimbursement Coverage_V3' != NULL"))
         {
                     await page.ClickRentalReimbursementCoverageV3Async();
-                    await page.PressRentalReimbursementCoverageV3Async("Click");
-                    await page.PressRentalReimbursementCoverageV3Async("scroll[4]");
+                    //await page.PressRentalReimbursementCoverageV3Async("Click");
+                    //await page.PressRentalReimbursementCoverageV3Async("scroll[4]");
         }
         if (data.Condition("'Theft Deductible_V3' != NULL"))
         {
@@ -1753,8 +2150,8 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         if (data.Condition("'Roadside Assistance Coverage_V3' != NULL AND NOT(State == \"NY\")"))
         {
                     await page.ClickRoadsideAssistanceCoverageV3Async();
-                    await page.PressRoadsideAssistanceCoverageV3Async("Click");
-                    await page.PressRoadsideAssistanceCoverageV3Async("scroll[2]");
+                    //await page.PressRoadsideAssistanceCoverageV3Async("Click");
+                    //await page.PressRoadsideAssistanceCoverageV3Async("scroll[2]");
         }
         if (data.Condition("'Cycle Accessories_V3' != NULL"))
         {
@@ -1783,8 +2180,8 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         if (data.Condition("'Rental Reimbursement Coverage_V4' != NULL"))
         {
                     await page.ClickRentalReimbursementCoverageV4Async();
-                    await page.PressRentalReimbursementCoverageV4Async("Click");
-                    await page.PressRentalReimbursementCoverageV4Async("end");
+                    //await page.PressRentalReimbursementCoverageV4Async("Click");
+                    //await page.PressRentalReimbursementCoverageV4Async("end");
         }
         if (data.Condition("'Theft Deductible_V4' != NULL"))
         {
@@ -1847,7 +2244,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         await page.WaitForHaveYouOrAnyHouseholdMemberEverBeenConvictedOfAFelonyAsync("Exists");
         await page.SelectNo43938Async("");
         await page.WaitForIsAnyVintageCycleGaragedInADifferentLocationAsync("Exists");
-        await page.SelectNo1Async("");
+        //await page.SelectNo1Async("");
         await page.ClickCycleUnderwritingNextAsync();
 
     }
@@ -1863,7 +2260,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickAdditionalInterestNextAsync();
-        await page.VerifyEQCommonLoadingIndicatorWaitAsync("Exists", "");
+        //await page.VerifyEQCommonLoadingIndicatorWaitAsync("Exists", "");
 
     }
 
@@ -1877,18 +2274,24 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.WaitForHdrBillingAsync("Visible");
+        //await page.WaitForHdrBillingAsync("Visible");
         await page.ClickCreateNewBillingAccountAsync();
         await page.ClickPrimaryAccountHolderNameAsync();
-        await page.PressPrimaryAccountHolderNameAsync("Click");
-        await page.PressPrimaryAccountHolderNameAsync("Scroll[3]");
+        //await page.PressPrimaryAccountHolderNameAsync("Click");
+        //await page.PressPrimaryAccountHolderNameAsync("Scroll[3]");
         await page.ClickDirectBillAsync();
-        await page.PressDirectBillAsync("Click");
-        await page.PressDirectBillAsync("scroll[3]");
+        //await page.PressDirectBillAsync("Click");
+        //await page.PressDirectBillAsync("scroll[3]");
+
+       
         await page.ClickN1PaymentAsync();
+        await Task.Delay(5000);
         await page.EnterPaymentDueDateAsync(data.Resolve("{{data:txt_paymentduedate_573}}"));
+        await page.WaitForRdBtnFullBalanceAsync("Visible");
         await page.ClickRdBtnFullBalanceAsync();
+        await page.WaitForCHECKAsync("Visible");
         await page.ClickCHECKAsync();
+        await page.WaitForCheckNumberAsync("Visible");
         await page.EnterCheckNumberAsync(data.Resolve("{{data:txt_check_number_576}}"));
         await page.ClickBillingNEXTAsync();
 

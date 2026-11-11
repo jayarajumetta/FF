@@ -1865,8 +1865,11 @@ public sealed class AutoRateFilingsCommonPolicyNBPriorEffDateSteps
         await page.PressDirectBillAsync("scroll[3]");
         await page.ClickN1PaymentAsync();
         await page.EnterPaymentDueDateAsync(data.Resolve("{{data:txt_paymentduedate_558}}"));
+        await page.WaitForRdBtnFullBalanceAsync("Visible");
         await page.ClickRdBtnFullBalanceAsync();
+        await page.WaitForCHECKAsync("Visible");
         await page.ClickCHECKAsync();
+        await page.WaitForCheckNumberAsync("Visible");
         await page.EnterCheckNumberAsync(data.Resolve("{{data:txt_check_number_561}}"));
         await page.ClickBillingNEXTAsync();
 

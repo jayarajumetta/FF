@@ -36,12 +36,16 @@ public sealed class ApplicationSteps
     }
 
     [Given("I sign in to Personal Lines Duck Creek using configured credentials")]
+    [When("I sign in to Personal Lines Duck Creek using configured credentials")]
+    [Then("I sign in to Personal Lines Duck Creek using configured credentials")]
     public Task SignInAsync()
     {
         var data = _scenario.Get<ScenarioData>();
         var page = new ApplicationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        var username = ResolveCredential(data, "username", "PL_DC_USERNAME");
-        var password = ResolveCredential(data, "password", "PL_DC_PASSWORD");
+        //var username = ResolveCredential(data, "username", "PL_DC_USERNAME");
+        //var password = ResolveCredential(data, "password", "PL_DC_PASSWORD");
+        var username = "YDH040";
+        var password = "Anico456";
         return page.SignInAsync(username, password);
     }
 

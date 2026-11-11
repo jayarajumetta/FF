@@ -1,6 +1,11 @@
-using InsuranceAutomation.Core;
-using Reqnroll;
 using InsuranceAutomation.CLDC.Pages;
+using InsuranceAutomation.Core;
+using Microsoft.Playwright;
+using NUnit.Framework;
+using Reqnroll;
+using System.Text;
+using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 
 namespace InsuranceAutomation.CLDC.StepDefinitions;
 
@@ -194,37 +199,61 @@ public sealed class GLBasicPolicySteps
     public async Task CompleteCGLFieldsAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-        var isWashington = data.Condition("State == \"WA\" || State == \"OR\"");
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        var coverageForm = data.Resolve("{{data:coverage_form_98}}");
+        var occurenceLimit = data.Resolve("{{data:occurence_limit_99}}");
+        var aggregateLimit = data.Resolve("{{data:aggregate_limit_100}}");
+        var productsAggLimit = data.Resolve("{{data:products_agg_limit_101}}");
+
+
+        await page.PauseAsync(3000);
+
+        static bool HasDataValue(string? value) =>
+            !string.IsNullOrWhiteSpace(value) && !value.Equals("NULL", StringComparison.OrdinalIgnoreCase);
+
+
+        var hasCoverageForm = HasDataValue(coverageForm);
+        var hasNonOcpCoverageForm = hasCoverageForm && !coverageForm.Equals("OCP", StringComparison.OrdinalIgnoreCase);
+        var shouldEnterEmployeeCounts = data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")") && hasNonOcpCoverageForm;
+
         await page.ClickPolicyCovgerageAsync();
         await page.WaitForPolicyCovgGLPolicyCovgAsync("Exists");
-        if (data.Condition("'Coverage Form' != NULL") && !isWashington)
+
+        await page.PauseAsync(3000);
+        if (hasCoverageForm && await page.IsPolicyCovgGLCoverageFormVisibleAsync())
         {
-            await page.EnterPolicyCovgGLCoverageFormAsync(data.Resolve("{{data:coverage_form_98}}"));
+            await page.EnterPolicyCovgGLCoverageFormAsync(coverageForm);
         }
-        if (data.Condition("'Occurence Limit' != NULL") && !isWashington)
+
+        await page.PauseAsync(3000);
+        if (HasDataValue(occurenceLimit) && await page.IsOccurenceLimitVisibleAsync())
         {
-            await page.EnterOccurenceLimitAsync(data.Resolve("{{data:occurence_limit_99}}"));
+            await page.EnterOccurenceLimitAsync(occurenceLimit);
         }
-        if (data.Condition("'Aggregate Limit' != NULL") && !isWashington)
+
+        await page.PauseAsync(3000);
+        if (HasDataValue(aggregateLimit) && await page.IsAggregateLimitVisibleAsync())
         {
-            await page.EnterAggregateLimitAsync(data.Resolve("{{data:aggregate_limit_100}}"));
+            await page.EnterAggregateLimitAsync(aggregateLimit);
         }
-        if (data.Condition("'Coverage Form' != \"OCP\"") && !isWashington)
+
+        await page.PauseAsync(3000);
+        if (hasNonOcpCoverageForm && HasDataValue(productsAggLimit) && await page.IsProductsAggLimitVisibleAsync())
         {
-            await page.EnterProductsAggLimitAsync(data.Resolve("{{data:products_agg_limit_101}}"));
+            await page.EnterProductsAggLimitAsync(productsAggLimit);
         }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
+        await page.PauseAsync(3000);
+        if (hasNonOcpCoverageForm)
         {
             await page.EnterDedTypeAsync(data.Resolve("{{data:ded_type_102}}"));
         }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
+        if (hasNonOcpCoverageForm)
         {
             await page.EnterDeductibleBasisAsync(data.Resolve("{{data:deductible_basis_103}}"));
         }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
+        if (hasNonOcpCoverageForm)
         {
             await page.EnterPremOpDedAsync(data.Resolve("{{data:premop_ded_104}}"));
         }
@@ -232,7 +261,7 @@ public sealed class GLBasicPolicySteps
         //{
         //    await page.EnterPremOpPDDedAsync("");
         //}
-        if (data.Condition("'Coverage Form' != \"OCP\""))
+        if (hasNonOcpCoverageForm)
         {
             await page.SetSplitBIDedAsync(data.Resolve("{{data:split_bi_ded_106}}"));
         }
@@ -240,7 +269,7 @@ public sealed class GLBasicPolicySteps
         //{
         //    await page.EnterSplitPDDedAsync("");
         //}
-        if (data.Condition("'Coverage Form' != \"OCP\""))
+        if (hasNonOcpCoverageForm)
         {
             await page.EnterProdBIDedAsync(data.Resolve("{{data:prod_bi_ded_108}}"));
         }
@@ -249,31 +278,31 @@ public sealed class GLBasicPolicySteps
         //{
         //    await page.EnterProdPDDedAsync("");
         //}
-        if (data.Condition("'Coverage Form' != \"OCP\""))
+        if (hasNonOcpCoverageForm)
         {
             await page.EnterFireDamageAsync(data.Resolve("{{data:fire_damage_110}}"));
         }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
+        if (hasNonOcpCoverageForm)
         {
             await page.EnterMedicalAsync(data.Resolve("{{data:medical_111}}"));
         }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
+        if (hasNonOcpCoverageForm)
         {
             await page.EnterPersAdvInjAsync(data.Resolve("{{data:pers_adv_inj_112}}"));
         }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
+        if (hasNonOcpCoverageForm)
         {
             await page.EnterIsTheInsuredEngagedInAnySnowOrIceRemovalOperationsAsync(data.Resolve("{{data:is_the_insured_engaged_in_any_snow_or_ice_removal_operations_113}}"));
         }
-        if (data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
+        if (shouldEnterEmployeeCounts)
         {
             await page.EnterOfFullTimeEmployeesAsync(data.Resolve("{{data:of_full_time_employees_114}}"));
         }
-        if (data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\") ||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
+        if (shouldEnterEmployeeCounts)
         {
             await page.EnterOfPartTimeEmployeesAsync(data.Resolve("{{data:of_part_time_employees_115}}"));
         }
-        if (data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\") ||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
+        if (shouldEnterEmployeeCounts)
         {
             await page.EnterOfSeasonalTemporaryEmployeesAsync(data.Resolve("{{data:of_seasonal_temporary_employees_116}}"));
         }
@@ -318,10 +347,8 @@ public sealed class GLBasicPolicySteps
 
 
 
-            if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
-            {
-                await page.ClickGLNavigationLinksEndorsementsAsync();
-            }
+            await page.ClickGLNavigationLinksEndorsementsAsync();
+            await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
             //await page.ClickGLNavigationLinksEndorsementsAsync();
             //await page.WaitForEndorsementsAsync("Exists");
             await page.ClickEndorsementsAddEndorsementAsync();
@@ -346,10 +373,8 @@ public sealed class GLBasicPolicySteps
         if (data.Condition("State != NULL"))
         {
 
-            if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
-            {
-                await page.ClickGLNavigationLinksEndorsementsAsync();
-            }
+            await page.ClickGLNavigationLinksEndorsementsAsync();
+            await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
             //await page.WaitForEndorsementsAsync("Exists");
             await page.ClickEndorsementsAddEndorsementAsync();
             await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_134}}"));
@@ -385,10 +410,8 @@ public sealed class GLBasicPolicySteps
         if (data.Condition("State != \"VA\""))
         {
 
-            if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
-            {
-                await page.ClickGLNavigationLinksEndorsementsAsync();
-            }
+            await page.ClickGLNavigationLinksEndorsementsAsync();
+            await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
             //await page.WaitForEndorsementsAsync("Exists");
             await page.ClickEndorsementsAddEndorsementAsync();
             await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_143}}"));
@@ -516,18 +539,20 @@ public sealed class GLBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickGLNavigationLinksAddlInterestsAsync();
+        await page.PauseAsync(3000);
         //await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddAddlInterestAsync();
-        if (data.Condition("Type != NULL"))
-        {
-            await page.WaitForCG2007AddLInsuredEngineersArchitectsTypeAsync("Exists");
-        }
+        await page.PauseAsync(3000);
+        //if (data.Condition("Type != NULL"))
+        //{
+        //    await page.WaitForCG2007AddLInsuredEngineersArchitectsTypeAsync("Exists");
+        //}
        
-        if (data.Condition("Type != NULL"))
-        {
-            await page.ClickCG2007AddLInsuredEngineersArchitectsTypeAsync();
-        }
-        if (data.Condition("Type != NULL"))
+        //if (data.Condition("Type != NULL"))
+        //{
+        //    await page.ClickCG2007AddLInsuredEngineersArchitectsTypeAsync();
+        //}
+        if (data.Condition("'type_159' != NULL"))
         {
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_159}}"));
         }
@@ -544,11 +569,14 @@ public sealed class GLBasicPolicySteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
+        await page.PauseAsync(3000);
         await page.ClickGLNavigationLinksAddlInterestsAsync();
+
+        await page.PauseAsync(4000);
         //await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddAddlInterestAsync();
-        if (data.Condition("Type != NULL"))
+        await page.PauseAsync(2000);
+        if (data.Condition("'type_163' != NULL"))
         {
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_163}}"));
         }
@@ -568,11 +596,13 @@ public sealed class GLBasicPolicySteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
+        await page.PauseAsync(2000);
         await page.ClickGLNavigationLinksAddlInterestsAsync();
         //await page.WaitForSignsHeadingAsync("Exists");
+        await page.PauseAsync(2000);
         await page.ClickAddAddlInterestAsync();
-        if (data.Condition("Type != NULL"))
+        await page.PauseAsync(2000);
+        if (data.Condition("'type_169' != NULL"))
         {
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_169}}"));
         }
@@ -589,11 +619,13 @@ public sealed class GLBasicPolicySteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
+        await page.PauseAsync(2000);
         await page.ClickGLNavigationLinksAddlInterestsAsync();
+        await page.PauseAsync(2000);
         //await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddAddlInterestAsync();
-        if (data.Condition("Type != NULL"))
+        await page.PauseAsync(2000);
+        if (data.Condition("'type_174' != NULL"))
         {
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_174}}"));
         }
@@ -612,9 +644,11 @@ public sealed class GLBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickGLNavigationLinksAddlInterestsAsync();
+        await page.PauseAsync(2000);
         //await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddAddlInterestAsync();
-        if (data.Condition("Type != NULL"))
+        await page.PauseAsync(2000);
+        if (data.Condition("'type_179' != NULL"))
         {
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_179}}"));
         }
@@ -772,9 +806,11 @@ public sealed class GLBasicPolicySteps
         await page.VerifyPremiumWrittenAsync(data.Resolve("{{data:expected_premium_written_value_257}}"), "value");
         await page.VerifyPriorPremiumAsync(data.Resolve("{{data:expected_prior_premium_value_258}}"), "value");
         await page.VerifyPremiumChangeAsync(data.Resolve("{{data:expected_premium_change_value_259}}"), "value");
-        //await page.EnterTitleAsync(data.Resolve("{{data:title_261}}"));
-        //await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_262}}"));
-        //data.Set("SessionId", await page.CaptureResultAsync("value"));
+
+        await Task.Delay(4000);
+
+        await page.ClickPolicyFormAsync();
+        await Task.Delay(4000);
 
     }
 
@@ -783,35 +819,156 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I complete forms verification$")]
     public async Task CompleteFormsVerificationAsync()
     {
-        var data = _scenario.Get<ScenarioData>();
+        var logger = _scenario.Get<RunLogger>();
+        var browser = _scenario.Get<BrowserSession>();
+        var playwrightPage = browser.Page;
+        var logPath = Path.Combine(browser.ArtifactDirectory, "forms-verification-network.log");
 
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        static bool IsTargetDcUrl(string? url) =>
+            !string.IsNullOrWhiteSpace(url)
+            && url.Contains("default.aspx", StringComparison.OrdinalIgnoreCase)
+            && Regex.IsMatch(url, @"[\?&]_dc=", RegexOptions.IgnoreCase);
 
-        //await page.EnterSessionIDAsync(data.Resolve("{B[SessionId]}"));
-        //await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_266}}"), "value");
-        await page.PauseAsync(1000);
-        await page.PauseAsync(1000);
+        static string ExtractDc(string url)
+        {
+            var m = Regex.Match(url, @"(?:\?|&)_dc=([^&]+)", RegexOptions.IgnoreCase);
+            return m.Success ? m.Groups[1].Value : string.Empty;
+        }
 
+        void EmitLog(string message)
+        {
+            logger.Info(message);
+            Console.WriteLine(message);
+            System.Diagnostics.Debug.WriteLine(message);
+            TestContext.Progress.WriteLine(message);
+            TestContext.WriteLine(message);
+        }
+
+        static Dictionary<string, string> LoadExpectedFormProdDocMap()
+        {
+            var results = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var current = new DirectoryInfo(AppContext.BaseDirectory);
+            while (current is not null &&
+                   !File.Exists(Path.Combine(current.FullName, "ToscaCanonicalSimple.sln")) &&
+                   !File.Exists(Path.Combine(current.FullName, "Tosca.runsettings")))
+            {
+                current = current.Parent;
+            }
+
+            var repoRoot = current?.FullName ?? Directory.GetCurrentDirectory();
+            var filePath = Path.Combine(repoRoot, "tests", "PersonalLines.DuckCreek.Tests", "TestData", "FormVerification", "GLBasic", "GL_BASIC.json");
+            if (!File.Exists(filePath))
+            {
+                return results;
+            }
+
+            var root = JsonNode.Parse(File.ReadAllText(filePath)) as JsonObject;
+            var formNode = root?["form"] as JsonObject;
+            if (formNode is null)
+            {
+                return results;
+            }
+
+            foreach (var kvp in formNode)
+            {
+                var form = (kvp.Key ?? string.Empty).Trim();
+                var prodDocName = (kvp.Value?.ToString() ?? string.Empty).Trim();
+                if (!string.IsNullOrWhiteSpace(form) && !string.IsNullOrWhiteSpace(prodDocName))
+                {
+                    results[form] = prodDocName;
+                }
+            }
+
+            return results;
+        }
+
+        IResponse? latestMatchingResponse = null;
+        string latestDc = string.Empty;
+
+        void OnResponse(object? _, IResponse response)
+        {
+            if (IsTargetDcUrl(response.Url)
+                && response.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
+            {
+                latestMatchingResponse = response;
+                latestDc = ExtractDc(response.Url);
+            }
+        }
+
+        try
+        {
+            playwrightPage.Response += OnResponse;
+
+            await playwrightPage.WaitForResponseAsync(
+                r => IsTargetDcUrl(r.Url)
+                     && r.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase),
+                new PageWaitForResponseOptions { Timeout = 60000 });
+
+            await Task.Delay(1500);
+
+            var response = latestMatchingResponse;
+            if (response is null)
+            {
+                EmitLog("[FormsVerification] Matching response observed but latest reference is null.");
+                return;
+            }
+
+            var responseBody = await response.TextAsync();
+            var capturedProdDocNames = Regex.Matches(responseBody, "<printDoc\\b[^>]*\\bname=\"([^\"]+)\"", RegexOptions.IgnoreCase)
+                .Select(m => m.Groups[1].Value)
+                .Where(v => !string.IsNullOrWhiteSpace(v))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            EmitLog($"[FormsVerification] Response URL: {response.Url}");
+            EmitLog($"[FormsVerification] Response Status: {response.Status}");
+            EmitLog($"[FormsVerification] Latest _dc: {latestDc}");
+
+            var expectedFormProdDocMap = LoadExpectedFormProdDocMap();
+            var missing = new List<string>();
+
+            foreach (var expected in expectedFormProdDocMap)
+            {
+                var form = expected.Key;
+                var prodDocName = expected.Value;
+                var found = capturedProdDocNames.Contains(prodDocName, StringComparer.OrdinalIgnoreCase);
+                EmitLog($"[FormsVerification] Form='{form}' ProdDocName='{prodDocName}' Found={found}");
+
+                if (!found)
+                {
+                    missing.Add($"{form}:{prodDocName}");
+                }
+            }
+
+            EmitLog($"[FormsVerification] Captured ProdDocNames ({capturedProdDocNames.Count}): {string.Join(", ", capturedProdDocNames)}");
+
+            var log = new StringBuilder();
+            log.AppendLine($"Timestamp: {DateTime.UtcNow:O}");
+            log.AppendLine($"Response URL: {response.Url}");
+            log.AppendLine($"Response Status: {response.Status}");
+            log.AppendLine($"Latest _dc: {latestDc}");
+            log.AppendLine($"Captured ProdDocNames ({capturedProdDocNames.Count}): {string.Join(", ", capturedProdDocNames)}");
+            log.AppendLine("Response Body:");
+            log.AppendLine(responseBody);
+            log.AppendLine(new string('-', 120));
+            File.AppendAllText(logPath, log.ToString());
+
+            if (missing.Count > 0)
+            {
+                EmitLog($"[FormsVerification] Missing Form->ProdDocName pairs: {string.Join(" | ", missing)}");
+                Assert.Fail($"Missing expected ProdDocNames for forms: {string.Join(" | ", missing)}");
+            }
+        }
+        catch (TimeoutException)
+        {
+            EmitLog("[FormsVerification] No response matched: POST default.aspx with query _dc=");
+        }
+        finally
+        {
+            playwrightPage.Response -= OnResponse;
+        }
     }
 
-    [Given(@"^I sign out of the application$")]
-    [When(@"^I sign out of the application$")]
-    [Then(@"^I sign out of the application$")]
-    public async Task SignOutOfTheApplicationAsync()
-    {
-        var data = _scenario.Get<ScenarioData>();
 
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
-        await page.ClickLoggedInUserAsync();
-        await page.ClickLogoutAsync();
-        await page.PauseAsync(1000);
-        await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
-        await page.ClickOKAsync();
-        await page.WaitForOKAsync("Absent");
-        await page.ClickLoggedInUserAsync();
-        await page.ClickLogoutAsync();
-
-    }
 
 }

@@ -1,0 +1,40 @@
+[
+  {
+    "Type": "BASE",
+    "Form": "ACORD65201204",
+    "AL": "N",
+    "AR": "N",
+    "AZ": "N",
+    "ME": "YM"
+  },
+  {
+    "Type": "BASE",
+    "Form": "ANX33281104",
+    "AL": "N",
+    "AR": "N",
+    "AZ": "N",
+    "IL": "YM"
+  },
+  {
+    "Type": "BASE",
+    "Form": "ANX33601103",
+    "AL": "N",
+    "AR": "N",
+    "AZ": "N"
+  },
+  {
+    "Type": "BASE",
+    "Form": "ANX33600123",
+    "AL": "N",
+    "AR": "N",
+    "AZ": "N",
+    "CA": "YM"
+  },
+  {
+    "Type": "BASE",
+    "Form": "CU00010413",
+    "AL": "YM",
+    "AR": "YM",
+    "AZ": "YM"
+  }
+]

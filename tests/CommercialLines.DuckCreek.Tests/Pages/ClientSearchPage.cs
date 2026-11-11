@@ -20,20 +20,48 @@ public sealed class ClientSearchPage
     public Task ClickAddNamedInsuredIndividualAsync() =>
         _ui.ClickAsync(_locators.AddNamedInsuredIndividual, new ControlIntent("ClientSearch", "AddNamedInsuredIndividual"));
 
+    public async Task CheckIsClientDataCurrentAsync()
+    {
+        if (await _locators.IsClientDataCurrent.CountAsync() > 0 && await _locators.IsClientDataCurrent.IsVisibleAsync())
+        {
+            await _ui.ClickAsync(_locators.IsClientDataCurrent, new ControlIntent("ClientSearch", "IsClientDataCurrent"));
+            if (await _locators.OK.CountAsync() > 0 && await _locators.OK.IsVisibleAsync())
+            {
+                await _ui.ClickAsync(_locators.OK, new ControlIntent("ClientSearch", "OK"));
+            }
+        }
+
+    }
+
     public Task WaitForAdditionalInsuredFirstNameAsync(string expected) =>
         _ui.WaitAsync(_locators.AdditionalInsuredFirstName, expected, new ControlIntent("ClientSearch", "AdditionalInsuredFirstName"));
 
     public Task EnterAdditionalInsuredFirstNameAsync(string value) =>
-        _ui.FillAsync(_locators.AdditionalInsuredFirstName, value, new ControlIntent("ClientSearch", "AdditionalInsuredFirstName"));
+        _ui.PressSequentiallyAsync(_locators.AdditionalInsuredFirstName, value, new ControlIntent("ClientSearch", "AdditionalInsuredFirstName"));
 
     public Task PressAdditionalInsuredFirstNameAsync(string key) =>
         _ui.PressAsync(_locators.AdditionalInsuredFirstName, key, new ControlIntent("ClientSearch", "AdditionalInsuredFirstName"));
 
+    public Task WaitForAdditionalInsuredLastNameAsync(string expected) =>
+        _ui.WaitAsync(_locators.AdditionalInsuredLastName, expected, new ControlIntent("ClientSearch", "AdditionalInsuredLastName"));
+
+    public Task EnterAdditionalInsuredLastNameAsync(string value) =>
+        _ui.PressSequentiallyAsync(_locators.AdditionalInsuredLastName, value, new ControlIntent("ClientSearch", "AdditionalInsuredLastName"));
+
+    public Task EnterAdditionalInsuredLastNameSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AdditionalInsuredLastName, value, new ControlIntent("ClientSearch", "AdditionalInsuredLastName"), delayMs);
+
+    public Task PressAdditionalInsuredLastNameAsync(string key) =>
+        _ui.PressAsync(_locators.AdditionalInsuredLastName, key, new ControlIntent("ClientSearch", "AdditionalInsuredLastName"));
+
     public Task EnterAdditionalInsuredMiddleNameAsync(string value) =>
-        _ui.FillAsync(_locators.AdditionalInsuredMiddleName, value, new ControlIntent("ClientSearch", "AdditionalInsuredMiddleName"));
+        _ui.PressSequentiallyAsync(_locators.AdditionalInsuredMiddleName, value, new ControlIntent("ClientSearch", "AdditionalInsuredMiddleName"));
 
     public Task PressAdditionalInsuredMiddleNameAsync(string key) =>
         _ui.PressAsync(_locators.AdditionalInsuredMiddleName, key, new ControlIntent("ClientSearch", "AdditionalInsuredMiddleName"));
+
+    public Task WaitForAdditionalNamedInsuredAsync(string expected) =>
+        _ui.WaitAsync(_locators.AdditionalNamedInsured, expected, new ControlIntent("ClientSearch", "AdditionalNamedInsured"));
 
     public Task ClickAdditionalNamedInsuredAsync() =>
         _ui.ClickAsync(_locators.AdditionalNamedInsured, new ControlIntent("ClientSearch", "AdditionalNamedInsured"));
@@ -57,7 +85,7 @@ public sealed class ClientSearchPage
         _ui.WaitAsync(_locators.AdditionalInsuredIndividualAddress, expected, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualAddress"));
 
     public Task EnterAdditionalInsuredIndividualAddressAsync(string value) =>
-        _ui.FillAsync(_locators.AdditionalInsuredIndividualAddress, value, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualAddress"));
+        _ui.PressSequentiallyAsync(_locators.AdditionalInsuredIndividualAddress, value, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualAddress"));
 
     public Task PressAdditionalInsuredIndividualAddressAsync(string key) =>
         _ui.PressAsync(_locators.AdditionalInsuredIndividualAddress, key, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualAddress"));
@@ -126,7 +154,7 @@ public sealed class ClientSearchPage
         _ui.PressAsync(_locators.AddAssociatedClientDateOfBirth, key, new ControlIntent("ClientSearch", "AddAssociatedClientDateOfBirth"));
 
     public Task EnterAdditionalInsuredIndividualDateOfBirthAsync(string value) =>
-        _ui.FillAsync(_locators.AdditionalInsuredIndividualDateOfBirth, value, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualDateOfBirth"));
+        _ui.PressSequentiallyAsync(_locators.AdditionalInsuredIndividualDateOfBirth, value, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualDateOfBirth"));
 
     public Task PressAdditionalInsuredIndividualDateOfBirthAsync(string key) =>
         _ui.PressAsync(_locators.AdditionalInsuredIndividualDateOfBirth, key, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualDateOfBirth"));
@@ -135,7 +163,7 @@ public sealed class ClientSearchPage
         _ui.ClickAsync(_locators.AddAssociatedClientDetail, new ControlIntent("ClientSearch", "AddAssociatedClientDetail"));
 
     public Task ClickAdditionalInsuredIndividualDetailAsync() =>
-        _ui.ClickAsync(_locators.AddAssociatedClientDetail, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualDetail"));
+        _ui.ClickAsync(_locators.AdditionalInsuredIndividualDetail, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualDetail"));
 
     public Task WaitForNamedInsuredIndividualEnterSSNAsync(string expected) =>
         _ui.WaitAsync(_locators.NamedInsuredIndividualEnterSSN, expected, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"));
@@ -159,7 +187,7 @@ public sealed class ClientSearchPage
         _ui.ClickAsync(_locators.AddAssociatedClientEnterSSN, new ControlIntent("ClientSearch", "AddAssociatedClientEnterSSN"));
 
     public Task EnterAddAssociatedClientEnterSSNAsync(string value) =>
-        _ui.FillAsync(_locators.AddAssociatedClientEnterSSN, value, new ControlIntent("ClientSearch", "AddAssociatedClientEnterSSN"));
+        _ui.PressSequentiallyAsync(_locators.AddAssociatedClientEnterSSN, value, new ControlIntent("ClientSearch", "AddAssociatedClientEnterSSN"));
 
     public Task<string> CaptureAddAssociatedClientEnterSSNAsync(string property = "") =>
         _ui.CaptureAsync(_locators.AddAssociatedClientEnterSSN, property, new ControlIntent("ClientSearch", "AddAssociatedClientEnterSSN"));
@@ -200,8 +228,16 @@ public sealed class ClientSearchPage
     public Task PressGenderAsync(string key) =>
         _ui.PressAsync(_locators.Gender, key, new ControlIntent("ClientSearch", "Gender"));
 
-    public Task ClickOKAsync() =>
-        _ui.ClickAsync(_locators.OK, new ControlIntent("ClientSearch", "OK"));
+    public async Task ClickOKAsync()
+    {
+        if (await _locators.OK.CountAsync() > 0 && await _locators.OK.IsVisibleAsync())
+        {
+            await _ui.ClickAsync(_locators.OK, new ControlIntent("ClientSearch", "OK"));
+            return;
+        }
+
+        await _ui.ClickAsync(_locators.PopupOK, new ControlIntent("ClientSearch", "PopupOK"));
+    }
 
     public async Task ClickOKWithRetryAsync(int maxAttempts = 3, int waitBeforeMs = 1000)
     {
@@ -420,7 +456,7 @@ public sealed class ClientSearchPage
         _ui.PressAsync(_locators.NamedInsuredZipCode, key, new ControlIntent("ClientSearch", "NamedInsuredZipCode"));
 
     public Task EnterAdditionalInsuredIndividualZipCodeAsync(string value) =>
-        _ui.FillAsync(_locators.AdditionalInsuredIndividualZipCode, value, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualZipCode"));
+        _ui.PressSequentiallyAsync(_locators.AdditionalInsuredIndividualZipCode, value, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualZipCode"));
 
     public Task PressAdditionalInsuredIndividualZipCodeAsync(string key) =>
         _ui.PressAsync(_locators.AdditionalInsuredIndividualZipCode, key, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualZipCode"));

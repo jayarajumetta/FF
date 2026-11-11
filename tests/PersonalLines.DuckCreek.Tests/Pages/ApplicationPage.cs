@@ -21,6 +21,9 @@ public sealed class ApplicationPage
     private ILocator Password => _page.GetByRole(AriaRole.Textbox, new PageGetByRoleOptions { NameRegex = new Regex("Password", RegexOptions.IgnoreCase) });
     private ILocator SignIn => _page.GetByRole(AriaRole.Button, new PageGetByRoleOptions { NameRegex = new Regex("Sign On|Sign In|Login", RegexOptions.IgnoreCase) });
 
+    private ILocator QuoteSearchInput => _page.GetByTestId("quoteSearchInput");
+    private ILocator QuoteSearchButton => _page.GetByTestId("quoteSearchButton");
+
     public async Task NavigateAsync(string url)
     {
         if (string.IsNullOrWhiteSpace(url)) throw new ArgumentException("Application URL is required.", nameof(url));
@@ -34,5 +37,18 @@ public sealed class ApplicationPage
         await _ui.FillAsync(Username, username);
         await _ui.FillAsync(Password, password);
         await _ui.ClickAsync(SignIn);
+    }
+
+    public async Task SearchQuoteAsync(string quoteNumber)
+    {
+        if (string.IsNullOrWhiteSpace(quoteNumber)) throw new ArgumentException("Quote number is required.", nameof(quoteNumber));
+        await _ui.FillAsync(QuoteSearchInput, quoteNumber, new ControlIntent("Application", "QuoteSearchInput"));
+        await _ui.ClickAsync(QuoteSearchButton, new ControlIntent("Application", "QuoteSearchButton"));
+    }
+
+    public async Task<bool> IsSignInRequiredAsync()
+    {
+        await Username.Or(QuoteSearchInput).Filter(new() { Visible = true }).First.WaitForAsync();
+        return await Username.IsVisibleAsync();
     }
 }

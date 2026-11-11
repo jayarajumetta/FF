@@ -23,6 +23,7 @@
     "stateVariant": "AZ ANP"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "ARIZONA",
@@ -130,7 +131,7 @@
     "AZ_ClientData.Apartment": "19",
     "AL_ClientData.Apartment": "19",
     "AZ_ClientData.SSN": "888002048",
-    "AL_ClientData.SSN": "888002048",
+    "AL_ClientData.SSN": "666358818",
     "AZ_ClientData.State": "AZ",
     "AL_ClientData.State": "AZ",
     "AZ_ClientData.Gender": "M",

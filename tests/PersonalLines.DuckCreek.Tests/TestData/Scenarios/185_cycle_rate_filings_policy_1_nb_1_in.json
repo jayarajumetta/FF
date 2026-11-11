@@ -23,6 +23,7 @@
     "stateVariant": "IN"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "INDIANA",
@@ -130,7 +131,7 @@
     "IN_ClientData.Apartment": "19",
     "AL_ClientData.Apartment": "19",
     "IN_ClientData.SSN": "888008847",
-    "AL_ClientData.SSN": "888008847",
+    "AL_ClientData.SSN": "666358818",
     "IN_ClientData.State": "IN",
     "AL_ClientData.State": "IN",
     "IN_ClientData.Gender": "F",

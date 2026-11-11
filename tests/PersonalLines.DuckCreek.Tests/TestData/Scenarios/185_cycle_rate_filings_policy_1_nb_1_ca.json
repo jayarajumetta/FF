@@ -23,6 +23,7 @@
     "stateVariant": "CA"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "CALIFORNIA",
@@ -130,7 +131,7 @@
     "CA_ClientData.Apartment": "203",
     "AL_ClientData.Apartment": "203",
     "CA_ClientData.SSN": "888002734",
-    "AL_ClientData.SSN": "888002734",
+    "AL_ClientData.SSN": "666358818",
     "CA_ClientData.State": "CA",
     "AL_ClientData.State": "CA",
     "CA_ClientData.Gender": "M",

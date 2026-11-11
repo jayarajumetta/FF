@@ -23,6 +23,7 @@
     "stateVariant": "TN ANP"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "TENNESSEE",
@@ -130,7 +131,7 @@
     "TN_ClientData.Apartment": "19",
     "AL_ClientData.Apartment": "19",
     "TN_ClientData.SSN": "888024352",
-    "AL_ClientData.SSN": "888024352",
+    "AL_ClientData.SSN": "666358818",
     "TN_ClientData.State": "TN",
     "AL_ClientData.State": "TN",
     "TN_ClientData.Gender": "M",

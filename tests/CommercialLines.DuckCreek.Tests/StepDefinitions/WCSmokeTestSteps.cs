@@ -101,7 +101,7 @@ public sealed class WCSmokeTestSteps
         await page.ClickNewQuoteAsync();
         await page.EnterEffectiveDateAsync(data.Resolve("{{data:effective_date_43}}"));
         await page.EnterProductAsync(data.Resolve("{{data:product_45}}"));
-        await page.EnterProducerAsync(data.Resolve("{{data:producer}}"));
+        await page.EnterProducerAsync(data.Resolve("{{data:producer_46}}"));
         await page.WaitForStartAsync("Visible");
         await page.ClickStartAsync();
 
@@ -227,9 +227,27 @@ public sealed class WCSmokeTestSteps
         await page.ClickOKAsync();
         await page.ClickOrderSSNAsync();
         await page.EnterAddAssociatedClientEnterSSNAsync(data.Resolve("{{data:enter_ssn_114}}"));
+        await page.PressAddAssociatedClientEnterSSNAsync("Tab");
         await page.ClickVerifyAsync();
         await page.WaitForPleaseVerifySSNAsync("Absent");
         await page.ClickCompleteAsync();
+    }
+
+    [Given(@"^I run insurance score$")]
+    [When(@"^I run insurance score$")]
+    [Then(@"^I run insurance score$")]
+    public async Task RunInsuranceScoreAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (await page.IsInsuranceScoreVisibleAsync())
+        {
+            await page.ClickInsuranceScoreAsync();
+            await page.PauseAsync(2000);
+        }
+
     }
 
     [Given(@"^I complete required policy information$")]

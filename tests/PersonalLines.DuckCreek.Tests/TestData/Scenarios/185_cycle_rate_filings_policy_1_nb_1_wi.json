@@ -23,6 +23,7 @@
     "stateVariant": "WI"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "WISCONSIN",
@@ -130,7 +131,7 @@
     "WI_ClientData.Apartment": "26",
     "AL_ClientData.Apartment": "26",
     "WI_ClientData.SSN": "888027827",
-    "AL_ClientData.SSN": "888027827",
+    "AL_ClientData.SSN": "666358818",
     "WI_ClientData.State": "WI",
     "AL_ClientData.State": "WI",
     "WI_ClientData.Gender": "F",
@@ -1174,6 +1175,8 @@
         "condition": "",
         "value": "Principal"
       },
+
+      
       {
         "order": 27.01,
         "derivedFrom": "3a1c989c-d20f-8489-a23e-6212b6432dd4",

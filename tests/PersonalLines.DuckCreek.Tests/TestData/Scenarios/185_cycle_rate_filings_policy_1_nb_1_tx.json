@@ -23,6 +23,7 @@
     "stateVariant": "TX"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "TEXAS",
@@ -130,7 +131,7 @@
     "TX_ClientData.Apartment": "19",
     "AL_ClientData.Apartment": "19",
     "TX_ClientData.SSN": "666633618",
-    "AL_ClientData.SSN": "666633618",
+    "AL_ClientData.SSN": "666358818",
     "TX_ClientData.State": "TX",
     "AL_ClientData.State": "TX",
     "TX_ClientData.Gender": "M",

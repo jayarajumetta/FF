@@ -23,6 +23,7 @@
     "stateVariant": "ID"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "IDAHO",
@@ -130,7 +131,7 @@
     "ID_ClientData.Apartment": "A",
     "AL_ClientData.Apartment": "A",
     "ID_ClientData.SSN": "888007778",
-    "AL_ClientData.SSN": "888007778",
+    "AL_ClientData.SSN": "666358818",
     "ID_ClientData.State": "ID",
     "AL_ClientData.State": "ID",
     "ID_ClientData.Gender": "F",

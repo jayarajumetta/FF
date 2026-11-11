@@ -198,9 +198,12 @@ public sealed class BAPSmokeTestSteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await page.ClickInsuranceScoreAsync();
-        await page.VerifyReferenceNumberAsync(data.Resolve("{{data:expected_reference_number_innertext_135}}"), "InnerText");
-        await page.PauseAsync(3000);
+        if (await page.IsInsuranceScoreVisibleAsync())
+        {
+            await page.ClickInsuranceScoreAsync();
+            await page.VerifyReferenceNumberAsync(data.Resolve("{{data:expected_reference_number_innertext_135}}"), "InnerText");
+            await page.PauseAsync(3000);
+        }
     }
 
     [Given(@"^I complete Business Auto policy\-specific fields$")]

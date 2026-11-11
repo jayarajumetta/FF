@@ -37,6 +37,8 @@ public sealed class ApplicationSteps
     }
 
     [Given("I sign in to Commercial Lines Duck Creek using configured credentials")]
+    [When("I sign in to Commercial Lines Duck Creek using configured credentials")]
+    [Then("I sign in to Commercial Lines Duck Creek using configured credentials")]
     public Task SignInAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -66,6 +68,115 @@ public sealed class ApplicationSteps
 
     [When("I switch back to Agent for OR and WA when required")]
     public Task SwitchBackToAgentAsync() => AuthenticateAsync("agent", conditionalWineryState: true);
+
+    [Given(@"^I click on QA button to logout$")]
+    [When(@"^I click on QA button to logout$")]
+    [Then(@"^I click on QA button to logout$")]
+    public async Task ClickOnQAButtonToLogoutAsync()
+    {
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        var navigationPage = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        //await navigationPage.WaitForClientLinkAsync("Visible");
+        //await navigationPage.ClickClientLinkAsync();
+        await navigationPage.WaitForHomeLinkAsync("Visible");
+        await navigationPage.ClickHomeLinkAsync();
+        await page.WaitForUserNameInitialAsync("Visible");
+        await Task.Delay(8000);
+        await page.ClickUserNameInitialAsync();
+        await page.WaitForLogoutAsync("Visible");
+        await page.ClickLogoutAsync();
+        await Task.Delay(6000);
+
+        if (await page.LogoutOkButtonIsVisibleAsync())
+        {
+            await page.ClickLogoutOkButtonAsync();
+            await page.WaitForLogoutOkButtonAsync("Hidden");
+            await page.WaitForUserNameInitialAsync("Visible");
+            await Task.Delay(8000);
+            await page.ClickUserNameInitialAsync();
+            await page.WaitForLogoutAsync("Visible");
+            await page.ClickLogoutAsync();
+            await Task.Delay(6000);
+        }
+
+    }
+
+    [Given(@"^I search for the quote description using quick search$")]
+    [When(@"^I search for the quote description using quick search$")]
+    [Then(@"^I search for the quote description using quick search$")]
+    public async Task SearchForTheQuoteDescriptionUsingQuickSearchAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.WaitForSearchTextAsync("Visible");
+        //await page.EnterSearchTextSequentiallyAsync(data.Resolve("{B[QuoteDescription]}"));
+        await page.EnterSearchTextSequentiallyAsync("AL BAP STRAIGHTTHROUGH 09.18.26 14:35");
+        await page.WaitForQuickSearchButtonAsync("Visible");
+        await page.ClickQuickSearchButtonAsync();
+        await page.WaitForSearchMethodEGDescriptionPolicyAsync("Visible");
+        await page.EnterSearchMethodEGDescriptionPolicySequentiallyAsync("Description");
+        await page.PressSearchMethodEGDescriptionPolicyAsync("Tab");
+        await page.WaitForSearchButtonAsync("Visible");
+        await page.ClickSearchButtonAsync();
+        await page.WaitForSearchResultsInsuredNameColumnHeaderAsync("Visible");
+        await page.ClickSearchResultInsuredNameLinkAsync();
+        await page.WaitForCommercialAutoQuoteLinkAsync("Visible");
+        await page.ClickCommercialAutoQuoteLinkAsync();
+
+        var navigationPage = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        if (await navigationPage.IsClientLinkVisibleAsync())
+        {
+            await navigationPage.ClickClientLinkAsync();
+            await navigationPage.WaitForClientPageTitleAsync("Visible");
+        }
+
+    }
+
+    [Given("I search for the policy quote  using quick search")]
+    [When("I search for the policy quote  using quick search")]
+    [Then("I search for the policy quote  using quick search")]
+    public Task SearchForThePolicyQuoteUsingQuickSearchAsync() => SearchForThePolicyQuoteUsingQuickSearchAsync(null);
+
+    [Given("I search for the policy quote  using quick search with policy number {word}")]
+    [When("I search for the policy quote  using quick search with policy number {word}")]
+    [Then("I search for the policy quote  using quick search with policy number {word}")]
+    public async Task SearchForThePolicyQuoteUsingQuickSearchAsync(string? policyNumberRule)
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        var policyNumber = data.Get("RegressionPolicyNumber", data.Get("Policy#"));
+        if (string.IsNullOrWhiteSpace(policyNumber))
+        {
+            policyNumber = policyNumberRule;
+        }
+
+        await page.WaitForSearchTextAsync("Visible");
+        //await page.EnterSearchTextSequentiallyAsync(policyNumber);
+        //await page.PressSearchTextAsync("Tab");
+        //await page.WaitForQuickSearchButtonAsync("Visible");
+        //await page.ClickQuickSearchButtonAsync();
+        //await page.WaitForSearchMethodEGDescriptionPolicyAsync("Visible");
+        ////await page.EnterSearchMethodEGDescriptionPolicySequentiallyAsync("Policy");
+        ////await page.PressSearchMethodEGDescriptionPolicyAsync("Tab");
+        //await page.WaitForSearchButtonAsync("Visible");
+        //await page.ClickSearchButtonAsync();
+        //await page.WaitForSearchResultsInsuredNameColumnHeaderAsync("Visible");
+        //await page.ClickSearchResultInsuredNameLinkAsync();
+        //await page.WaitForCommercialAutoQuoteLinkAsync("Visible");
+        //await page.ClickCommercialAutoQuoteLinkAsync();
+
+        //var navigationPage = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        //if (await navigationPage.IsClientLinkVisibleAsync())
+        //{
+        //    await navigationPage.ClickClientLinkAsync();
+        //    await navigationPage.WaitForClientPageTitleAsync("Visible");
+        //}
+    }
 
 
 

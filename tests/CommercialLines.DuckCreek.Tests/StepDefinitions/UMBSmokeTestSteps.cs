@@ -158,6 +158,23 @@ public sealed class UMBSmokeTestSteps
         await page.VerifyNamedInsuredZipCodeAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
     }
 
+    [Given(@"^I run insurance score$")]
+    [When(@"^I run insurance score$")]
+    [Then(@"^I run insurance score$")]
+    public async Task RunInsuranceScoreAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (await page.IsInsuranceScoreVisibleAsync())
+        {
+            await page.ClickInsuranceScoreAsync();
+            await page.PauseAsync(2000);
+        }
+
+    }
+
     [Given(@"^I complete required policy information$")]
     [When(@"^I complete required policy information$")]
     [Then(@"^I complete required policy information$")]

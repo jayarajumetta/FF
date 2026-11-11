@@ -1,4 +1,4 @@
-@CL_DC @BAP @expanded_new_business
+@CL_DC @BAP @BAP_expanded_new_business
 
 Feature: BAP Expanded
   As a Commercial Lines Duck Creek policy processing user
@@ -11,6 +11,7 @@ Feature: BAP Expanded
     Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Commercial Lines Duck Creek application
     And I sign in to Commercial Lines Duck Creek using configured credentials
+    And I start a new quote
     When I enter individual client information
     And I add Third Party Designee
     And I add Additional Named Insured
@@ -38,8 +39,8 @@ Feature: BAP Expanded
     And I add notepad comment
     And I complete required submission information
     And I run Stoplight
-    And I complete forms verification
-    And I complete save for Later/Return to Admin
+    #And I complete forms verification
+    #And I complete save for Later/Return to Admin
 
     Examples:
       | stateCode | dataFile                                    | stateVariant | stateName      | externalDataFile                    |

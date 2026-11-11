@@ -11,7 +11,7 @@ public sealed class PolicyInformationLocators
 
     public ILocator Client => _page.GetByRole(AriaRole.Link, new() { Name = "Add Client", Exact = true });
 
-    public ILocator Detail => _page.Locator("[id=\"dctGridLink\"]");
+    public ILocator Detail => _page.Locator("span.g-btn-text", new() { HasTextString = "Detail" });
 
     public ILocator EffectiveDate => _page.Locator("input[fieldref=\"CommercialAutoHistoryInput.EffectiveDate\"]");
 

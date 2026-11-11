@@ -71,6 +71,9 @@ public sealed class UiActions
     public Task<bool> ExistsAsync(ILocator locator, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
         TraceAsync(caller, source, nameof(ExistsAsync), string.Empty, new Dictionary<string, string> {  }, () => ExistsCoreAsync(locator));
 
+    public Task<bool> ExistsAsync(ILocator locator, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(ExistsAsync), intent.ToString(), new Dictionary<string, string> { }, () => ExistsCoreAsync(locator, intent));
+
     public Task WaitAsync(ILocator locator, string expected, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
         TraceAsync(caller, source, nameof(WaitAsync), intent.ToString(), new Dictionary<string, string> { ["expected"] = expected }, () => WaitCoreAsync(locator, expected, intent));
 
@@ -461,23 +464,53 @@ public sealed class UiActions
         {
             await control.ClickAsync();
         }
-        catch (PlaywrightException ex) when (ex.Message.Contains("loadingMask", StringComparison.OrdinalIgnoreCase) ||
-                                             ex.Message.Contains("intercepts pointer events", StringComparison.OrdinalIgnoreCase))
+
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
         {
-            _logger.Warn("CLICK RETRY: Duck Creek loading overlay intercepted the click. Waiting for overlay to clear and retrying.");
+            _logger.Warn($"CLICK RETRY: Standard click failed ({ex.Message}). Waiting for overlay to clear and retrying.");
             await WaitForDuckCreekLoadingOverlayBestEffortAsync();
-            await control.ClickAsync(new LocatorClickOptions
+
+            try
             {
-                Timeout = Math.Max(_config.Browser.ActionTimeoutMs, _config.Waits.ElementReadyTimeoutMs)
-            });
+                await control.ClickAsync(new LocatorClickOptions
+                {
+                    Timeout = Math.Max(_config.Browser.ActionTimeoutMs, _config.Waits.ElementReadyTimeoutMs)
+                });
+            }
+
+            catch (Exception retryEx) when (retryEx is PlaywrightException or TimeoutException)
+            {
+                _logger.Warn($"CLICK RETRY: Element still intercepted after waiting for overlay ({retryEx.Message}). Forcing click.");
+
+                await control.ClickAsync(new LocatorClickOptions
+                {
+                    Force = true,
+                    Timeout = Math.Max(_config.Browser.ActionTimeoutMs, _config.Waits.ElementReadyTimeoutMs)
+                });
+            }
         }
     }
 
     private async Task<bool> ExistsCoreAsync(ILocator locator)
     {
-        try { return await locator.CountAsync() > 0 && await locator.First.IsVisibleAsync(); }
-        catch { return false; }
+        try
+        {
+            await locator.First.WaitForAsync(new LocatorWaitForOptions
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = _config.Waits.ElementReadyTimeoutMs
+            });
+            return true;
+        }
+        catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+        {
+            try { return await locator.CountAsync() > 0 && await locator.First.IsVisibleAsync(); }
+            catch { return false; }
+        }
     }
+
+    private Task<bool> ExistsCoreAsync(ILocator locator, ControlIntent intent) =>
+        ExecuteAsync(locator, intent, "exists", x => ExistsCoreAsync(x));
 
     private async Task WaitCoreAsync(ILocator locator, string expected, ControlIntent intent)
     {
@@ -545,10 +578,13 @@ public sealed class UiActions
                             normalized.StartsWith("Regex:", StringComparison.OrdinalIgnoreCase);
             var notEqualMode = propertySpec.StartsWith("NotEqual:", StringComparison.OrdinalIgnoreCase) ||
                                normalized.StartsWith("NotEqual:", StringComparison.OrdinalIgnoreCase);
+            var containsMode = propertySpec.StartsWith("Contains:", StringComparison.OrdinalIgnoreCase) ||
+                               normalized.StartsWith("Contains:", StringComparison.OrdinalIgnoreCase);
 
             var captureProperty = propertySpec;
             if (captureProperty.StartsWith("Regex:", StringComparison.OrdinalIgnoreCase)) captureProperty = captureProperty[6..].Trim();
             if (captureProperty.StartsWith("NotEqual:", StringComparison.OrdinalIgnoreCase)) captureProperty = captureProperty[9..].Trim();
+            if (captureProperty.StartsWith("Contains:", StringComparison.OrdinalIgnoreCase)) captureProperty = captureProperty[9..].Trim();
 
             var actual = await CaptureCoreAsync(locator, captureProperty, intent);
             if (regexMode)
@@ -563,6 +599,13 @@ public sealed class UiActions
                 var notExpected = normalized.StartsWith("NotEqual:", StringComparison.OrdinalIgnoreCase) ? normalized[9..] : normalized;
                 if (string.Equals(actual, notExpected, StringComparison.OrdinalIgnoreCase))
                     throw new InvalidOperationException($"Expected value to differ from '{notExpected}', but it was equal.");
+                return;
+            }
+            if (containsMode)
+            {
+                var containsExpected = normalized.StartsWith("Contains:", StringComparison.OrdinalIgnoreCase) ? normalized[9..] : normalized;
+                if (actual.IndexOf(containsExpected, StringComparison.OrdinalIgnoreCase) < 0)
+                    throw new InvalidOperationException($"Expected value to contain '{containsExpected}' but found '{actual}'.");
                 return;
             }
             if (!string.Equals(actual, normalized, StringComparison.OrdinalIgnoreCase))
@@ -704,7 +747,7 @@ public sealed class UiActions
         try
         {
             await _browser.Page.WaitForFunctionAsync(
-                "() => { const overlays = Array.from(document.querySelectorAll('#loadingMask, #loadingWindow')); if (overlays.length === 0) return true; return overlays.every(el => { const style = window.getComputedStyle(el); const rect = el.getBoundingClientRect(); const hiddenByStyle = style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0'; const hiddenByState = el.hasAttribute('hidden') || el.getAttribute('aria-hidden') === 'true'; const noSize = rect.width === 0 || rect.height === 0; return hiddenByStyle || hiddenByState || noSize; }); }",
+                "() => { const overlays = Array.from(document.querySelectorAll('#loadingMask, #loadingWindow, .x-mask, .x-mask-msg')); if (overlays.length === 0) return true; return overlays.every(el => { const style = window.getComputedStyle(el); const rect = el.getBoundingClientRect(); const hiddenByStyle = style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0'; const hiddenByState = el.hasAttribute('hidden') || el.getAttribute('aria-hidden') === 'true'; const noSize = rect.width === 0 || rect.height === 0; return hiddenByStyle || hiddenByState || noSize; }); }",
                 new PageWaitForFunctionOptions
                 {
                     Timeout = _config.Waits.PageReadyTimeoutMs
@@ -712,7 +755,7 @@ public sealed class UiActions
         }
         catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
         {
-            _logger.Warn($"LOADING OVERLAY WAIT CONTINUING: #loadingMask/#loadingWindow did not clear within {_config.Waits.PageReadyTimeoutMs}ms: {ex.Message}");
+            _logger.Warn($"LOADING OVERLAY WAIT CONTINUING: #loadingMask/#loadingWindow/.x-mask did not clear within {_config.Waits.PageReadyTimeoutMs}ms: {ex.Message}");
         }
     }
 
@@ -746,16 +789,25 @@ public sealed class UiActions
 
     private static async Task<bool> IsTextLikeInputAsync(ILocator locator)
     {
-        var tag = (await locator.EvaluateAsync<string>("e=>e.tagName.toLowerCase()") ?? string.Empty).ToLowerInvariant();
-        var type = (await locator.GetAttributeAsync("type") ?? string.Empty).ToLowerInvariant();
-        var role = (await locator.GetAttributeAsync("role") ?? string.Empty).ToLowerInvariant();
-        var contentEditable = (await locator.GetAttributeAsync("contenteditable") ?? string.Empty).ToLowerInvariant();
+        try
+        {
+            return await locator.EvaluateAsync<bool>(@"e => {
+                const tag = (e.tagName || '').toLowerCase();
+                const type = (e.getAttribute('type') || '').toLowerCase();
+                const role = (e.getAttribute('role') || '').toLowerCase();
+                const contentEditable = (e.getAttribute('contenteditable') || '').toLowerCase();
 
-        if (role == "textbox" || contentEditable == "true") return true;
-        if (tag == "textarea") return true;
-        if (tag != "input") return false;
+                if (role === 'textbox' || contentEditable === 'true') return true;
+                if (tag === 'textarea') return true;
+                if (tag !== 'input') return false;
 
-        return type is not ("checkbox" or "radio" or "button" or "submit" or "reset" or "file" or "image" or "range" or "color");
+                return !['checkbox', 'radio', 'button', 'submit', 'reset', 'file', 'image', 'range', 'color'].includes(type);
+            }");
+        }
+        catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+        {
+            return false;
+        }
     }
 
     private static async Task<string> TryGetInputValueAsync(ILocator locator)

@@ -42,7 +42,7 @@
     "cyclenondriver_combobox_145": "Medical Condition",
     "cyclenondriver_combobox_146": "Surrendered",
     "cyclenondriver_combobox_147": "Permit Driver",
-    "driver_s_license_number_169": "{TDS[WY_ClientData.DL Number]}",
+    "driver_s_license_number_169": "888588210",
     "yrs_licensed_current_state_171": "\"\"",
     "yrs_licensed_current_state_172": "9",
     "months_licensed_current_state_173": "\"\"",
@@ -133,7 +133,17 @@
     "tdm_existingornewtdstype": "Auto_PolicyData_RateFilings_CommonAuto",
     "statecode": "WY",
     "state_name": "Wyoming",
-    "state_variant": "WY"
+    "state_variant": "WY",
+    "AL_ClientData.Street Address": "1529 N GRASS CREEK RD",
+    "AL_ClientData.City": "CASPER",
+    "AL_ClientData.ZIP": "82604",
+    "AL_ClientData.First Name": "AARON",
+    "AL_ClientData.Last Name": "KURAS",
+    "AL_ClientData.DOB": "11/15/1950",
+    "AL_ClientData.Apartment": "SYNTHETIC_REPLACE_ME",
+    "AL_ClientData.SSN": "SYNTHETIC_REPLACE_ME",
+    "AL_ClientData.DL Number": "SYNTHETIC_REPLACE_ME",
+    "AL_ClientData.State": "SYNTHETIC_REPLACE_ME"
   },
   "random": {},
   "application": {

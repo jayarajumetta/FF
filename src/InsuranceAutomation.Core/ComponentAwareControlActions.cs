@@ -122,6 +122,52 @@ public static class ComponentAwareControlActions
         await control.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs });
         await control.EvaluateAsync("el => el.click()");
     }
+    // Bypasses the runtime locator resolver entirely (used for controls whose ILocator is already
+    // frame-scoped in code, e.g. Duck Creek popup windows). The resolver's fallback candidate matching
+    // rebuilds plain page-level locators from a discovered fieldref, which searches the wrong (top)
+    // document for iframe-hosted controls and can burn the full element-ready timeout before giving up.
+    public static async Task DomFillAsync(ILocator control, string value, int timeoutMs = 15000)
+    {
+        await control.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs });
+        await control.FillAsync(value ?? string.Empty, new() { Timeout = timeoutMs });
+    }
+    // Bypasses the runtime locator resolver entirely (same rationale as DomFillAsync) for controls
+    // whose ILocator is already frame-scoped in code, e.g. Duck Creek popup windows. Routing these
+    // through UiActions.PressSequentiallyAsync forces an extra resolver probe of the top-level
+    // document before falling back to the already-correct frame-scoped locator, which is unnecessary
+    // and slow once the control is known to live inside the popup iframe.
+    public static async Task DomPressSequentiallyAsync(ILocator control, string value, int delayMs = 20, int timeoutMs = 15000, int maxAttempts = 3)
+    {
+        value ??= string.Empty;
+        for (var attempt = 1; attempt <= Math.Max(1, maxAttempts); attempt++)
+        {
+            await control.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs });
+            await control.ClickAsync(new() { Timeout = timeoutMs });
+            try { await control.FillAsync(string.Empty, new() { Timeout = timeoutMs }); } catch { }
+            await control.ClickAsync(new() { Timeout = timeoutMs });
+            try
+            {
+                await control.PressAsync("Control+A");
+                await control.PressAsync("Delete");
+            }
+            catch { }
+            await control.PressSequentiallyAsync(value, new LocatorPressSequentiallyOptions { Delay = Math.Max(0, delayMs) });
+
+            if (value.Length == 0) return;
+
+            string? actual = null;
+            try { actual = await control.InputValueAsync(new() { Timeout = timeoutMs }); } catch { }
+
+            if (!string.IsNullOrEmpty(actual)) return;
+
+            if (attempt < maxAttempts) await control.Page.WaitForTimeoutAsync(200);
+        }
+    }
+    public static async Task DomPressAsync(ILocator control, string key, int timeoutMs = 15000)
+    {
+        await control.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs });
+        await control.PressAsync(key, new() { Timeout = timeoutMs });
+    }
     private static async Task<bool> TrySelectNativeAsync(ILocator select, string requested, int timeoutMs)
     {
         var options = select.Locator("option");

@@ -25,6 +25,8 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator CTStraightThroughLiabilityLimitTo1M => _page.GetByText("CT StraightThrough Liability Limit to 1M", new() { Exact = true });
 
+    public ILocator LiabilityLimit => _page.Locator("input[fieldref=\"RiskDefaultsInput.LiabilityLimit\"]");
+
     public ILocator CommercialAuto => _page.GetByRole(AriaRole.Link, new() { Name = "Commercial Auto", Exact = true });
 
     public ILocator DedType => _page.Locator("input[fieldref=\"LineInput.DeductibleType\"]");
@@ -87,7 +89,11 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator LoggedInUser => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Logged In User']/@for] | //label[normalize-space(string(.))='Logged In User']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Logged In User']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    public ILocator Logout => _page.Locator("[id=\"id_LogOut\"]");
+    public ILocator UserNameInitial => _page.Locator("div.userNameInitial", new() { HasTextString = "QA" }).Or(_page.Locator("div.userNameInitial", new() { HasTextString = "UP" })).Or(_page.Locator("div.userNameInitial", new() { HasTextString = "EA" }));
+
+    public ILocator Logout => _page.Locator("[id=\"id_LogOut\"]", new() { HasTextString = "Logout" });
+
+    public ILocator LogoutOkButton => _page.Locator("div.x-message-box[role=\"alertdialog\"] a.x-btn", new() { HasTextString = "OK" }).First;
 
     public ILocator Medical => _page.Locator("input[fieldref=\"CovMedicalInput.Medical\"]");
 
@@ -134,9 +140,15 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator SaveForLaterOK => _page.GetByRole(AriaRole.Link, new() { Name = "Save for Later - OK", Exact = true });
 
-    public ILocator SearchButton => _page.GetByRole(AriaRole.Link, new() { Name = "Search", Exact = true });
+    public ILocator SearchButton => _page.Locator("#searchFilterActions a[name=\"searchFilterActions\"]");
 
     public ILocator SearchMethodEGDescriptionPolicy => _page.Locator("[id='_keynameAdvSearch1-inputEl']");
+
+    public ILocator SearchResultsInsuredNameColumnHeader => _page.Locator("span.x-column-header-text-inner", new() { HasTextString = "Insured Name" });
+
+    public ILocator SearchResultInsuredNameLink => _page.Locator("[id=\"clientPageLoadA\"]");
+
+    public ILocator CommercialAutoQuoteLink => _page.Locator("#quoteList table.formTbl tr:not(.detailsLabel)").First.Locator("td").First.Locator("a");
 
     public ILocator RiskComputerSystemsSearchResult => _page.Locator("input[fieldref=\"CovComputerSystemsInput.SearchResult\"]");
 

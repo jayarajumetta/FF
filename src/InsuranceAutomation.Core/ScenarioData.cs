@@ -332,7 +332,7 @@ public sealed class ScenarioData
     private bool EvaluateAnd(string expression)
     {
         var parts = SplitTopLevel(expression, " AND ");
-        if (parts.Count > 1) return parts.All(EvaluateAtom);
+        if (parts.Count > 1) return parts.All(EvaluateOr);
         return EvaluateAtom(expression);
     }
     private bool EvaluateAtom(string expression)
@@ -341,11 +341,15 @@ public sealed class ScenarioData
         while (value.StartsWith('(') && value.EndsWith(')') && Balanced(value[1..^1])) value = value[1..^1].Trim();
         if (value.StartsWith("NOT(", StringComparison.OrdinalIgnoreCase) && value.EndsWith(')')) return !EvaluateOr(value[4..^1]);
         if (value.StartsWith("NOT ", StringComparison.OrdinalIgnoreCase)) return !EvaluateAtom(value[4..]);
-        var m = Regex.Match(value, @"^(?:['""](.+?)['""]|([A-Za-z0-9 _().:*#/-]+?))\s*(==|!=)\s*(?:['""](.*?)['""]|NULL)$", RegexOptions.IgnoreCase);
+        var m = Regex.Match(value, @"^(?:['""](.+?)['""]|([A-Za-z0-9 _().:*#/-]+?))\s*(==|!=)\s*(?:['""](.*?)['""]|([A-Za-z0-9 _().:*#/-]+)|NULL)$", RegexOptions.IgnoreCase);
         if (!m.Success) throw new InvalidOperationException("No supported data comparison was found.");
         var key = (m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value).Trim().Trim('\'', '"');
         var op = m.Groups[3].Value;
-        var expected = m.Groups[4].Success ? m.Groups[4].Value.Trim().Trim('\'', '"') : string.Empty;
+        var expected = m.Groups[4].Success
+            ? m.Groups[4].Value.Trim().Trim('\'', '"')
+            : m.Groups[5].Success
+                ? m.Groups[5].Value.Trim().Trim('\'', '"')
+                : string.Empty;
         if(expected.Equals("NULL",StringComparison.OrdinalIgnoreCase)) expected=string.Empty;
         var actual=Get(key); var equal=string.Equals(actual,expected,StringComparison.OrdinalIgnoreCase);
         return op=="==" ? equal : !equal;

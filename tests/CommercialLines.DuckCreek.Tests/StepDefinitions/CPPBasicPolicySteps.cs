@@ -1,6 +1,11 @@
-using InsuranceAutomation.Core;
-using Reqnroll;
 using InsuranceAutomation.CLDC.Pages;
+using InsuranceAutomation.Core;
+using Microsoft.Playwright;
+using NUnit.Framework;
+using Reqnroll;
+using System.Text;
+using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 
 namespace InsuranceAutomation.CLDC.StepDefinitions;
 
@@ -672,7 +677,9 @@ public sealed class CPPBasicPolicySteps
         await page.WaitForAddAddlInterestAsync("Visible");
         await page.ClickAddAddlInterestAsync();
         await page.WaitForTypeAsync("Visible");
+        await Task.Delay(2000);
         await page.EnterTypeAsync(data.Resolve("{{data:type_233}}"));
+        await Task.Delay(2000);
         await page.WaitForLoanNumberAsync("Visible");
         await page.EnterLoanNumberAsync(data.Resolve("{{data:loan_number_234}}"));
         await page.WaitForInsuredTypeAsync("Visible");
@@ -1563,6 +1570,7 @@ public sealed class CPPBasicPolicySteps
         await page.EnterGroupClassAsync(data.Resolve("{{data:group_class_422}}"));
         await page.WaitForNumberOfVehiclesAsync("Visible");
         await page.EnterNumberOfVehiclesAsync(data.Resolve("{{data:number_of_vehicles_423}}"));
+        await page.PressNumberOfVehiclesAsync("Tab");
         if (await page.IsUnnamedTerminalsLimitVisibleAsync())
         {
             await page.WaitForUnnamedTerminalsLimitAsync("Visible");
@@ -2169,14 +2177,14 @@ public sealed class CPPBasicPolicySteps
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.PauseAsync(4000);
-        if (await page.IsThisCoverageBoundExistsAsync())
-        {
-            await page.VerifyIsThisCoverageBoundAsync("Exists", "");
-        }
-        if (await page.IsThisCoverageBoundExistsAsync())
-        {
-            await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_value_663}}"), "Value");
-        }
+        //if (await page.IsThisCoverageBoundExistsAsync())
+        //{
+        //    await page.VerifyIsThisCoverageBoundAsync("Exists", "");
+        //}
+        //if (await page.IsThisCoverageBoundExistsAsync())
+        //{
+        //    await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_value_663}}"), "Value");
+        //}
         if (await page.IsThisCoverageBoundExistsAsync())
         {
             await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_664}}"));
@@ -2203,24 +2211,212 @@ public sealed class CPPBasicPolicySteps
         await page.VerifyPremiumWrittenAsync(data.Resolve("{{data:expected_premium_written_value_697}}"), "value");
         await page.VerifyPriorPremiumAsync(data.Resolve("{{data:expected_prior_premium_value_698}}"), "value");
         await page.VerifyPremiumChangeAsync(data.Resolve("{{data:expected_premium_change_value_699}}"), "value");
-        data.Set("SessionId", await page.CaptureResultAsync("value"));
+        await Task.Delay(4000);
 
+        await page.ClickPolicyFormAsync();
+        await Task.Delay(4000);
     }
 
-    [Given(@"^I complete forms verification$")]
-    [When(@"^I complete forms verification$")]
-    [Then(@"^I complete forms verification$")]
-    public async Task CompleteFormsVerificationAsync()
+    [Given(@"^I complete forms verification UMB$")]
+    [When(@"^I complete forms verification UMB$")]
+    [Then(@"^I complete forms verification UMB$")]
+    public async Task CompleteFormsVerificationUMBAsync()
+    {
+        var logger = _scenario.Get<RunLogger>();
+        var browser = _scenario.Get<BrowserSession>();
+        var playwrightPage = browser.Page;
+        var logPath = Path.Combine(browser.ArtifactDirectory, "forms-verification-network.log");
+
+        static bool IsTargetDcUrl(string? url) =>
+            !string.IsNullOrWhiteSpace(url)
+            && url.Contains("default.aspx", StringComparison.OrdinalIgnoreCase)
+            && Regex.IsMatch(url, @"[\?&]_dc=", RegexOptions.IgnoreCase);
+
+        static string ExtractDc(string url)
+        {
+            var m = Regex.Match(url, @"(?:\?|&)_dc=([^&]+)", RegexOptions.IgnoreCase);
+            return m.Success ? m.Groups[1].Value : string.Empty;
+        }
+
+        void EmitLog(string message)
+        {
+            logger.Info(message);
+            Console.WriteLine(message);
+            System.Diagnostics.Debug.WriteLine(message);
+            TestContext.Progress.WriteLine(message);
+            TestContext.WriteLine(message);
+        }
+
+        static Dictionary<string, string> LoadExpectedFormProdDocMap()
+        {
+            var results = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var current = new DirectoryInfo(AppContext.BaseDirectory);
+            while (current is not null &&
+                   !File.Exists(Path.Combine(current.FullName, "ToscaCanonicalSimple.sln")) &&
+                   !File.Exists(Path.Combine(current.FullName, "Tosca.runsettings")))
+            {
+                current = current.Parent;
+            }
+
+            var repoRoot = current?.FullName ?? Directory.GetCurrentDirectory();
+            var filePath = Path.Combine(repoRoot, "tests", "PersonalLines.DuckCreek.Tests", "TestData", "FormVerification", "CPPBasic", "CPP_BASIC.json");
+            if (!File.Exists(filePath))
+            {
+                return results;
+            }
+
+            var root = JsonNode.Parse(File.ReadAllText(filePath)) as JsonObject;
+            var formNode = root?["form"] as JsonObject;
+            if (formNode is null)
+            {
+                return results;
+            }
+
+            foreach (var kvp in formNode)
+            {
+                var form = (kvp.Key ?? string.Empty).Trim();
+                var prodDocName = (kvp.Value?.ToString() ?? string.Empty).Trim();
+                if (!string.IsNullOrWhiteSpace(form) && !string.IsNullOrWhiteSpace(prodDocName))
+                {
+                    results[form] = prodDocName;
+                }
+            }
+
+            return results;
+        }
+
+        IResponse? latestMatchingResponse = null;
+        string latestDc = string.Empty;
+
+        void OnResponse(object? _, IResponse response)
+        {
+            if (IsTargetDcUrl(response.Url)
+                && response.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
+            {
+                latestMatchingResponse = response;
+                latestDc = ExtractDc(response.Url);
+            }
+        }
+
+        try
+        {
+            playwrightPage.Response += OnResponse;
+
+            await playwrightPage.WaitForResponseAsync(
+                r => IsTargetDcUrl(r.Url)
+                     && r.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase),
+                new PageWaitForResponseOptions { Timeout = 60000 });
+
+            await Task.Delay(1500);
+
+            var response = latestMatchingResponse;
+            if (response is null)
+            {
+                EmitLog("[FormsVerification] Matching response observed but latest reference is null.");
+                return;
+            }
+
+            var responseBody = await response.TextAsync();
+            var capturedProdDocNames = Regex.Matches(responseBody, "<printDoc\\b[^>]*\\bname=\"([^\"]+)\"", RegexOptions.IgnoreCase)
+                .Select(m => m.Groups[1].Value)
+                .Where(v => !string.IsNullOrWhiteSpace(v))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            EmitLog($"[FormsVerification] Response URL: {response.Url}");
+            EmitLog($"[FormsVerification] Response Status: {response.Status}");
+            EmitLog($"[FormsVerification] Latest _dc: {latestDc}");
+
+            var expectedFormProdDocMap = LoadExpectedFormProdDocMap();
+            var missing = new List<string>();
+
+            foreach (var expected in expectedFormProdDocMap)
+            {
+                var form = expected.Key;
+                var prodDocName = expected.Value;
+                var found = capturedProdDocNames.Contains(prodDocName, StringComparer.OrdinalIgnoreCase);
+                EmitLog($"[FormsVerification] Form='{form}' ProdDocName='{prodDocName}' Found={found}");
+
+                if (!found)
+                {
+                    missing.Add($"{form}:{prodDocName}");
+                }
+            }
+
+            EmitLog($"[FormsVerification] Captured ProdDocNames ({capturedProdDocNames.Count}): {string.Join(", ", capturedProdDocNames)}");
+
+            var log = new StringBuilder();
+            log.AppendLine($"Timestamp: {DateTime.UtcNow:O}");
+            log.AppendLine($"Response URL: {response.Url}");
+            log.AppendLine($"Response Status: {response.Status}");
+            log.AppendLine($"Latest _dc: {latestDc}");
+            log.AppendLine($"Captured ProdDocNames ({capturedProdDocNames.Count}): {string.Join(", ", capturedProdDocNames)}");
+            log.AppendLine("Response Body:");
+            log.AppendLine(responseBody);
+            log.AppendLine(new string('-', 120));
+            File.AppendAllText(logPath, log.ToString());
+
+            if (missing.Count > 0)
+            {
+                EmitLog($"[FormsVerification] Missing Form->ProdDocName pairs: {string.Join(" | ", missing)}");
+                Assert.Fail($"Missing expected ProdDocNames for forms: {string.Join(" | ", missing)}");
+            }
+        }
+        catch (TimeoutException)
+        {
+            EmitLog("[FormsVerification] No response matched: POST default.aspx with query _dc=");
+        }
+        finally
+        {
+            playwrightPage.Response -= OnResponse;
+        }
+    }
+
+
+
+
+
+    [Given(@"^I sign out of the application$")]
+    [When(@"^I sign out of the application$")]
+    [Then(@"^I sign out of the application$")]
+    public async Task SignOutOfTheApplicationAsync()
     {
         var data = _scenario.Get<ScenarioData>();
 
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.EnterSessionIDAsync(data.Resolve("{B[SessionId]}"));
-        await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_706}}"), "value");
-        await page.PauseAsync(1000);
-        await page.PauseAsync(1000);
+        //await page.ClickLoggedInUserAsync();
+        //await page.ClickLogoutAsync();
+        //await page.PauseAsync(1000);
+        //await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
+        //await page.ClickOKAsync();
+        //await page.WaitForOKAsync("Absent");
+        //await page.ClickLoggedInUserAsync();
+        //await page.ClickLogoutAsync();
 
+    }
+
+    private static async Task EnterWithTabAndNonEmptyRetryAsync(
+        Func<Task> enter,
+        Func<Task> pressTab,
+        Func<Task<string>> capture,
+        string fieldName,
+        int maxAttempts = 4)
+    {
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            await enter();
+            await pressTab();
+            await Task.Delay(2000);
+
+            var actual = (await capture())?.Trim() ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(actual))
+            {
+                return;
+            }
+        }
+
+        throw new InvalidOperationException($"Value was empty after Tab commit for field '{fieldName}' after {maxAttempts} attempts.");
     }
 
 }

@@ -23,6 +23,7 @@
     "stateVariant": "OH ANP"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "OHIO",
@@ -130,7 +131,7 @@
     "OH_ClientData.Apartment": "203",
     "AL_ClientData.Apartment": "203",
     "OH_ClientData.SSN": "888020348",
-    "AL_ClientData.SSN": "888020348",
+    "AL_ClientData.SSN": "666358818",
     "OH_ClientData.State": "OH",
     "AL_ClientData.State": "OH",
     "OH_ClientData.Gender": "U",

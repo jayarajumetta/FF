@@ -9,11 +9,29 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator AddEditAdditionalInterestFirstMortgageeSearch => _page.Locator("button:has-text(\"Search\"), a:has-text(\"Search\")").First;
 
+    public ILocator SearchText => _page.Locator("[id='quickSearchTextId-inputEl']");
+
+    public ILocator QuickSearchButton => _page.Locator("[id=\"id_quickSearch\"]");
+
+    public ILocator SearchMethodEGDescriptionPolicy => _page.Locator("[id='_keynameAdvSearch1-inputEl']");
+
+    public ILocator SearchButton => _page.Locator("#searchFilterActions a[name=\"searchFilterActions\"]");
+
+    public ILocator SearchResultsInsuredNameColumnHeader => _page.Locator("span.x-column-header-text-inner", new() { HasTextString = "Insured Name" });
+
+    public ILocator SearchResultInsuredNameLink => _page.Locator("[id=\"clientPageLoadA\"]");
+
+    public ILocator CommercialAutoQuoteLink => _page.Locator("#quoteList table.formTbl tr:not(.detailsLabel)").First.Locator("td").First.Locator("a");
+
     // Dynamically set by buffer Additional Death Benefit in RTB Auto | 10.2 EQ | Auto_AddlCov PIP
     public ILocator AdditionalDeathBenefit => _page.GetByRole(AriaRole.Button, new() { Name = "Additional Death Benefit", Exact = true });
 
     // Dynamically set by buffer Additional PIP in RTB Auto | 10.2 EQ | Auto_AddlCov PIP
     public ILocator AdditionalPIP => _page.GetByRole(AriaRole.Button, new() { Name = "Additional PIP", Exact = true });
+
+    public ILocator Nocooverage => _page.GetByTestId("fields.policy.line.risk.rows[0].covComprehensiveInput$theftDeductible.value-chip-label").First;
+
+    public ILocator TheftDeductable => _page.Locator("fields.policy.line.risk.rows[1].covComprehensiveInput$theftDeductible.value-chip-wrapper").First;
 
     // Dynamically set by buffer Auto Health Insurer in RTB Auto | 10.2 EQ | Auto_AddlCov PIP
     public ILocator AutoHealthInsurer => _page.GetByTestId("fields.policy.line.pIPInput$autoHealthInsurer.value-chip-wrapper");
@@ -35,10 +53,10 @@ public sealed class PolicyWorkflowLocators
     public ILocator MedicalExpenseElimination => _page.GetByRole(AriaRole.Button, new() { Name = "Medical Expense Elimination", Exact = true });
 
     // Dynamically set by buffer PIP Deductible in RTB Auto | 10.2 EQ | Auto_AddlCov PIP
-    public ILocator PIPDeductible => _page.GetByTestId("fields.policy.line.pIPInput$deductible.value-chip-wrapper");
+    public ILocator PIPDeductible => _page.GetByTestId("fields.policy.line.pIPInput$deductible.value-chip-label").GetByText("No Deductible");
 
     // Dynamically set by buffer PIP Limit in RTB Auto | 10.2 EQ | Auto_AddlCov PIP
-    public ILocator PIPLimit => _page.GetByTestId("fields.policy.line.pIPInput$limit.value-chip-wrapper");
+    public ILocator PIPLimit => _page.GetByTestId("fields.policy.line.pIPInput$limit.value-chip-label").GetByText("Basic - $15,000 per person/$30,000 per accident").First;
 
     // Dynamically set by buffer PIP Stacking in RTB Auto | 10.2 EQ | Auto_AddlCov PIP
     public ILocator PIPStacking => _page.GetByRole(AriaRole.Button, new() { Name = "PIP Stacking", Exact = true });

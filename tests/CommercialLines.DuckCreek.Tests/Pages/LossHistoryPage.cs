@@ -100,7 +100,7 @@ public sealed class LossHistoryPage
         _ui.WaitAsync(_locators.LoanNumber, expected, new ControlIntent("LossHistory", "LoanNumber"));
 
     public Task EnterLoanNumberAsync(string value) =>
-        _ui.FillAsync(_locators.LoanNumber, value, new ControlIntent("LossHistory", "LoanNumber"));
+        _ui.PressSequentiallyAsync(_locators.LoanNumber, value, new ControlIntent("LossHistory", "LoanNumber"), 20);
 
     public Task PressLoanNumberAsync(string key) =>
         _ui.PressAsync(_locators.LoanNumber, key, new ControlIntent("LossHistory", "LoanNumber"));

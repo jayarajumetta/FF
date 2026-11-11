@@ -23,6 +23,7 @@
     "stateVariant": "VA"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "VIRGINIA",
@@ -130,7 +131,7 @@
     "VA_ClientData.Apartment": "17",
     "AL_ClientData.Apartment": "17",
     "VA_ClientData.SSN": "888026111",
-    "AL_ClientData.SSN": "888026111",
+    "AL_ClientData.SSN": "666358818",
     "VA_ClientData.State": "VA",
     "AL_ClientData.State": "VA",
     "VA_ClientData.Gender": "F",

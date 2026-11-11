@@ -23,6 +23,7 @@
     "stateVariant": "ND"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "NORTH DAKOTA",
@@ -130,7 +131,7 @@
     "ND_ClientData.Apartment": "19",
     "AL_ClientData.Apartment": "19",
     "ND_ClientData.SSN": "888016424",
-    "AL_ClientData.SSN": "888016424",
+    "AL_ClientData.SSN": "666358818",
     "ND_ClientData.State": "ND",
     "AL_ClientData.State": "ND",
     "ND_ClientData.Gender": "19",

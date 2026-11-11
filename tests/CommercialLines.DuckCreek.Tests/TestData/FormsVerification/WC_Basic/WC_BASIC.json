@@ -1,0 +1,34 @@
+[
+  {
+    "Type": "BASE",
+    "Form": "C1050917",
+    "Comment": "",
+    "AL": "N",
+    "AR": "N",
+    "AZ": "N"
+  },
+  {
+    "Type": "BASE",
+    "Form": "INWCE0707",
+    "Comment": "",
+    "AL": "N",
+    "AR": "N",
+    "AZ": "N"
+  },
+  {
+    "Type": "BASE",
+    "Form": "NOA10917",
+    "Comment": "",
+    "AL": "N",
+    "AR": "N",
+    "AZ": "N"
+  },
+  {
+    "Type": "BASE",
+    "Form": "NM3421025",
+    "Comment": "",
+    "AL": "YM",
+    "AR": "YM",
+    "AZ": "YM"
+  }
+]

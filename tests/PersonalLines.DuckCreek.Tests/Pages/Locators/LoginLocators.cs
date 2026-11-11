@@ -45,6 +45,34 @@ public sealed class LoginLocators
 
     public ILocator TxtSearchType => _page.Locator("[id=\"cb_0\"]");
 
-    public ILocator TxtUnderwritingNotes => _page.GetByText("Txt_Underwriting Notes *", new() { Exact = true });
+    public ILocator LoginOrPolicySearch => _page.Locator("input#username:visible, [id='cb_0']:visible").First;
+
+    public ILocator PolicyLoginId => _page.GetByRole(AriaRole.Textbox, new() { Name = "Login ID", Exact = true });
+
+    public ILocator PolicyLoginPassword => _page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true });
+
+    public ILocator PolicyLoginSubmit => _page.GetByText("LOGIN", new() { Exact = true });
+
+    public ILocator PolicySearchText => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Text", Exact = true });
+
+    public ILocator PolicySearchButton => _page.GetByRole(AriaRole.Button, new() { Name = "Search", Exact = true });
+
+    public ILocator PolicyQuoteLink(string quoteNumber) => _page.GetByRole(AriaRole.Link, new() { Name = quoteNumber, Exact = true });
+
+    public ILocator PolicyBypassLevel9BCheckbox => _page.GetByRole(AriaRole.Checkbox, new() { Name = "Bypass Level 9B Rules", Exact = true });
+
+    public ILocator PolicyBypassLevel9BComments => _page.Locator("input[fieldref=\"PolicyInput.BypassLevel9BRulesComments\"]");
+
+    public ILocator PolicyBypassNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
+
+    public ILocator PolicyHome => _page.GetByTitle("Home", new() { Exact = true });
+
+    public ILocator TxtUnderwritingNotes => _page.Locator("textarea[fieldref=\"UWRulesReview.UWNotes\"]");
+
+    public ILocator Lnk_Pricing => _page.GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Pricing", Exact = true });
+
+    public ILocator Check_UnderwritingNotes => _page.Locator("input[fieldref=\"UWRulesReview.UWReviewRequiredAfterIssuance\"]");
+
+    public ILocator Btn_Approve => _page.GetByRole(AriaRole.Button, new PageGetByRoleOptions { Name = "Approve" });
 
 }

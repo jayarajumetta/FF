@@ -207,6 +207,23 @@ public sealed class IMSmokeTestSteps
 
     }
 
+    [Given(@"^I run insurance score$")]
+    [When(@"^I run insurance score$")]
+    [Then(@"^I run insurance score$")]
+    public async Task RunInsuranceScoreAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (await page.IsInsuranceScoreVisibleAsync())
+        {
+            await page.ClickInsuranceScoreAsync();
+            await page.PauseAsync(2000);
+        }
+
+    }
+
     [Given(@"^I sign out of the application for logged in user$")]
     [When(@"^I sign out of the application for logged in user$")]
     [Then(@"^I sign out of the application for logged in user$")]

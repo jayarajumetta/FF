@@ -491,7 +491,7 @@ public sealed class WCExpandedSteps
         //{
             await page.EnterTotalPayrollEstimatedAsync(data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_156}}"));
         //}
-        if (data.Condition("'Waiver of Subrogation Exposure' != NULL"))
+        if (await page.IsWaiverOfSubrogationExposureVisibleAsync())
         {
             await page.EnterWaiverOfSubrogationExposureAsync(data.Resolve("{{data:class_code_frame_class_code_window_waiver_of_subrogation_exposure_157}}"));
         }
@@ -500,21 +500,25 @@ public sealed class WCExpandedSteps
         await page.PauseAsync(2000);
         await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
         await page.ClickOKDetailsAsync();
-        await page.WaitForClassCodeFrameAsync("Absent");
+        //await page.WaitForClassCodeFrameAsync("Absent");
+
+
+        await page.PauseAsync(2000);
         await page.WaitForAddClassCodeAsync("Exists");
+        await page.PauseAsync(2000);
         await page.ClickAddClassCodeAsync();
         //await page.WaitForClassCodeFrameAsync("Exists");
         //await page.VerifyOKClassCodeAsync("Absent", "");
-        await page.WaitForSearchValueAsync("Exists");
-
-        if (data.Condition("'Class Code 2' != NULL"))
-        {
+        //await page.WaitForSearchValueAsync("Exists");
+        await page.PauseAsync(2000);
+        //if (data.Condition("'Class Code 2' != NULL"))
+        //{
             await page.EnterSearchValueAsync(data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_166}}"));
-        }
-        if (data.Condition("'Class Code 2' != NULL"))
-        {
+        //}
+        //if (data.Condition("'Class Code 2' != NULL"))
+        //{
             await page.EnterSelectClassCodeAsync(data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_168}}"));
-        }
+        //}
         await page.PauseAsync(1000);
         await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
         if (data.Condition("'Class Code 2' != NULL"))
@@ -525,7 +529,7 @@ public sealed class WCExpandedSteps
         await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
         await page.ClickOKClassCodeAsync();
         await page.EnterTotalPayrollEstimatedAsync(data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_174}}"));
-        if (data.Condition("'Waiver of Subrogation Exposure' != NULL"))
+        if (await page.IsWaiverOfSubrogationExposureVisibleAsync())
         {
             await page.EnterWaiverOfSubrogationExposureAsync(data.Resolve("{{data:class_code_frame_class_code_window_waiver_of_subrogation_exposure_175}}"));
         }

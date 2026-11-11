@@ -203,19 +203,7 @@
       "value": "iframe"
     }
   ],
-  "Navigation|OK": [
-    {
-      "strategy": "css",
-      "value": "iframe"
-    }
-  ],
   "Navigation|AddDriverName": [
-    {
-      "strategy": "css",
-      "value": "iframe"
-    }
-  ],
-  "Navigation|AddOptionA": [
     {
       "strategy": "css",
       "value": "iframe"
@@ -239,18 +227,6 @@
       "value": "iframe"
     }
   ],
-  "Navigation|BusinessInterruptionDescriptionOfScheduledProperty": [
-    {
-      "strategy": "css",
-      "value": "iframe"
-    }
-  ],
-  "Navigation|OptionA": [
-    {
-      "strategy": "css",
-      "value": "iframe"
-    }
-  ],
   "Navigation|EntityInfoFrameEntityInfoWindowFax": [
     {
       "strategy": "css",
@@ -267,12 +243,6 @@
     {
       "strategy": "css",
       "value": "iframe[id^='dctPopup_dctPopupWindow']"
-    }
-  ],
-  "Navigation|BusinessInterruptionLimitOfInsurance": [
-    {
-      "strategy": "css",
-      "value": "iframe"
     }
   ],
   "Navigation|CA9940ContractProvisions": [

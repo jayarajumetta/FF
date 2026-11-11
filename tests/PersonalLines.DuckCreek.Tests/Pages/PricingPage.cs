@@ -19,7 +19,17 @@ public sealed class PricingPage
 
     public Task WaitForHeaderPricingDetailsAsync(string expected) =>
         _ui.WaitAsync(_locators.HeaderPricingDetails, expected, new ControlIntent("Pricing", "HeaderPricingDetails"));
+
+    public Task WaitForHeaderPricingDetailsAsync() =>
+        _locators.HeaderPricingDetails.WaitForAsync(new LocatorWaitForOptions
+        {
+            State = WaitForSelectorState.Visible,
+            Timeout = 30_000
+        });
 public Task ClickPricingDetailsNewNextAsync() =>
         _ui.ClickAsync(_locators.PricingDetailsNewNext, new ControlIntent("Pricing", "PricingDetailsNewNext"));
+
+    public Task ClickPricingDetailsNavAsync() =>
+        _ui.ClickAsync(_locators.PricingDetailsNav, new ControlIntent("Pricing", "PricingDetailsNav"));
 
 }

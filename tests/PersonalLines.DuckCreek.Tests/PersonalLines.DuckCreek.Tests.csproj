@@ -18,8 +18,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Update="TestData/**/*.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="TestData/**/*.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
     <None Include="../../config/framework.json" Link="config/framework.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="TestData\Assets\Test.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

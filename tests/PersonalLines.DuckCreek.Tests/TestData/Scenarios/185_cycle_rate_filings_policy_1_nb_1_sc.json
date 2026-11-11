@@ -23,6 +23,7 @@
     "stateVariant": "SC"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "SOUTH CAROLINA",
@@ -130,7 +131,7 @@
     "SC_ClientData.Apartment": "17",
     "AL_ClientData.Apartment": "17",
     "SC_ClientData.SSN": "666535005",
-    "AL_ClientData.SSN": "666535005",
+    "AL_ClientData.SSN": "666358818",
     "SC_ClientData.State": "SC",
     "AL_ClientData.State": "SC",
     "SC_ClientData.Gender": "M",

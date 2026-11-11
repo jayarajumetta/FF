@@ -11,9 +11,13 @@ public sealed class ClientSearchLocators
 
     public ILocator AdditionalInsuredFirstName => _page.Locator("input[fieldref=\"AdditionalNamedInsuredInput.FirstName\"]");
 
+    public ILocator AdditionalInsuredLastName => _page.Locator("input[fieldref=\"AdditionalNamedInsuredInput.LastName\"]");
+
     public ILocator AdditionalInsuredMiddleName => _page.Locator("input[fieldref=\"AdditionalNamedInsuredInput.MiddleName\"]");
 
     public ILocator AdditionalNamedInsured => _page.GetByRole(AriaRole.Link, new() { Name = "Additional Named Insured", Exact = true });
+
+    public ILocator AdditionalInsuredIndividualDetail => _page.Locator("span.g-btn-text", new() { HasTextString = "Detail" });
 
     public ILocator AdditionalNamedInsuredHeading => _page.Locator("[id=\"pageTop\"]");
 
@@ -44,7 +48,7 @@ public sealed class ClientSearchLocators
 
     public ILocator NamedInsuredIndividualEnterSSN => _page.Locator("input[fieldref=\"AccountSSNRetrievalInput.SSNInput\"]");
 
-    public ILocator AddAssociatedClientEnterSSN => _page.Locator("input[fieldref=\"AssociatedClientSSNRetrievalInput.SSNInput\"]");
+    public ILocator AddAssociatedClientEnterSSN => _page.Locator("input[fieldref=\"AssociatedClientSSNRetrievalInput.SSNInput\"], input[fieldref=\"IndividualNamedInsuredSSNRetrievalInput.SSNInput\"]");
 
     public ILocator EntityType => _page.Locator("input[fieldref=\"AccountInput.EntityType\"]");
 
@@ -52,6 +56,8 @@ public sealed class ClientSearchLocators
 
     public ILocator Gender => _page.Locator("input[fieldref=\"AccountInput.Gender\"]:visible, input[fieldref=\"AssociatedClientInput.Gender\"]:visible");
 
+    public ILocator PopupOK => _page.FrameLocator("iframe[id^='dctPopup_dctPopupWindow']:visible >> nth=-1")
+        .Locator("span.g-btn-text").Filter(new LocatorFilterOptions { HasTextRegex = new System.Text.RegularExpressions.Regex(@"^\s*OK\s*$") }).First;
     public ILocator OK => _page.FrameLocator("iframe[id*='dctPopup_dctPopupWindow']").GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true });
 
     public ILocator IndividualType => _page.Locator("input[fieldref=\"AssociatedClientInput.IndividualType\"]");
@@ -110,4 +116,6 @@ public sealed class ClientSearchLocators
     public ILocator AuditTelephone => _page.Locator("input[fieldref=\"AccountInput.AuditContactPhone\"]");
 
     public ILocator InspectionTelephone => _page.Locator("input[fieldref=\"AccountInput.InspectionContactPhone\"]");
+
+    public ILocator IsClientDataCurrent => _page.Locator("input[fieldref=\"AccountInput.IsClientDataCurrent\"]");
 }

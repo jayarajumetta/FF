@@ -23,6 +23,7 @@
     "stateVariant": "IL"
   },
   "values": {
+    "Engine CC": "150",
     "expected_btn_new_quote_2": "New Quote",
     "expected_lbl_client_info_5": "Client Info",
     "statename": "ILLINOIS",
@@ -130,7 +131,7 @@
     "IL_ClientData.Apartment": "17",
     "AL_ClientData.Apartment": "17",
     "IL_ClientData.SSN": "888008271",
-    "AL_ClientData.SSN": "888008271",
+    "AL_ClientData.SSN": "666358818",
     "IL_ClientData.State": "IL",
     "AL_ClientData.State": "IL",
     "IL_ClientData.Gender": "M",
