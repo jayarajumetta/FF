@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CommercialLines.DuckCreek.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+adba2ab6d2c0f75d61cfc4062d6707e8289cb71d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f6439ec1af4582c556fc29d037ea3cf6cb966ef9")]
 [assembly: System.Reflection.AssemblyProductAttribute("CommercialLines.DuckCreek.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CommercialLines.DuckCreek.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

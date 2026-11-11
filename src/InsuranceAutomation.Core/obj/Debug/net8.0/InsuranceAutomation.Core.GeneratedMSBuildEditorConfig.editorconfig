@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = InsuranceAutomation.Core
-build_property.ProjectDir = C:\Users\CT7859\Desktop\Auto\PnC_DC_TestAutomation\src\InsuranceAutomation.Core\
+build_property.ProjectDir = C:\Users\CT7858\wokdir\PnC_DC_TestAutomation\src\InsuranceAutomation.Core\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

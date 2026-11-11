@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "schemaVersion": "3.0-state-lineage",
+    "sourceFile": "211_Smoke_Test_Auto_AL.feature",
+    "sourceSha256": "20687c5a13836e75eb1a2e6662bc44b0a6ff51feef58ffe12f386472e738e3d5",
+    "sourceRevision": "55681",
+    "application": "PL_DC",
+    "feature": "Personal Lines Duck Creek - Smoke Test Auto",
+    "representativeIteration": "IL",
+    "note": "Only the attached representative flow is generated.",
+    "sourceConcreteTestCase": "IL",
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
+  },
+  "dimensions": {
+    "state": "Illinois",
+    "stateCode": "IL",
+    "product": "Personal Auto",
+    "productCode": "AUTO",
+    "transaction": "Smoke Test",
+    "effectiveDateMode": "Current",
+    "stateVariant": "IL"
+  },
+  "values": {
+    "Apartment": "17",
+    "City": "MILFORD",
+    "DOB": "10/15/1968",
+    "First Name": "MATTEW",
+    "Last Name": "BARNES",
+    "SSN": "666408246",
+    "State Abbreviation": "IL",
+    "Street Address": "750 E FREDERICK ST",
+    "ZIP": "60953",
+    "agentcode_40": "9997F",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "state": "IL",
+    "state_44": "ILLINOIS",
+    "state_name": "Illinois",
+    "state_variant": "IL",
+    "statecode": "IL",
+    "statename": "ILLINOIS",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "writingcompany_48": "American National Property And Casualty Co."
+  },
+  "random": {},
+  "application": {
+    "url": "https://expertquote-qa.americannational.com/expertquote/#/quote",
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME"
+  },
+  "external": {}
+}

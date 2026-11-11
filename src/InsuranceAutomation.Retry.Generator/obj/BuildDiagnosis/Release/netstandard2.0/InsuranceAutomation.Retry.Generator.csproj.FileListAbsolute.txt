@@ -1,0 +1,5 @@
+C:\Users\CT7858\wokdir\PnC_DC_TestAutomation\src\InsuranceAutomation.Retry.Generator\obj\BuildDiagnosis\Release\netstandard2.0\InsuranceAutomation.Retry.Generator.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\CT7858\wokdir\PnC_DC_TestAutomation\src\InsuranceAutomation.Retry.Generator\obj\BuildDiagnosis\Release\netstandard2.0\InsuranceAutomation.Retry.Generator.AssemblyInfoInputs.cache
+C:\Users\CT7858\wokdir\PnC_DC_TestAutomation\src\InsuranceAutomation.Retry.Generator\obj\BuildDiagnosis\Release\netstandard2.0\InsuranceAutomation.Retry.Generator.AssemblyInfo.cs
+C:\Users\CT7858\wokdir\PnC_DC_TestAutomation\src\InsuranceAutomation.Retry.Generator\obj\BuildDiagnosis\Release\netstandard2.0\InsuranceAutomation.Retry.Generator.csproj.CoreCompileInputs.cache
+C:\Users\CT7858\wokdir\PnC_DC_TestAutomation\src\InsuranceAutomation.Retry.Generator\obj\BuildDiagnosis\Release\netstandard2.0\InsuranceAutomation.Retry.Generator.sourcelink.json
