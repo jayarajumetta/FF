@@ -230,13 +230,13 @@ public sealed class ClientSearchPage
 
     public async Task ClickOKAsync()
     {
-        if (await _locators.OK.CountAsync() > 0 && await _locators.OK.IsVisibleAsync())
-        {
-            await _ui.ClickAsync(_locators.OK, new ControlIntent("ClientSearch", "OK"));
-            return;
-        }
+        //if (await _locators.OK.CountAsync() > 0 && await _locators.OK.IsVisibleAsync())
+        //{
+        //    await _ui.ClickAsync(_locators.OK, new ControlIntent("ClientSearch", "OK"));
+        //    return;
+        //}
 
-        await _ui.ClickAsync(_locators.PopupOK, new ControlIntent("ClientSearch", "PopupOK"));
+        await _ui.ClickAsync(_locators.OK, new ControlIntent("ClientSearch", "PopupOK"));
     }
 
     public async Task ClickOKWithRetryAsync(int maxAttempts = 3, int waitBeforeMs = 1000)
@@ -336,10 +336,6 @@ public sealed class ClientSearchPage
 
     public Task WaitForOKAsync(string expected) =>
         _ui.WaitAsync(_locators.OK, expected, new ControlIntent("ClientSearch", "OK"));
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
     public Task ClickOrderSSNAsync() =>
         _ui.ClickAsync(_locators.OrderSSN, new ControlIntent("ClientSearch", "OrderSSN"));
 
@@ -468,7 +464,8 @@ public sealed class ClientSearchPage
         _ui.CaptureAsync(_locators.LastName, property, new ControlIntent("ClientSearch", "LastName"));
 
     public Task EnterNamedInsuredIndividualEnterSSNAsync(string value) =>
-        _ui.PressSequentiallyAsync(_locators.NamedInsuredIndividualEnterSSN, value, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"));
+        _ui.PressSequentiallyAsync(_locators.NamedInsuredIndividualEnterSSN, value, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"), 30);
+
 
     public Task WaitForPrimaryPhoneAsync(string expected) =>
         _ui.WaitAsync(_locators.PrimaryPhone, expected, new ControlIntent("ClientSearch", "PrimaryPhone"));

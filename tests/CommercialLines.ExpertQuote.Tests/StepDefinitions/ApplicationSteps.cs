@@ -84,28 +84,19 @@ public sealed class ApplicationSteps
         var page = new DuckCreekSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickQuickSearchAsync();
-        await Task.Delay(3000);
         await page.SelectSearchFieldAsync("Description");
-        await Task.Delay(3000);
         await page.SelectSearchOperatorAsync("is");
-        await Task.Delay(3000);
         await page.EnterSearchValueAsync(description);
-        await Task.Delay(3000);
         await page.ClickSearchAsync();
-        await Task.Delay(9000);
         await page.ClickSearchAsync();
-        await Task.Delay(3000);
     }
 
     [Given("I click the insured name in the Duck Creek search results")]
     public async Task ClickInsuredNameInSearchResultsAsync()
     {
         var page = new DuckCreekSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await Task.Delay(3000);
         await page.ClickSearchResultInsuredNameAsync();
-        await Task.Delay(3000);
         await page.ClickBusinessOwnersQuoteAsync();
-        await Task.Delay(3000);
     }
 
     [Given("I navigate to the Submission window in Duck Creek")]
@@ -119,20 +110,13 @@ public sealed class ApplicationSteps
     public async Task ClickCompleteApplicationAsync()
     {
         var page = new DuckCreekSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await Task.Delay(3000);
         await page.ClickCompleteApplicationAsync();
-        await Task.Delay(3000);
         await page.WaitForProcessingCompleteAsync();
-        await Task.Delay(9000);
         await page.ClickProcessingCompleteCloseAsync();
-        await Task.Delay(6000);
         await page.ClickApproveAsync();
-        await Task.Delay(6000);
         await page.WaitForOkButtonAsync();
         await page.ClickOkAsync();
-        await Task.Delay(5000);
         await page.VerifyApprovedStatusAsync("Approved", "Status");
-        await Task.Delay(3000);
     }
 
     private static string ResolveCredential(ScenarioData data, string key, string environmentVariable)

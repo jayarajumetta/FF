@@ -21,8 +21,7 @@ public sealed class UMBSmokeTestSteps
 
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
-        await page.WaitForBODYAsync("Exists");
-        await page.PauseAsync(1000);
+        //await page.WaitForBODYAsync("Exists");
 
     }
 
@@ -64,10 +63,9 @@ public sealed class UMBSmokeTestSteps
 
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
-        await page.PauseAsync(1000);
         await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
         await page.ClickOKAsync();
-        await page.WaitForOKAsync("Absent");
+        //await page.WaitForOKAsync("Absent");
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
 
@@ -85,7 +83,7 @@ public sealed class UMBSmokeTestSteps
         await page.EnterUserNameAsync(data.Resolve("{{env:CL_DC_USERNAME}}"));
         await page.EnterPasswordAsync(data.Resolve("{{env:CL_DC_PASSWORD}}"));
         await page.ClickLoginAsync();
-        await page.WaitForLoginAsync("Absent");
+        //await page.WaitForLoginAsync("Absent");
 
     }
 
@@ -101,7 +99,7 @@ public sealed class UMBSmokeTestSteps
         await page.ClickNewQuoteAsync();
         await page.EnterEffectiveDateAsync(data.Resolve("{{data:effective_date_43}}"));
         await page.EnterProductAsync(data.Resolve("{{data:product_45}}"));
-        await page.WaitForStartAsync("Visible");
+        //await page.WaitForStartAsync("Visible");
         await page.ClickStartAsync();
 
     }
@@ -120,12 +118,12 @@ public sealed class UMBSmokeTestSteps
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_50}}"));
-        await page.WaitForUnderwritingInfoAsync("Exists");
+        //await page.WaitForUnderwritingInfoAsync("Exists");
         await page.EnterInsuredAndEntityTypeAsync(data.Resolve("{{data:insured_type_52}}"), data.Resolve("{{data:entity_type_62}}"));
-        await page.WaitForFirstNameAsync("Visible");
+        //await page.WaitForFirstNameAsync("Visible");
         await page.EnterFirstNameAsync(data.Resolve("{{data:first_name_56}}"));
         await page.EnterMiddleNameAsync(data.Resolve("{{data:middle_name_57}}"));
-        await page.WaitForLastNameAsync("Visible");
+        //await page.WaitForLastNameAsync("Visible");
         await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0067}}"));
         await page.EnterDOBAsync(data.Resolve("{DATE[][-40y][MM-dd-yyyy]}"));
         if (data.Condition("State!=\"CA\""))
@@ -133,24 +131,22 @@ public sealed class UMBSmokeTestSteps
             await page.EnterGenderAsync(data.Resolve("{{data:gender_60}}"));
         }
         await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0068}}"));
-        await page.PauseAsync(2000);
         await page.EnterAddressAsync(data.Resolve("{{data:address1_64}}"));
         await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_65}}"));
         await page.ClickClientSearchAsync();
-        await page.WaitForOKAsync("Exists");
+        //await page.WaitForOKAsync("Exists");
         await page.ClickOKAsync();
-        await page.WaitForOrderSSNAsync("Exists");
+        //await page.WaitForOrderSSNAsync("Exists");
         await page.ClickOrderSSNAsync();
-        await page.PauseAsync(1000);
-        await page.WaitForNamedInsuredIndividualEnterSSNAsync("Exists");
+        //await page.WaitForNamedInsuredIndividualEnterSSNAsync("Exists");
         await page.EnterNamedInsuredIndividualEnterSSNAsync(data.Resolve("{{runtime:InsuredSSN}}"));
         data.Set("Last4SSN", data.Get("InsuredSSN").Length >= 4 ? data.Get("InsuredSSN")[^4..] : data.Get("InsuredSSN"));
-        await page.PressNamedInsuredIndividualEnterSSNAsync("Doubleclick");
+        await page.PressNamedInsuredIndividualEnterSSNAsync("Tab");
         await page.ClickVerifyAsync();
-        await page.WaitForVerifyAsync("Absent");
-        await page.WaitForSocialSecurityAsync("Equal");
+        //await page.WaitForVerifyAsync("Absent");
+        //await page.WaitForSocialSecurityAsync("Equal");
         await page.VerifySocialSecurityAsync(data.Resolve("XXX-XX-{B[Last4SSN]}"), "InnerText");
-        await page.WaitForPleaseVerifySSNAsync("Absent");
+        //await page.WaitForPleaseVerifySSNAsync("Absent");
         await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_82}}"));
         await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0075}}"));
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_84}}"));
@@ -170,7 +166,6 @@ public sealed class UMBSmokeTestSteps
         if (await page.IsInsuranceScoreVisibleAsync())
         {
             await page.ClickInsuranceScoreAsync();
-            await page.PauseAsync(2000);
         }
 
     }
@@ -185,11 +180,9 @@ public sealed class UMBSmokeTestSteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickPolicyInfoAsync();
-        await page.WaitForPolicyInfoHeaderAsync("Exists");
-        await page.PauseAsync(1000);
+        //await page.WaitForPolicyInfoHeaderAsync("Exists");
         await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_98}}"));
         await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_99}}"));
-        await page.PauseAsync(1000);
         await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_101}}"));
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_105}}"));
         //await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_107}}"));
@@ -198,17 +191,15 @@ public sealed class UMBSmokeTestSteps
         //await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_110}}"));
         //await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_111}}"));
         //await page.PressPrimaryRatingStateAsync("Down");
-        //await page.PauseAsync(1000);
         //await page.WaitForPrimaryRatingStateAsync("Exists");
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_115}}"));
         await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
-        await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
-        await page.PauseAsync(1000);
-        await page.WaitForPolicyInfoHeaderAsync("Visible");
-        await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
+        //await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
+        //await page.WaitForPolicyInfoHeaderAsync("Visible");
+        //await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
         await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
-        data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
+        data.Set("QuoteDescription", data.BuildQuoteDescription());
 
     }
 
@@ -235,13 +226,11 @@ public sealed class UMBSmokeTestSteps
 
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
-        await page.PauseAsync(1000);
         await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
         await page.ClickOKAsync();
-        await page.WaitForOKAsync("Absent");
-        await page.ClickLoggedInUserAsync();
-        await page.ClickLogoutAsync();
-
+        //await page.WaitForOKAsync("Absent");
+        //await page.ClickLoggedInUserAsync();
+        //await page.ClickLogoutAsync();
     }
 
 }

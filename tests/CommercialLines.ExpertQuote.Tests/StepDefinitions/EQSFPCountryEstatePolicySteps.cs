@@ -545,7 +545,6 @@ public sealed class EQSFPCountryEstatePolicySteps
         await page.PressAdditionalDescriptionAsync("Enter");
         await page.PressYearBuiltAsync("CTRL+A");
         await page.PressYearBuiltAsync("Enter");
-        await page.PauseAsync(1000);
         await page.WaitForAddResidenceHeaderAsync("Exists");
         await page.PressRoofYearAsync("CTRL+A");
         await page.PressRoofYearAsync("Enter");
@@ -556,7 +555,6 @@ public sealed class EQSFPCountryEstatePolicySteps
         await page.PressRoofYearAsync("SCROLL[2]");
         await page.WaitForAddResidenceHeaderAsync("Exists");
         await page.PressResidenceCoverageAsync("SCROLL[-3]");
-        await page.PauseAsync(1000);
         await page.ClickDoesTheClientHaveASolidFuelHeatingTypeNoAsync();
         await page.WaitForAddResidenceHeaderAsync("Exists");
         await page.ClickResidenceCoverageAsync();
@@ -703,7 +701,6 @@ public sealed class EQSFPCountryEstatePolicySteps
         await page.PressInsuranceScoreConsentAsync("SHIFTTAB");
         await page.PressInsuranceScoreConsentAsync("SCROLL[-3]");
         await page.ClickPrimaryInsuredAsync();
-        await page.PauseAsync(1000);
         await page.ClickInsuranceScoreConsentAsync();
         await page.WaitForAcceptAsync("Exists");
         await page.ClickAcceptAsync();

@@ -125,7 +125,6 @@ public sealed class WCBasicPolicySteps
         //await page.WaitForPayPlanAsync("Equal");
         //await page.WaitForEasyPayAsync("Exists");
         //await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_44}}"));
-        await page.PauseAsync(1000);
 
     }
 
@@ -191,7 +190,6 @@ public sealed class WCBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickUnderwritingInfoAsync();
-        await page.PauseAsync(4000);
         //await page.WaitForIsThereAPriorCarrierAsync("Exists");
         await page.EnterIsThereAPriorCarrierAsync(data.Resolve("{{data:is_there_a_prior_carrier_85}}"));
         await page.WaitForCarrierAsync("Exists");
@@ -206,7 +204,6 @@ public sealed class WCBasicPolicySteps
         //await page.WaitForUnderwritingInfoOtherInsuranceHistoryDetailAsync("Exists");
         await page.ClickLossExperienceAsync();
         //await page.WaitForNoKnownLossesAsync("Exists");
-        await page.PauseAsync(3000);
         //await page.SetNoKnownLossesAsync(data.Resolve("{{data:no_known_losses_98}}"));
         await page.ClickReturnToQuoteAsync();
         //await page.EnterTitleAsync(data.Resolve("{{data:title_100}}"));
@@ -230,18 +227,14 @@ public sealed class WCBasicPolicySteps
 
         await page.ClickPolicyInfoAsync();
         //await page.WaitForPolicyInfoHeaderAsync("Exists");
-        await page.PauseAsync(1000);
         await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_106}}"));
-        await page.PauseAsync(1000);
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_109}}"));
-        await page.PauseAsync(1000);
 
 
         //await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysSequentiallyAsync("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_113}}"));
         await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
-        await page.PauseAsync(1000);
         //await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
         await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
@@ -365,7 +358,6 @@ public sealed class WCBasicPolicySteps
         await page.EnterSearchValueAsync(data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_141}}"));
         await page.EnterSelectClassCodeAsync(data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_143}}"));
         await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
-        await page.PauseAsync(1000);
         await page.VerifySelectClassCodeAsync(data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_146}}"), "value");
         await page.WaitForOKClassCodeAsync("Exists");
         await page.ClickOKClassCodeAsync();
@@ -390,7 +382,6 @@ public sealed class WCBasicPolicySteps
         await page.EnterSearchValueAsync(data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_160}}"));
         await page.EnterSelectClassCodeAsync(data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_161}}"));
         await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
-        await page.PauseAsync(1000);
         await page.VerifySelectClassCodeAsync(data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_164}}"), "value");
         await page.WaitForOKClassCodeAsync("Exists");
         await page.ClickOKClassCodeAsync();
@@ -433,7 +424,6 @@ public sealed class WCBasicPolicySteps
         await page.WaitForAssignLocationsAsync("Exists");
         await page.ClickAssignLocationsAsync();
         await page.WaitForAssignLocationAsync("Exists");
-        await page.PauseAsync(4000);
         await page.ClickAssignLocationAsync();
         await page.WaitForLocationIDAsync("Exists");
         await page.EnterLocationIDAsync("");
@@ -479,22 +469,18 @@ public sealed class WCBasicPolicySteps
 
         //await page.ClickAddEndorsementsAsync();
 
-        //await page.PauseAsync(4000);
 
         //await page.EnterEndrosmentType("Sole Proprietors, Partners, Officers And Others Coverage");
 
 
         //await page.ClickAddSoleProprietorInformationAsync();
-        //await page.PauseAsync(2000);
         //await page.EnterSoleProprietorsAsync("TEst");
 
         //await page.ClickAddPartnerInformationAsync();
 
-        //await page.PauseAsync(2000);
 
         //await page.EnterPartnersAsync("Test");
         //await page.ClickAddOthersInformationAsync();
-        //await page.PauseAsync(2000);
         //await page.EnterOthersAsync("Test");
 
         //await page.ClickOKAsync();
@@ -545,7 +531,6 @@ public sealed class WCBasicPolicySteps
         {
             await page.ClickWorksheetAsync();
             await page.EnterEmployerSafetyDevices(data.Resolve("{{data:wc_employer_safety_devices_pricing}}"));
-            await page.PauseAsync(1000);
             await page.EnterEmployerSafetyDevicesComments(data.Resolve("{{data:wc_employer_safety_devices_comments}}"));
             await page.ClickOKAsync();
         }
@@ -557,36 +542,26 @@ public sealed class WCBasicPolicySteps
             await page.ClickWorksheetAsync();
             await page.EnterPremisesCredit(data.Resolve("{{data:worksheet_multistate_premises_credit_255}}"));
             //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
-            await page.PauseAsync(1000);
             await page.EnterPremisesComments(data.Resolve("{{data:worksheet_multistate_premises_comments_256}}"));
             //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
-            await page.PauseAsync(1000);
             await page.EnterClassificationPecularities(data.Resolve("{{data:worksheet_multistate_classification_pecularities_257}}"));
             //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
-            await page.PauseAsync(1000);
             await page.EnterClassificationPecularitiesComments(data.Resolve("{{data:worksheet_multistate_classification_comments_258}}"));
             //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
-            await page.PauseAsync(1000);
             await page.EnterMedicalFacilities(data.Resolve("{{data:worksheet_multistate_medical_facilities_259}}"));
             //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
-            await page.PauseAsync(1000);
             await page.EnterMedicalFacilitiesComments(data.Resolve("{{data:worksheet_multistate_medical_comments_260}}"));
             //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
-            await page.PauseAsync(1000);
             await page.EnterSafetyDevices(data.Resolve("{{data:worksheet_multistate_safety_devices_264}}"));
             //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
-            await page.PauseAsync(1000);
             await page.EnterSafetyDevicesComments(data.Resolve("{{data:worksheet_multistate_safety_comments_265}}"));
             //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
-            await page.PauseAsync(1000);
             await page.EnterEmployeesSelection(data.Resolve("{{data:worksheet_multistate_employees_selection_266}}"));
             //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
             await page.EnterEmployeeselectionComments(data.Resolve("{{data:worksheet_multistate_employees_comments_267}}"));
-            await page.PauseAsync(1000);
             //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
             await page.EnterManagementSafetyOrganizationStateInput(data.Resolve("{{data:worksheet_multistate_management_safety_organization_268}}"));
             //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
-            await page.PauseAsync(1000);
             await page.EnterManagementSafetyOrganizationStateInputComments(data.Resolve("{{data:worksheet_multistate_management_safety_organization_comments_269}}"));
             //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
             await page.EnterManagementCooperationWithInsuranceCarrierStateInput(data.Resolve("{{data:worksheet_multistate_management_cooperation_270}}"));
@@ -600,33 +575,24 @@ public sealed class WCBasicPolicySteps
         {
             await page.ClickWorksheetAsync();
             await page.EnterPremisesCredit(data.Resolve("{{data:worksheet_pa_nj_premises_credit_255}}"));
-            await page.PauseAsync(1000);
 
             await page.EnterPremisesComments(data.Resolve("{{data:worksheet_pa_nj_premises_comments_256}}"));
-            await page.PauseAsync(1000);
             
             await page.EnterClassificationPecularities(data.Resolve("{{data:worksheet_pa_nj_classification_pecularities_257}}"));
-            await page.PauseAsync(1000);
 
             await page.EnterClassificationPecularitiesComments(data.Resolve("{{data:worksheet_pa_nj_classification_comments_258}}"));
-            await page.PauseAsync(1000);
 
             await page.EnterMedicalFacilities(data.Resolve("{{data:worksheet_pa_nj_medical_facilities_259}}"));
-            await page.PauseAsync(1000);
 
 
             await page.EnterMedicalFacilitiesComments(data.Resolve("{{data:worksheet_pa_nj_medical_comments_260}}"));
-            await page.PauseAsync(1000);
 
             await page.EnterSafetyDevices(data.Resolve("{{data:worksheet_pa_nj_safety_devices_264}}"));
-            await page.PauseAsync(1000);
 
             await page.EnterSafetyDevicesComments(data.Resolve("{{data:worksheet_pa_nj_safety_comments_265}}"));
-            await page.PauseAsync(1000);
 
             await page.EnterEmployeesSelection(data.Resolve("{{data:worksheet_pa_nj_employees_selection_267}}"));
             await page.EnterEmployeeselectionComments(data.Resolve("{{data:worksheet_pa_nj_employees_comments_268}}"));
-            await page.PauseAsync(1000);
 
             await page.ClickOKAsync();
         }
@@ -637,21 +603,13 @@ public sealed class WCBasicPolicySteps
         {
             await page.ClickWorksheetAsync();
             await page.EnterPremisesCredit(data.Resolve("{{data:worksheet_multistate_premises_credit_255}}"));
-            await page.PauseAsync(1000);
             await page.EnterPremisesComments(data.Resolve("{{data:worksheet_multistate_premises_comments_256}}"));
-            await page.PauseAsync(1000);
             await page.EnterClassificationPecularities(data.Resolve("{{data:worksheet_multistate_classification_pecularities_257}}"));
-            await page.PauseAsync(1000);
             await page.EnterClassificationPecularitiesComments(data.Resolve("{{data:worksheet_multistate_classification_comments_258}}"));
-            await page.PauseAsync(1000);
             await page.EnterMedicalFacilities(data.Resolve("{{data:worksheet_multistate_medical_facilities_259}}"));
-            await page.PauseAsync(1000);
             await page.EnterMedicalFacilitiesComments(data.Resolve("{{data:worksheet_multistate_medical_comments_260}}"));
-            await page.PauseAsync(1000);
             await page.EnterSafetyDevices(data.Resolve("{{data:worksheet_multistate_safety_devices_264}}"));
-            await page.PauseAsync(1000);
             await page.EnterSafetyDevicesComments(data.Resolve("{{data:worksheet_multistate_safety_comments_265}}"));
-            await page.PauseAsync(1000);
             await page.EnterEmployeesSelection(data.Resolve("{{data:worksheet_multistate_employees_selection_267}}"));
             await page.EnterEmployeeselectionComments(data.Resolve("{{data:worksheet_multistate_employees_comments_268}}"));
             await page.ClickOKAsync();
@@ -663,7 +621,6 @@ public sealed class WCBasicPolicySteps
             await page.ClickWorksheetAsync();
             await page.EnterEmployerSafetyDevices(data.Resolve("{{data:wc_employer_safety_devices_pricing_factor}}"));
        
-            await page.PauseAsync(1000);
             await page.EnterEmployerSafetyDevicesComments(data.Resolve("{{data:wc_employer_safety_devices_comments}}"));
      
             await page.ClickOKAsync();
@@ -718,7 +675,6 @@ public sealed class WCBasicPolicySteps
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_234}}"));
-        await page.PauseAsync(1000);
 
     }
 
@@ -735,7 +691,6 @@ public sealed class WCBasicPolicySteps
         //await page.WaitForNotepadHeadingAsync("Exists");
         await page.ClickAddNotesRemarksAsync();
         await page.EnterTextBoxAsync(data.Resolve("{{data:wc_notepad_comment}}"));
-        await page.PauseAsync(4000);
         await page.ClickOKAsync();
 
     }
@@ -757,9 +712,7 @@ public sealed class WCBasicPolicySteps
         //await page.EnterOrderAuditAsync(data.Resolve("{{data:order_audit_247}}"));
         //await page.VerifySubmissionHeadingAsync("Absent", "");
         //await page.ClickSubmissionAsync();
-        //await page.PauseAsync(1000);
         //await page.WaitForSubmissionHeadingAsync("Exists");
-        //await page.PauseAsync(1000);
 
     }
 
@@ -777,29 +730,20 @@ public sealed class WCBasicPolicySteps
         //await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_256}}"));
         await page.ClickCompleteApplicationAsync();
         //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
-        await page.PauseAsync(10000);
         //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
         await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
-        await page.PauseAsync(10000);
         //await page.ClickCompleteApplicationAsync();
-        //await page.PauseAsync(10000);
         //await page.ClickStoplightWaitingWindowCloseAsync();
         //await page.WaitForStoplightWaitingWindowAsync("Absent");
-        //await page.PauseAsync(1000);
         //await page.VerifyLoadingMessageAsync("Visible", "");
-        //await page.PauseAsync(1000);
         //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
         //await page.ClickCompleteApplicationAsync();
         //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
-        //await page.PauseAsync(1000);
         //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
         //await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
-        //await page.PauseAsync(1000);
         //await page.ClickCompleteApplicationAsync();
-        //await page.PauseAsync(1000);
         //await page.ClickStoplightWaitingWindowCloseAsync();
         //await page.WaitForStoplightWaitingWindowAsync("Absent");
-        //await page.PauseAsync(1000);
         //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
 
     }
@@ -821,10 +765,8 @@ public sealed class WCBasicPolicySteps
         //await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_294}}"));
         //data.Set("SessionId", await page.CaptureResultAsync("value"));
 
-        await Task.Delay(4000);
 
         await page.ClickPolicyFormAsync();
-        await Task.Delay(4000);
 
     }
 
@@ -918,7 +860,6 @@ public sealed class WCBasicPolicySteps
                      && r.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase),
                 new PageWaitForResponseOptions { Timeout = 60000 });
 
-            await Task.Delay(1500);
 
             var response = latestMatchingResponse;
             if (response is null)
@@ -1007,7 +948,6 @@ public sealed class WCBasicPolicySteps
 
             await pressTab();
 
-            await Task.Delay(2000);
 
 
             var actual = (await capture())?.Trim() ?? string.Empty;
@@ -1040,7 +980,6 @@ public sealed class WCBasicPolicySteps
 
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
-        await page.PauseAsync(1000);
         await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
         await page.ClickOKAsync();
         await page.WaitForOKAsync("Absent");

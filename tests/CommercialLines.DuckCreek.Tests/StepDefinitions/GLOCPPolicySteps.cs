@@ -135,22 +135,18 @@ public sealed class GLOCPPolicySteps
 
         await page.ClickPolicyInfoAsync();
         await page.WaitForPolicyInfoHeaderAsync("Exists");
-        await page.PauseAsync(1000);
         await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_71}}"));
-        await page.PauseAsync(1000);
         await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_73}}"));
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_77}}"));
         await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_80}}"));
         await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_81}}"));
         //await page.PressPrimaryRatingStateAsync("Down");
-        await page.PauseAsync(1000);
         await page.WaitForPrimaryRatingStateAsync("Exists");
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_85}}"));
         await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
         await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_89}}"));
-        await page.PauseAsync(1000);
         await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
         await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
@@ -165,7 +161,6 @@ public sealed class GLOCPPolicySteps
         }
 
 
-        await page.PauseAsync(3000);
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }
@@ -217,7 +212,6 @@ public sealed class GLOCPPolicySteps
 
         if (data.Condition("State == \"NH\" || State == \"NY\""))
         {
-            await page.PauseAsync(2000);
             await page.EnterTerritoryAsync("001");
             await page.ClickOKAsync();
         }
@@ -519,7 +513,6 @@ public sealed class GLOCPPolicySteps
         //await page.WaitForGeneralLiabilityInformationAsync("Exists");
         //await page.ClickProductsCompletedOpsButtonAsync();
         //await page.WaitForSignsHeadingAsync("Exists");
-        await page.PauseAsync(2000);
         await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
         await page.ClickOKAsync();
 
@@ -542,7 +535,6 @@ public sealed class GLOCPPolicySteps
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_202}}"));
-        await page.PauseAsync(1000);
 
     }
 
@@ -580,9 +572,7 @@ public sealed class GLOCPPolicySteps
         //await page.EnterOrderAuditAsync(data.Resolve("{{data:order_audit_215}}"));
         //await page.VerifySubmissionHeadingAsync("Absent", "");
         //await page.ClickSubmissionAsync();
-        //await page.PauseAsync(1000);
         //await page.WaitForSubmissionHeadingAsync("Exists");
-        await page.PauseAsync(1000);
 
     }
 
@@ -600,29 +590,20 @@ public sealed class GLOCPPolicySteps
         //await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_224}}"));
         await page.ClickCompleteApplicationAsync();
         //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
-        await page.PauseAsync(3000);
         //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
         //await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
-        //await page.PauseAsync(1000);
         //await page.ClickCompleteApplicationAsync();
-        //await page.PauseAsync(1000);
         //await page.ClickStoplightWaitingWindowCloseAsync();
         //await page.WaitForStoplightWaitingWindowAsync("Absent");
-        //await page.PauseAsync(1000);
         //await page.VerifyLoadingMessageAsync("Visible", "");
-        //await page.PauseAsync(1000);
         //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
         //await page.ClickCompleteApplicationAsync();
         //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
-        //await page.PauseAsync(1000);
         //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
         await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
-        await page.PauseAsync(2000);
         //await page.ClickCompleteApplicationAsync();
-        //await page.PauseAsync(1000);
         //await page.ClickStoplightWaitingWindowCloseAsync();
         //await page.WaitForStoplightWaitingWindowAsync("Absent");
-        //await page.PauseAsync(1000);
         //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
 
     }
@@ -657,8 +638,6 @@ public sealed class GLOCPPolicySteps
 
         await page.EnterSessionIDAsync(data.Resolve("{B[SessionId]}"));
         await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_266}}"), "value");
-        await page.PauseAsync(1000);
-        await page.PauseAsync(1000);
 
     }
 
@@ -673,7 +652,6 @@ public sealed class GLOCPPolicySteps
 
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
-        await page.PauseAsync(1000);
         await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
         await page.ClickOKAsync();
         await page.WaitForOKAsync("Absent");

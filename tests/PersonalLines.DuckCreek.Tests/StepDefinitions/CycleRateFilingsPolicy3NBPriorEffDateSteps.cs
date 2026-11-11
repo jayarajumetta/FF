@@ -261,7 +261,6 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
 
         await page.WaitForStartQuoteAsync("True");
         await page.ClickStartQuoteAsync();
-        await page.PauseAsync(5000);
 
 
 
@@ -273,7 +272,6 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
             await page.VerifyPROCEEDAsync("Exists", "");
             await page.ClickCONFIRMAsync();
-            await page.PauseAsync(5000);
         }
         if (await page.IsSSNPresentAsync())
         {
@@ -281,19 +279,15 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
             await page.VerifyProposalStartProceedSSNSUBMITAsync("Exists", "");
             await page.EnterSSNAsync(data.Get("SSN"));
             await page.ClickProposalStartProceedSSNSUBMITAsync();
-            await page.PauseAsync(5000);
         }
         if (await page.IsCONFIRMPresentAsync())
         {
             await page.VerifyCONFIRMAsync("Exists", "");
             await page.ClickCONFIRMAsync();
-            await page.PauseAsync(5000);
         }
-        await page.PauseAsync(5000);
         if (await page.IsUSEEXISTINGACCOUNTPresentAsync())
         {
             await page.ClickUSEEXISTINGACCOUNTAsync();
-            await page.PauseAsync(5000);
         }
 
 
@@ -886,13 +880,11 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.ClickSaveAndContinue9CB7AAsync();
         }
-        await page.PauseAsync(10000);
 
         if (await page.IsCONTINUED555DPresentAsync())
         {
             await page.WaitForCONTINUED555DAsync("Exists");
         }
-        await page.PauseAsync(10000);
         if (await page.IsCONTINUED555DPresentAsync())
         {
             await page.ClickCONTINUED555DAsync();
@@ -1139,7 +1131,6 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         if (data.Condition("State ==\"IA\"||State ==\"DE\"||State ==\"AL\"|| State ==\"AR\"|| State ==\"AZ\"|| State ==\"UT\"|| State ==\"ME\"||State ==\"PA\" || State ==\"MN\"|| State ==\"MD\"|| State ==\"KY\" || State ==\"TX\""))
         {
             await page.ClickOwnD044EAsync();
-            await Task.Delay(5000);
             if (await page.IsLblOwnedPopupPresentAsync())
             {
                 await page.VerifyLblOwnedPopupAsync("Visible", "");
@@ -1185,9 +1176,7 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         if (data.Condition("State ==\"IA\"||State ==\"DE\"||State ==\"PA\" ||State ==\"AL\"|| State ==\"AR\"|| State ==\"AZ\"|| State ==\"UT\"|| State ==\"ME\"|| State ==\"MN\"|| State ==\"MD\"|| State ==\"KY\"|| State ==\"TX\""))
         {
             await page.ClickMotorCycleAsync();
-            await Task.Delay(5000);
             await page.ClickOwnD044EAsync();
-            await Task.Delay(5000);
            
             if (await page.IsLblOwnedPopupPresentAsync())
             {
@@ -2285,7 +2274,6 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
 
        
         await page.ClickN1PaymentAsync();
-        await Task.Delay(5000);
         await page.EnterPaymentDueDateAsync(data.Resolve("{{data:txt_paymentduedate_573}}"));
         await page.WaitForRdBtnFullBalanceAsync("Visible");
         await page.ClickRdBtnFullBalanceAsync();

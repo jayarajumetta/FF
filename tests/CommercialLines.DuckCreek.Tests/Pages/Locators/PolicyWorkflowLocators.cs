@@ -89,7 +89,7 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator LoggedInUser => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Logged In User']/@for] | //label[normalize-space(string(.))='Logged In User']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Logged In User']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    public ILocator UserNameInitial => _page.Locator("div.userNameInitial", new() { HasTextString = "QA" }).Or(_page.Locator("div.userNameInitial", new() { HasTextString = "UP" })).Or(_page.Locator("div.userNameInitial", new() { HasTextString = "EA" }));
+    public ILocator UserNameInitial => _page.Locator("div.userNameInitial", new() { HasTextString = "QA" }).Or(_page.Locator("div.userNameInitial", new() { HasTextString = "UP" })).Or(_page.Locator("div.userNameInitial", new() { HasTextString = "EA" })).First;
 
     public ILocator Logout => _page.Locator("[id=\"id_LogOut\"]", new() { HasTextString = "Logout" });
 
@@ -144,7 +144,7 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator SearchMethodEGDescriptionPolicy => _page.Locator("[id='_keynameAdvSearch1-inputEl']");
 
-    public ILocator SearchResultsInsuredNameColumnHeader => _page.Locator("span.x-column-header-text-inner", new() { HasTextString = "Insured Name" });
+    public ILocator SearchResultsInsuredNameColumnHeader => _page.Locator("span.x-column-header-text-inner", new() { HasTextString = "Insured Name" }).First;
 
     public ILocator SearchResultInsuredNameLink => _page.Locator("[id=\"clientPageLoadA\"]");
 

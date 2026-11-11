@@ -18,7 +18,7 @@ public sealed class FormsLocators
 
     public ILocator Businessowners => _page.GetByRole(AriaRole.Link, new() { Name = "Businessowners", Exact = true });
 
-    public ILocator EffectiveDate => _page.FrameLocator("iframe").Locator("input[fieldref*=\".EffectiveDate\"]");
+    public ILocator EffectiveDate => _page.Locator("input[fieldref*=\".EffectiveDate\"]");
     public ILocator AddlInterestsLink => _page.GetByRole(AriaRole.Link, new() { Name = "Addl Interests", Exact = true });
 
     public ILocator LiquifiedGas => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.PetroleumGasExposure\"]");
@@ -49,6 +49,6 @@ public sealed class FormsLocators
 
     public ILocator TotalSubjectPremium => _page.Locator("input[fieldref*=\".TotalSubjectPremium\"]");
 
-    public ILocator Value => _page.FrameLocator("iframe").Locator("input[fieldref=\"NCCISearchInputNonShredded.SearchValue\"]");
+    public ILocator Value => _page.Locator("input[fieldref=\"NCCISearchInputNonShredded.SearchValue\"]");
 
 }

@@ -153,7 +153,6 @@ public sealed class EQBOPSmokeTestSteps
     {
         var data = _scenario.Get<ScenarioData>();
         var page = new QuoteSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await Task.Delay(9000);
         // Source captures Name and Quote -> Quote_NameNum, then sets Quote_Num with
         // STRINGREPLACE(Quote_NameNum, LastName, "") before selecting Close Quote.
         data.Set("Quote_NameNum", await page.CaptureNameAndQuoteAsync("InnerText"));
@@ -162,7 +161,6 @@ public sealed class EQBOPSmokeTestSteps
             .Trim());
 
         await page.ClickCloseQuoteAsync();
-        await Task.Delay(5000);
     }
 
     [Given(@"^I retrieve the quote and verify its identity$")]
@@ -174,12 +172,9 @@ public sealed class EQBOPSmokeTestSteps
         var page = new QuoteSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // TC-02 / Feature step 9.
-        await Task.Delay(5000);
         await page.EnterQuoteSearchAsync(data.Resolve("{{runtime:Quote_Num}}"));
-        await Task.Delay(5000);
         //await page.EnterQuoteSearchAsync("02067723"); // TODO: revert to dynamic value above once testing is complete
         await page.ClickQuoteSearchAsync();
-        await Task.Delay(5000);
 
         var screen = "PreQualification"; // TODO: revert to data.Resolve("{{data:prequalification_64}}") once testing is complete
 
@@ -195,7 +190,6 @@ public sealed class EQBOPSmokeTestSteps
                 await page.ClickKeepGoingAsync();
         }
 
-        await Task.Delay(5000);
         await page.VerifyScreenAsync(screen);
         //await page.VerifyNameAndQuoteAsync(data.Resolve("{{runtime:Quote_NameNum}}"), "InnerText");
         //await page.VerifyNameAndQuoteAsync("02067723", "InnerText"); // TODO: revert to dynamic value above once testing is complete

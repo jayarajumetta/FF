@@ -111,7 +111,6 @@ public sealed class LossHistoryPage
         await Assertions.Expect(_locators.ClaimDetail).ToBeVisibleAsync();
         await _ui.ClickAsync(_locators.ClaimDriverOutsideHousehold,
             new ControlIntent("LossHistory", $"ClaimDriverOutsideHousehold:{editButtonTestId}"));
-        await Task.Delay(7000);
         if (await _locators.ClaimLoanedVehicleReason.IsVisibleAsync())
         {
             await _ui.ClickAsync(_locators.ClaimLoanedVehicleReason,

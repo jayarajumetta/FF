@@ -60,10 +60,6 @@ public Task<bool> IsLoadingPresentAsync() =>
 
     public Task<bool> IsSavePresentAsync() =>
         _ui.ExistsAsync(_locators.Save);
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
     public async Task EnterTerritoryAsync(string value)
     {
         // Territory is auto-populated and rendered aria-disabled="true"/mat-form-field-disabled for

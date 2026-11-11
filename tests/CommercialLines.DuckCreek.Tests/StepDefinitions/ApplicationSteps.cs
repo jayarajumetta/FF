@@ -1,4 +1,5 @@
 using InsuranceAutomation.Core;
+using Microsoft.Playwright;
 using Reqnroll;
 using InsuranceAutomation.CLDC.Pages;
 
@@ -79,25 +80,21 @@ public sealed class ApplicationSteps
 
         //await navigationPage.WaitForClientLinkAsync("Visible");
         //await navigationPage.ClickClientLinkAsync();
-        await navigationPage.WaitForHomeLinkAsync("Visible");
+        //await navigationPage.WaitForHomeLinkAsync("Visible");
         await navigationPage.ClickHomeLinkAsync();
-        await page.WaitForUserNameInitialAsync("Visible");
-        await Task.Delay(8000);
+        //await page.WaitForUserNameInitialAsync("Visible");
         await page.ClickUserNameInitialAsync();
-        await page.WaitForLogoutAsync("Visible");
+        //await page.WaitForLogoutAsync("Visible");
         await page.ClickLogoutAsync();
-        await Task.Delay(6000);
 
         if (await page.LogoutOkButtonIsVisibleAsync())
         {
             await page.ClickLogoutOkButtonAsync();
-            await page.WaitForLogoutOkButtonAsync("Hidden");
-            await page.WaitForUserNameInitialAsync("Visible");
-            await Task.Delay(8000);
+            //await page.WaitForLogoutOkButtonAsync("Hidden");
+            //await page.WaitForUserNameInitialAsync("Visible");
             await page.ClickUserNameInitialAsync();
-            await page.WaitForLogoutAsync("Visible");
+            //await page.WaitForLogoutAsync("Visible");
             await page.ClickLogoutAsync();
-            await Task.Delay(6000);
         }
 
     }
@@ -225,7 +222,18 @@ public sealed class ApplicationSteps
 
     private static async Task SignInWithLoginPageAsync(LoginPage page, string username, string password)
     {
-        await page.EnterUserNameAsync(username);
+        try
+        {
+            await page.EnterUserNameAsync(username);
+        }
+        catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+        {
+            // The login form occasionally fails to render after a logout -> re-open navigation (stale
+            // SPA bootstrap state). A single reload is far cheaper and more reliable than a longer timeout.
+            await page.ReloadAsync();
+            await page.EnterUserNameAsync(username);
+        }
+
         await page.EnterPasswordAsync(password);
         await page.ClickLoginAsync();
         await page.WaitForLoginAsync("Absent");

@@ -127,7 +127,6 @@ public sealed class GLBasicPolicySteps
         await page.ClickOKAsync();
         //await page.WaitForUnderwritingInfoOtherInsuranceHistoryDetailAsync("Exists");
         await page.ClickLossExperienceAsync();
-        await page.PauseAsync(3000);
         //await page.WaitForNoKnownLossesAsync("Exists");
         //await page.SetNoKnownLossesAsync(data.Resolve("{{data:no_known_losses_63}}"));
         await page.ClickReturnToQuoteAsync();
@@ -148,27 +147,22 @@ public sealed class GLBasicPolicySteps
 
         await page.ClickPolicyInfoAsync();
         await page.WaitForPolicyInfoHeaderAsync("Exists");
-        await page.PauseAsync(1000);
         await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_71}}"));
         await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_72}}"));
-        await page.PauseAsync(1000);
         await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_74}}"));
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_78}}"));
         await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_81}}"));
         await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_82}}"));
         //await page.PressPrimaryRatingStateAsync("Down");
-        await page.PauseAsync(1000);
         //await page.WaitForPrimaryRatingStateAsync("Exists");
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_86}}"));
         //await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         //await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         //await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
-        await page.PauseAsync(1000);
         await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
         await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
 
-        await page.PauseAsync(2000);
 
         if (await page.IsEstimatedPremiumAvailableAsync())
         {
@@ -187,8 +181,6 @@ public sealed class GLBasicPolicySteps
         //await page.WaitForInsuranceScoreAsync("Exists");
        
         //await page.VerifyReferenceNumberAsync(data.Resolve("{{data:expected_reference_number_innertext_140}}"), "InnerText");
-        await page.PauseAsync(2000);
-        //await page.PauseAsync(1000);
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }
@@ -208,7 +200,6 @@ public sealed class GLBasicPolicySteps
         var productsAggLimit = data.Resolve("{{data:products_agg_limit_101}}");
 
 
-        await page.PauseAsync(3000);
 
         static bool HasDataValue(string? value) =>
             !string.IsNullOrWhiteSpace(value) && !value.Equals("NULL", StringComparison.OrdinalIgnoreCase);
@@ -221,30 +212,25 @@ public sealed class GLBasicPolicySteps
         await page.ClickPolicyCovgerageAsync();
         await page.WaitForPolicyCovgGLPolicyCovgAsync("Exists");
 
-        await page.PauseAsync(3000);
         if (hasCoverageForm && await page.IsPolicyCovgGLCoverageFormVisibleAsync())
         {
             await page.EnterPolicyCovgGLCoverageFormAsync(coverageForm);
         }
 
-        await page.PauseAsync(3000);
         if (HasDataValue(occurenceLimit) && await page.IsOccurenceLimitVisibleAsync())
         {
             await page.EnterOccurenceLimitAsync(occurenceLimit);
         }
 
-        await page.PauseAsync(3000);
         if (HasDataValue(aggregateLimit) && await page.IsAggregateLimitVisibleAsync())
         {
             await page.EnterAggregateLimitAsync(aggregateLimit);
         }
 
-        await page.PauseAsync(3000);
         if (hasNonOcpCoverageForm && HasDataValue(productsAggLimit) && await page.IsProductsAggLimitVisibleAsync())
         {
             await page.EnterProductsAggLimitAsync(productsAggLimit);
         }
-        await page.PauseAsync(3000);
         if (hasNonOcpCoverageForm)
         {
             await page.EnterDedTypeAsync(data.Resolve("{{data:ded_type_102}}"));
@@ -539,10 +525,8 @@ public sealed class GLBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickGLNavigationLinksAddlInterestsAsync();
-        await page.PauseAsync(3000);
         //await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddAddlInterestAsync();
-        await page.PauseAsync(3000);
         //if (data.Condition("Type != NULL"))
         //{
         //    await page.WaitForCG2007AddLInsuredEngineersArchitectsTypeAsync("Exists");
@@ -558,7 +542,6 @@ public sealed class GLBasicPolicySteps
         }
         await page.ClickOKAsync();
 
-        await page.PauseAsync(2000);
     }
 
     [Given(@"^I add Addl Interest \[CG2020\] Add'l Insured\-Charitable Institution$")]
@@ -569,13 +552,10 @@ public sealed class GLBasicPolicySteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await page.PauseAsync(3000);
         await page.ClickGLNavigationLinksAddlInterestsAsync();
 
-        await page.PauseAsync(4000);
         //await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddAddlInterestAsync();
-        await page.PauseAsync(2000);
         if (data.Condition("'type_163' != NULL"))
         {
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_163}}"));
@@ -585,7 +565,6 @@ public sealed class GLBasicPolicySteps
             await page.EnterTypeOfLicenseAsync(data.Resolve("{{data:type_of_license_164}}"));
         }
         await page.ClickOKAsync();
-        await page.PauseAsync(2000);
     }
 
     [Given(@"^I add Addl Interest \[CG2023\] Add'l Insured\-Executors$")]
@@ -596,18 +575,14 @@ public sealed class GLBasicPolicySteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await page.PauseAsync(2000);
         await page.ClickGLNavigationLinksAddlInterestsAsync();
         //await page.WaitForSignsHeadingAsync("Exists");
-        await page.PauseAsync(2000);
         await page.ClickAddAddlInterestAsync();
-        await page.PauseAsync(2000);
         if (data.Condition("'type_169' != NULL"))
         {
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_169}}"));
         }
         await page.ClickOKAsync();
-        await page.PauseAsync(2000);
 
     }
 
@@ -619,18 +594,14 @@ public sealed class GLBasicPolicySteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await page.PauseAsync(2000);
         await page.ClickGLNavigationLinksAddlInterestsAsync();
-        await page.PauseAsync(2000);
         //await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddAddlInterestAsync();
-        await page.PauseAsync(2000);
         if (data.Condition("'type_174' != NULL"))
         {
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_174}}"));
         }
         await page.ClickOKAsync();
-        await page.PauseAsync(2000);
 
     }
 
@@ -644,10 +615,8 @@ public sealed class GLBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickGLNavigationLinksAddlInterestsAsync();
-        await page.PauseAsync(2000);
         //await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddAddlInterestAsync();
-        await page.PauseAsync(2000);
         if (data.Condition("'type_179' != NULL"))
         {
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_179}}"));
@@ -657,7 +626,6 @@ public sealed class GLBasicPolicySteps
             await page.EnterTypeOfEquipmentAsync(data.Resolve("{{data:type_of_equipment_180}}"));
         }
         await page.ClickOKAsync();
-        await page.PauseAsync(2000);
 
     }
 
@@ -674,7 +642,6 @@ public sealed class GLBasicPolicySteps
         //await page.WaitForNotepadHeadingAsync("Exists");
         await page.ClickAddNotesRemarksAsync();
         await page.EnterTextBoxAsync(data.Resolve("{{data:notepad_text_637}}"));
-        await page.PauseAsync(2000);
         await page.ClickOKAsync();
 
     }
@@ -692,14 +659,12 @@ public sealed class GLBasicPolicySteps
         //await page.WaitForGeneralLiabilityInformationAsync("Exists");
         await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
         await page.EnterDescribeAllHoldHarmlessAgreementsAndPleaseProvideACopyAsync(data.Resolve("{{data:describe_all_hold_harmless_agreements_and_please_provide_a_copy_190}}"));
-        await page.PauseAsync(3000);
         await page.ClickGeneralLiabilityInformationAsync();
         //await page.ClickGLUWQuestionsAsync();
         //await page.WaitForGeneralLiabilityInformationAsync("Exists");
         //await page.ClickProductsCompletedOpsButtonAsync();
         //await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
-        await page.PauseAsync(3000);
         await page.ClickOKAsync();
 
     }
@@ -714,7 +679,6 @@ public sealed class GLBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
     
-        await page.PauseAsync(4000);
         await page.ClickNavigationBillingAsync();
         //await page.WaitForBillingAsync("Exists");
         await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_200}}"));
@@ -723,7 +687,6 @@ public sealed class GLBasicPolicySteps
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_207}}"));
-        await page.PauseAsync(1000);
 
     }
 
@@ -746,9 +709,7 @@ public sealed class GLBasicPolicySteps
 
         //await page.ClickCompleteApplicationAsync();
         //await page.ClickSubmissionAsync();
-        //await page.PauseAsync(1000);
         //await page.WaitForSubmissionHeadingAsync("Exists");
-        //await page.PauseAsync(1000);
 
     }
 
@@ -766,29 +727,20 @@ public sealed class GLBasicPolicySteps
         //await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_224}}"));
         await page.ClickCompleteApplicationAsync();
         //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
-        await page.PauseAsync(10000);
         //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
         await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
-        await page.PauseAsync(5000);
         //await page.ClickCompleteApplicationAsync();
-        //await page.PauseAsync(1000);
         //await page.ClickStoplightWaitingWindowCloseAsync();
         //await page.WaitForStoplightWaitingWindowAsync("Absent");
-        //await page.PauseAsync(1000);
         //await page.VerifyLoadingMessageAsync("Visible", "");
-        //await page.PauseAsync(1000);
         //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
         //await page.ClickCompleteApplicationAsync();
         //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
-        //await page.PauseAsync(1000);
         //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
         //await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
-        //await page.PauseAsync(1000);
         //await page.ClickCompleteApplicationAsync();
-        //await page.PauseAsync(1000);
         //await page.ClickStoplightWaitingWindowCloseAsync();
         //await page.WaitForStoplightWaitingWindowAsync("Absent");
-        //await page.PauseAsync(1000);
         //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
 
     }
@@ -807,10 +759,8 @@ public sealed class GLBasicPolicySteps
         await page.VerifyPriorPremiumAsync(data.Resolve("{{data:expected_prior_premium_value_258}}"), "value");
         await page.VerifyPremiumChangeAsync(data.Resolve("{{data:expected_premium_change_value_259}}"), "value");
 
-        await Task.Delay(4000);
 
         await page.ClickPolicyFormAsync();
-        await Task.Delay(4000);
 
     }
 
@@ -904,7 +854,6 @@ public sealed class GLBasicPolicySteps
                      && r.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase),
                 new PageWaitForResponseOptions { Timeout = 60000 });
 
-            await Task.Delay(1500);
 
             var response = latestMatchingResponse;
             if (response is null)

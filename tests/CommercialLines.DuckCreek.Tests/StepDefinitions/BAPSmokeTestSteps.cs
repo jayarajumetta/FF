@@ -22,7 +22,6 @@ public sealed class BAPSmokeTestSteps
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
         await page.WaitForBODYAsync("Exists");
-        await page.PauseAsync(1000);
 
     }
 
@@ -64,7 +63,6 @@ public sealed class BAPSmokeTestSteps
 
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
-        await page.PauseAsync(1000);
         await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
         await page.ClickOKAsync();
         await page.WaitForOKAsync("Absent");
@@ -171,22 +169,18 @@ public sealed class BAPSmokeTestSteps
 
         await page.ClickPolicyInfoAsync();
         await page.WaitForPolicyInfoHeaderAsync("Exists");
-        await page.PauseAsync(1000);
         await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_100}}"));
         await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_101}}"));
-        await page.PauseAsync(1000);
         await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_103}}"));
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107}}"));
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_117}}"));
         await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
-        await page.PauseAsync(1000);
         await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
         await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
-        await page.PauseAsync(1000);
 
     }
 
@@ -202,7 +196,6 @@ public sealed class BAPSmokeTestSteps
         {
             await page.ClickInsuranceScoreAsync();
             await page.VerifyReferenceNumberAsync(data.Resolve("{{data:expected_reference_number_innertext_135}}"), "InnerText");
-            await page.PauseAsync(3000);
         }
     }
 
@@ -217,14 +210,11 @@ public sealed class BAPSmokeTestSteps
 
         await page.VerifyBAPSpecificFieldsOKAsync("Absent", "");
         await page.EnterNAICSCodeSearchValueAsync(data.Resolve("{{data:naics_code_search_value_139}}"));
-        await page.PauseAsync(1000);
         await page.EnterNAICSCodeSearchResultsAsync(data.Resolve("{{data:naics_code_search_results_141}}"));
-        await page.PauseAsync(1000);
         if (data.Condition("State != \"NY\""))
         {
             await page.EnterAccountCreditAsync(data.Resolve("{{data:account_credit_143}}"));
         }
-        await page.PauseAsync(1000);
         await page.WaitForBAPSpecificFieldsOKAsync("Exists");
         await page.ClickBAPSpecificFieldsOKAsync();
         await page.WaitForBAPSpecificFieldsOKAsync("Absent");
@@ -256,7 +246,6 @@ public sealed class BAPSmokeTestSteps
 
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
-        await page.PauseAsync(1000);
         await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
         await page.ClickOKAsync();
         await page.WaitForOKAsync("Absent");

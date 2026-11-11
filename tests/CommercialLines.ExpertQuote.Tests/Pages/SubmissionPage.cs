@@ -114,8 +114,4 @@ public Task VerifyLoadingMessageAsync(string expected, string property) =>
 
     public Task PressUnderwritingRulesAgentCommentsAsync(string key) =>
         _ui.PressAsync(_locators.ReferToUW, key, new ControlIntent("Submission", "UnderwritingRulesAgentComments"));
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
 }

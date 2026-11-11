@@ -463,10 +463,6 @@ public sealed class PolicyWorkflowPage
 
     public Task WaitForWatercraftLiabilityAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "WatercraftLiability"));
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
     public Task<string> CaptureDescriptionOfSpecifiedOperationAsync(string property = "") =>
         _ui.CaptureAsync(_locators.DescriptionOfSpecifiedOperation, property, new ControlIntent("PolicyWorkflow", "DescriptionOfSpecifiedOperation"));
 

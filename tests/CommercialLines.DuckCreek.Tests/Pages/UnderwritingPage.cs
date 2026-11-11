@@ -81,11 +81,6 @@ public sealed class UnderwritingPage
 
     public Task ClickUpdateAnswersAsync() =>
         _ui.ClickAsync(_locators.UpdateAnswers, new ControlIntent("Underwriting", "UpdateAnswers"));
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
-
     public Task EnterUnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrierSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.UnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrier, value, new ControlIntent("Underwriting", "UnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrier"), delayMs);
 

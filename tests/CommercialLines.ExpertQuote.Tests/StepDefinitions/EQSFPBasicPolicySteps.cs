@@ -544,7 +544,6 @@ public sealed class EQSFPBasicPolicySteps
         await page.PressAdditionalDescriptionAsync("Enter");
         await page.PressYearBuiltAsync("CTRL+A");
         await page.PressYearBuiltAsync("Enter");
-        await page.PauseAsync(1000);
         await page.WaitForAddResidenceHeaderAsync("Exists");
         await page.PressRoofYearAsync("CTRL+A");
         await page.PressRoofYearAsync("Enter");
@@ -556,7 +555,6 @@ public sealed class EQSFPBasicPolicySteps
         await page.ClickSeasonalOrVacantNoAsync();
         await page.WaitForAddResidenceHeaderAsync("Exists");
         await page.PressResidenceCoverageAsync("SCROLL[-3]");
-        await page.PauseAsync(1000);
         await page.ClickDoesTheClientHaveASolidFuelHeatingTypeNoAsync();
         await page.WaitForAddResidenceHeaderAsync("Exists");
         await page.ClickResidenceCoverageAsync();
@@ -842,7 +840,6 @@ public sealed class EQSFPBasicPolicySteps
         await page.PressInsuranceScoreConsentAsync("SHIFTTAB");
         await page.PressInsuranceScoreConsentAsync("SCROLL[-3]");
         await page.ClickPrimaryInsuredAsync();
-        await page.PauseAsync(1000);
         await page.ClickInsuranceScoreConsentAsync();
         await page.WaitForAcceptAsync("Exists");
         await page.ClickAcceptAsync();
@@ -1131,7 +1128,6 @@ public sealed class EQSFPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
-        await page.PauseAsync(1000);
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");

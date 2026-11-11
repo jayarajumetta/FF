@@ -15,7 +15,7 @@ public sealed class CoveragesLocators
 
     public ILocator AwayFromPremisesLmt => _page.Locator("input[fieldref=\"AccountsReceivableInput.OffPremisesLimit\"]");
 
-    public ILocator PolicyCovgAccountsReceivableOK => _page.FrameLocator("iframe").GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true });
+    public ILocator PolicyCovgAccountsReceivableOK => _page.GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true });
 
     public ILocator CP => _page.Locator("input[type='checkbox'][fieldref='LineInput.Selected'][name='boolean_2F6_1']");
     public ILocator Coinsurance => _page.Locator("input[fieldref=\"AccountsReceivableInput.Coinsurance\"]");
@@ -26,7 +26,7 @@ public sealed class CoveragesLocators
 
     public ILocator DescriptionOfSpecifiedOperation => _page.Locator("input[fieldref=\"PolicyOutput.DescriptionOfOperations\"]");
 
-    public ILocator Detail => _page.FrameLocator("iframe").Locator("//tr[td[contains(normalize-space(.),'FG0055')] and td[contains(normalize-space(.),'Employment Practices Liability Insurance Coverage Endorsement')]]//a[normalize-space()='Detail']");
+    public ILocator Detail => _page.Locator("//tr[td[contains(normalize-space(.),'FG0055')] and td[contains(normalize-space(.),'Employment Practices Liability Insurance Coverage Endorsement')]]//a[normalize-space()='Detail']");
 
     public ILocator FG0055Detail => _page.Locator("tr:has-text(\"Employment Practices Liability Insurance Coverage Endorsement\")").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").First;
 

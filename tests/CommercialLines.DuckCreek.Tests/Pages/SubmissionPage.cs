@@ -69,10 +69,6 @@ public sealed class SubmissionPage
 
     public Task ClickStoplightWaitingWindowCloseButtonAsync() =>
         _ui.ClickAsync(_locators.StoplightWaitingWindowClose, new ControlIntent("Submission", "StoplightWaitingWindowCloseButton"));
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
     public Task<string> CaptureResultAsync(string property = "") =>
         _ui.CaptureAsync(_locators.Result, property, new ControlIntent("Submission", "Result"));
 

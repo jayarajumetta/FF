@@ -147,15 +147,12 @@ public sealed class LoginPage
         await _locators.PolicySearchText.FillAsync(quoteNumber);
         await _locators.PolicySearchButton.ClickAsync();
         await _locators.PolicyQuoteLink(quoteNumber).ClickAsync();
-        await Task.Delay(5000);
 
         await _locators.Lnk_Pricing.ClickAsync();
-        await Task.Delay(5000);
 
         await _locators.Check_UnderwritingNotes.CheckAsync();
         await _locators.TxtUnderwritingNotes.FillAsync(comments);
         await _locators.Btn_Approve.ClickAsync();
-        await Task.Delay(25000);
         //await _locators.PolicyBypassNext.ClickAsync();
         await _locators.PolicyHome.ClickAsync();
     }

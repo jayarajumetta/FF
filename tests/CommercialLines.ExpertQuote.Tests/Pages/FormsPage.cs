@@ -57,10 +57,6 @@ public Task VerifyLoadingMessageAsync(string expected, string property) =>
 
     public Task<bool> IsViewPolicyPresentAsync() =>
         _ui.ExistsAsync(_locators.ViewPolicy);
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
     public Task NoteAsync(string note) =>
         _ui.ReviewRequiredAsync(note);
 

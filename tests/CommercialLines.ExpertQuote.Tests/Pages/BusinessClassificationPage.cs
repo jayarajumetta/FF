@@ -28,10 +28,6 @@ public sealed class BusinessClassificationPage
 
     public Task ClickNoneOfTheAboveLiabilityQuestionsAsync() =>
         _ui.ClickAsync(_locators.NoneOfTheAboveLiabilityQuestions, new ControlIntent("BusinessClassification", "NoneOfTheAboveLiabilityQuestions"));
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
     public Task VerifyScreenHeadingAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("BusinessClassification", "ScreenHeading"));
 

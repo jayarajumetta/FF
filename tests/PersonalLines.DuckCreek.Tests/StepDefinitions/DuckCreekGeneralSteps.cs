@@ -46,26 +46,18 @@ public sealed class DuckCreekGeneralSteps
         var page = new DuckCreekGeneralPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickQuickSearchAsync();
-        await Task.Delay(3000);
         await page.SelectSearchFieldAsync("Description");
-        await Task.Delay(3000);
         await page.SelectSearchOperatorAsync("is");
-        await Task.Delay(3000);
         await page.EnterSearchValueAsync(description);
-        await Task.Delay(3000);
         await page.ClickSearchAsync();
-        await Task.Delay(9000);
         await page.ClickSearchAsync();
-        await Task.Delay(3000);
     }
 
     [Given("I click the insured name in the Duck Creek search results")]
     public async Task ClickInsuredNameInSearchResultsAsync()
     {
         var page = new DuckCreekGeneralPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await Task.Delay(3000);
         await page.ClickSearchResultInsuredNameAsync();
-        await Task.Delay(3000);
     }
 
     [Given("I navigate to the Submission window in Duck Creek")]
@@ -79,20 +71,13 @@ public sealed class DuckCreekGeneralSteps
     public async Task ClickCompleteApplicationAsync()
     {
         var page = new DuckCreekGeneralPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await Task.Delay(3000);
         await page.ClickCompleteApplicationAsync();
-        await Task.Delay(3000);
         await page.WaitForProcessingCompleteAsync();
-        await Task.Delay(9000);
         await page.ClickProcessingCompleteCloseAsync();
-        await Task.Delay(6000);
         await page.ClickApproveAsync();
-        await Task.Delay(6000);
         await page.WaitForOkButtonAsync();
         await page.ClickOkAsync();
-        await Task.Delay(5000);
         await page.VerifyApprovedStatusAsync("Approved", "Status");
-        await Task.Delay(3000);
     }
 
     [Given("I open the configured Commercial Lines ExpertQuote application")]
@@ -122,7 +107,6 @@ public sealed class DuckCreekGeneralSteps
     {
         var data = _scenario.Get<ScenarioData>();
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await Task.Delay(9000);
         // Source captures Name and Quote -> Quote_NameNum, then sets Quote_Num with
         // STRINGREPLACE(Quote_NameNum, LastName, "") before selecting Close Quote.
         data.Set("Quote_NameNum", await page.CaptureNameAndQuoteAsync("InnerText"));
@@ -131,7 +115,6 @@ public sealed class DuckCreekGeneralSteps
             .Trim());
 
         await page.ClickCloseQuoteAsync();
-        await Task.Delay(5000);
     }
 
     [Given(@"^I go to submission and transmit the policy$")]
@@ -143,11 +126,9 @@ public sealed class DuckCreekGeneralSteps
         var submissionPage = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await navigationPage.NavigateToScreenAsync("Submission");
-        await Task.Delay(9000);
 
         await submissionPage.WaitForTransmitAsync("Exists");
         await submissionPage.ClickTransmitAsync();
-        await Task.Delay(9000);
 
         await submissionPage.WaitForPolicyNumberAsync("Exists");
     }

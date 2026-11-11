@@ -73,6 +73,10 @@
     "waitForDomContentLoadedBeforeActions": true,
     "frameProbeTimeoutMs": 600,
     "dropdownOptionTimeoutMs": 3000,
-    "dropdownPollIntervalMs": 100
+    "dropdownPollIntervalMs": 100,
+    "networkIdleTimeoutMs": 2000,
+    "presenceTimeoutMs": 4000,
+    "genericFramePresenceTimeoutMs": 1500,
+    "loadingOverlayTimeoutMs": 5000
   }
 }

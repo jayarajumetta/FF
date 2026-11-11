@@ -9,8 +9,8 @@ public sealed class NavigationLocators
     private readonly IPage _page;
     public NavigationLocators(IPage page) => _page = page;
 
-    public ILocator StateDetailsDriveOtherCarFirstName => _page.FrameLocator("iframe").Locator("input[fieldref=\"RiskDriveOtherCarIteratorInput.FirstName\"]");
-    public ILocator StateDetailsDriveOtherCarLastName => _page.FrameLocator("iframe").Locator("input[fieldref=\"RiskDriveOtherCarIteratorInput.LastName\"]");
+    public ILocator StateDetailsDriveOtherCarFirstName => _page.Locator("input[fieldref=\"RiskDriveOtherCarIteratorInput.FirstName\"]");
+    public ILocator StateDetailsDriveOtherCarLastName => _page.Locator("input[fieldref=\"RiskDriveOtherCarIteratorInput.LastName\"]");
     public ILocator CommercialAutoEffectiveDate => _page.Locator("input[fieldref='CommercialGeneralLiabilityHistoryInput.EffectiveDate'],input[fieldref='CommercialPropertyHistoryInput.EffectiveDate']:visible,input[fieldref='OtherInsuranceHistoryInput.EffectiveDate'], input[fieldref='UmbrellaGeneralLiabilityInput.EffectiveDate'], input[fieldref=\"UmbrellaSFP10LiabilityInput.EffectiveDate\"], input[fieldref=\"UmbrellaEmployersLiabilityInput.EffectiveDate\"], input[fieldref=\"UmbrellaCommercialAutoInput.EffectiveDate\"]");
     public ILocator CommercialAutoExpiryDateDate => _page.Locator("input[fieldref=\"UmbrellaCommercialAutoInput.ExpirationDate\"]");
     public ILocator LiquifiedGas => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.PetroleumGasExposure\"]");
@@ -137,7 +137,7 @@ public sealed class NavigationLocators
     public ILocator CompleteApplication => _page.Locator("a:has(span.g-btn-text:has-text(\"Complete Application\"))");
     public ILocator StoplightWaitingResults => _page.Locator("#stoplightWaitingResults", new() { HasTextString = "Processing is complete." }).Filter(new LocatorFilterOptions { Visible = true }).First;
     public ILocator StoplightCloseButton => _page.Locator("span[id^='button-'][id$='-btnInnerEl']:has-text(\"Close\")").Filter(new LocatorFilterOptions { Visible = true }).First;
-    public ILocator LocationDetail => _page.FrameLocator("iframe").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").Filter(new LocatorFilterOptions { Visible = true }).First;
+    public ILocator LocationDetail => _page.Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").Filter(new LocatorFilterOptions { Visible = true }).First;
     public ILocator PrivatePassengerVehicleDetail => _page.Locator("//tr[.//*[contains(text(),'Private Passenger')]]//a[.//span[contains(@class,'g-btn-text') and normalize-space(text())='Detail']]").First;
     public ILocator TruckVehicleDetail => _page.Locator("//tr[.//*[normalize-space(text())='Truck']]//a[.//span[contains(@class,'g-btn-text') and normalize-space(text())='Detail']]").First;
     public ILocator TruckTractorVehicleDetail => _page.Locator("//tr[.//*[normalize-space(text())='Truck Tractor']]//a[.//span[contains(@class,'g-btn-text') and normalize-space(text())='Detail']]").First;
@@ -252,14 +252,14 @@ public sealed class NavigationLocators
 
     public ILocator PopupWindowFrame => _page.Locator("iframe[id^='dctPopup_dctPopupWindow']");
 
-    public ILocator OKClassCode => _page.FrameLocator("iframe").Locator("//div[.//input[@fieldref='NCCISearchInputNonShredded.SearchValue']]//a[contains(@onclick,'processInterviewButtonAnchor')][.//span[normalize-space()='OK']]").First;
+    public ILocator OKClassCode => _page.Locator("//div[.//input[@fieldref='NCCISearchInputNonShredded.SearchValue']]//a[contains(@onclick,'processInterviewButtonAnchor')][.//span[normalize-space()='OK']]").First;
 
 
-    public ILocator OKFirst => _page.FrameLocator("iframe").Locator("//div[contains(@id,'_action')]//a[contains(@onclick,'processInterviewButtonAnchor')][.//span[normalize-space()='OK']]");
+    public ILocator OKFirst => _page.Locator("//div[contains(@id,'_action')]//a[contains(@onclick,'processInterviewButtonAnchor')][.//span[normalize-space()='OK']]");
 
 
 
-    public ILocator OKSecond => _page.FrameLocator("iframe").Locator("# ext-element-93 > span");
+    public ILocator OKSecond => _page.Locator("# ext-element-93 > span");
 
     public ILocator AddCoverageForm => _page.GetByRole(AriaRole.Link, new() { Name = "Add Coverage Form", Exact = true });
 
@@ -313,7 +313,7 @@ public sealed class NavigationLocators
     public ILocator Address => _page.Locator("input[fieldref=\"CovEndorsmentIteratorNonShreddedInput.Address\"]:visible")
         .Or(_page.FrameLocator("iframe[id^='dctPopup_dctPopupWindow']:visible >> nth=-1").Locator("input[fieldref=\"AdditionalOtherInterestInput.Address1\"]"));
 
-    public ILocator GLOCPRiskAddress => _page.FrameLocator("iframe").Locator("input[fieldref=\"CovOwnersContractorsOrPrincipalsInput.PolicyHolderAddress1\"]");
+    public ILocator GLOCPRiskAddress => _page.Locator("input[fieldref=\"CovOwnersContractorsOrPrincipalsInput.PolicyHolderAddress1\"]");
 
     public ILocator LocationAddress => _page.Locator("input[fieldref=\"LocationInput.Address1\"]");
 
@@ -335,7 +335,7 @@ public sealed class NavigationLocators
 
     public ILocator AreThereAnyOfficersThatShouldBeExcluded => _page.Locator("input[fieldref='LineInput.EntityTypeInclusion']");
 
-    public ILocator AssignLocation => _page.FrameLocator("iframe").Locator("[class='g-btn-text']").Filter(new() { HasText = "Assign Location" }).First;
+    public ILocator AssignLocation => _page.Locator("[class='g-btn-text']").Filter(new() { HasText = "Assign Location" }).First;
 
     public ILocator AssignLocations => _page.Locator("[class='g-btn-text']").Filter(new() { HasText = "Assign Locations" }).First;
 
@@ -423,7 +423,7 @@ public sealed class NavigationLocators
 
     public ILocator CauseOfLoss => _page.Locator("input[fieldref=\"RatingGroupInput.CauseOfLossType\"]");
 
-    public ILocator City => _page.FrameLocator("iframe").Locator("input[fieldref=\"DesignatedWorkplace.City\"]");
+    public ILocator City => _page.Locator("input[fieldref=\"DesignatedWorkplace.City\"]");
 
     public ILocator ClassCode => _page.Locator("input[fieldref=\"CovOwnersContractorsOrPrincipalsInputNonShredded.ClassCode\"]");
 
@@ -436,7 +436,7 @@ public sealed class NavigationLocators
 
     public ILocator ClickAddExcludedDriver => _page.FrameLocator("iframe[id^='dctPopup_dctPopupWindow']:visible >> nth=-1").GetByRole(AriaRole.Link, new() { Name = "Add Excluded Driver", Exact = true });
 
-    public ILocator AddClient => _page.FrameLocator("iframe").GetByRole(AriaRole.Link, new() { Name = "Add Client", Exact = true });
+    public ILocator AddClient => _page.GetByRole(AriaRole.Link, new() { Name = "Add Client", Exact = true });
 
     public ILocator ClientLink => _page.Locator("a[onclick*='MainInterview_Account']").Filter(new LocatorFilterOptions { Visible = true }).First;
 
@@ -605,7 +605,7 @@ public sealed class NavigationLocators
     public ILocator DriveOtherCar => _page.Locator("input[fieldref=\"LineStateInput.DriveOtherCarCoverage\"]");
 
 
-    public ILocator DriversLicenseNumber => _page.FrameLocator("iframe").Locator("input[fieldref=\"DriverUnderwritingInformationInput.DriversLicenseNumber\"]");
+    public ILocator DriversLicenseNumber => _page.Locator("input[fieldref=\"DriverUnderwritingInformationInput.DriversLicenseNumber\"]");
 
     public ILocator DryCleaning => _page.Locator("input[fieldref=\"BaileesCustomerPrincipalWorkUnderwritingQuestionsInput.Percent\"]").Nth(0);
 
@@ -619,7 +619,7 @@ public sealed class NavigationLocators
 
     public ILocator EasyPay => _page.Locator("input[fieldref=\"BillingDetailInput.EasyPay\"]");
 
-    public ILocator BusinessownersEffectiveDate => _page.FrameLocator("iframe").Locator("input[fieldref*='EffectiveDate']");
+    public ILocator BusinessownersEffectiveDate => _page.Locator("input[fieldref*='EffectiveDate']");
 
     public ILocator PolicyInfoRequiredAndOptionalFieldsEffectiveDate => _page.Locator(@"input[fieldref=""PolicyInput.EffectiveDate""]");
 
@@ -834,7 +834,7 @@ public sealed class NavigationLocators
 
     public ILocator LocationAssignment => _page.GetByText("Location Assignment", new() { Exact = true });
 
-    public ILocator LocationID => _page.FrameLocator("iframe").Locator("input[fieldref=\"AdditionalOtherInterestLocationsInput.LocationID\"]");
+    public ILocator LocationID => _page.Locator("input[fieldref=\"AdditionalOtherInterestLocationsInput.LocationID\"]");
 
     public ILocator LocationOfCoveredOperations => _page.Locator("input[fieldref=\"CovOwnersContractorsOrPrincipalsInput.LocationOfCoveredOperations\"]");
 
@@ -920,7 +920,7 @@ public sealed class NavigationLocators
 
     public ILocator N9AreThePremisesOrAnyPortionOfThePremisesEquippedWithASprinklerSystem => _page.Locator("xpath=(//*[self::input or self::textarea or self::select][@fieldref='BaileesCustomerUnderwritingQuestionsInput.Indicator'][@aria-label='9. Are the premises or any portion of the premises equipped with a sprinkler system?' or @placeholder='9. Are the premises or any portion of the premises equipped with a sprinkler system?'] | //*[(self::label or self::span or self::div or self::td) and normalize-space(string(.))='9. Are the premises or any portion of the premises equipped with a sprinkler system?']/following::*[self::input or self::textarea or self::select][@fieldref='BaileesCustomerUnderwritingQuestionsInput.Indicator'][1])").Filter(new LocatorFilterOptions { Visible = true }).First;
 
-    public ILocator NAICSCodeSearchValue => _page.FrameLocator("iframe").Locator("input[fieldref='AdditionalOtherInterestLocationsOutputNonShredded.NAICSCodeSearchValue']");
+    public ILocator NAICSCodeSearchValue => _page.Locator("input[fieldref='AdditionalOtherInterestLocationsOutputNonShredded.NAICSCodeSearchValue']");
 
     public ILocator NameSOrDescriptionSAndDateSOfDesignatedActivitiesOrServices => _page.FrameLocator("iframe[id^='dctPopup_dctPopupWindow']").Locator("input[fieldref=\"ActivitiesInput.Activities\"]");
 
@@ -934,9 +934,9 @@ public sealed class NavigationLocators
 
     public ILocator NumberOfEmployees => _page.Locator("input[fieldref=\"CovEmployeeBenefitsLiabInput.NumberOfEmployees\"]");
 
-    public ILocator NumberOfFullTimeEmployees => _page.FrameLocator("iframe").Locator("input[fieldref=\"CoverageInput.NumberOfFullTimeEmployees\"]");
+    public ILocator NumberOfFullTimeEmployees => _page.Locator("input[fieldref=\"CoverageInput.NumberOfFullTimeEmployees\"]");
 
-    public ILocator NumberOfPartTimeEmployees => _page.FrameLocator("iframe").Locator("input[fieldref=\"CoverageInput.NumberOfPartTimeEmployees\"]");
+    public ILocator NumberOfPartTimeEmployees => _page.Locator("input[fieldref=\"CoverageInput.NumberOfPartTimeEmployees\"]");
 
 
     public ILocator NumberOfVehicles => _page.Locator("input[fieldref=\"MotorTruckCargoInput.Owners200MilesAndUnderNumberOfVehicles\"], input[fieldref=\"MotorTruckCargoInput.CarriersNumberOfVehicles\"]");
@@ -1110,24 +1110,24 @@ public sealed class NavigationLocators
 
     public ILocator SearchResults => _page.Locator("input[fieldref=\"OccupancySearchInputNonShredded.SearchResults\"]");
 
-    public ILocator SearchValue => _page.FrameLocator("iframe").Locator("input[fieldref=\"NCCISearchInputNonShredded.SearchValue\"]");
+    public ILocator SearchValue => _page.Locator("input[fieldref=\"NCCISearchInputNonShredded.SearchValue\"]");
 
-    public ILocator PropertyAddClassSearchValue => _page.FrameLocator("iframe").Locator("input[fieldref=\"OccupancySearchInputNonShredded.SearchValue\"]");
+    public ILocator PropertyAddClassSearchValue => _page.Locator("input[fieldref=\"OccupancySearchInputNonShredded.SearchValue\"]");
 
-    public ILocator RiskAccountsReceivableSearchValue => _page.FrameLocator("iframe").Locator("input[fieldref=\"RiskInlandMarineInput.SearchValue\"]");
+    public ILocator RiskAccountsReceivableSearchValue => _page.Locator("input[fieldref=\"RiskInlandMarineInput.SearchValue\"]");
 
-    public ILocator RiskComputerSystemsSearchValue => _page.FrameLocator("iframe").Locator("input[fieldref=\"CovComputerSystemsInput.SearchValue\"]");
+    public ILocator RiskComputerSystemsSearchValue => _page.Locator("input[fieldref=\"CovComputerSystemsInput.SearchValue\"]");
 
-    public ILocator RiskBaileesCustomersSearchValue => _page.FrameLocator("iframe").Locator("input[fieldref=\"CovBaileesCustomersInput.SearchValue\"]");
+    public ILocator RiskBaileesCustomersSearchValue => _page.Locator("input[fieldref=\"CovBaileesCustomersInput.SearchValue\"]");
 
     public ILocator SeasonalProduceTrailers => _page.Locator("input[fieldref=\"CovLiabilitySeasonalAgriculturalProduceTrailersInput.SeasonalAgriculturalProduceTrailers\"]");
 
 
-    public ILocator SelectAppropriateCode => _page.FrameLocator("iframe").Locator("input[fieldref=\"AdditionalOtherInterestLocationsInput.NAICSCodeDesc\"]");
+    public ILocator SelectAppropriateCode => _page.Locator("input[fieldref=\"AdditionalOtherInterestLocationsInput.NAICSCodeDesc\"]");
 
-    public ILocator SelectClassCode => _page.FrameLocator("iframe").Locator("input[fieldref=\"NCCISearchInputNonShredded.SearchResults\"]");
+    public ILocator SelectClassCode => _page.Locator("input[fieldref=\"NCCISearchInputNonShredded.SearchResults\"]");
 
-    public ILocator SelectNAICSCode => _page.FrameLocator("iframe").GetByRole(AriaRole.Link, new() { Name = "Select NAICS Code", Exact = true });
+    public ILocator SelectNAICSCode => _page.GetByRole(AriaRole.Link, new() { Name = "Select NAICS Code", Exact = true });
 
     public ILocator SelectPPC => _page.GetByRole(AriaRole.Link, new() { Name = "Select PPC", Exact = true });
 
@@ -1158,11 +1158,11 @@ public sealed class NavigationLocators
 
     public ILocator SquareFeet => _page.Locator("input[fieldref=\"BuildingInput.SquareFt\"]");
 
-    public ILocator PolicyHolderState => _page.FrameLocator("iframe").Locator("input[fieldref=\"CovOwnersContractorsOrPrincipalsInput.PolicyHolderState\"]");
+    public ILocator PolicyHolderState => _page.Locator("input[fieldref=\"CovOwnersContractorsOrPrincipalsInput.PolicyHolderState\"]");
 
     public ILocator State => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.State\"]");
 
-    public ILocator EndorsementsDesignatedWorkplacesExclusionState => _page.FrameLocator("iframe").Locator("input[fieldref=\"DesignatedWorkplace.State\"]");
+    public ILocator EndorsementsDesignatedWorkplacesExclusionState => _page.Locator("input[fieldref=\"DesignatedWorkplace.State\"]");
 
 
     public ILocator StateLicensed => _page.FrameLocator("iframe[id^='dctPopup_dctPopupWindow']:visible >> nth=-1").Locator("input[fieldref=\"DriverUnderwritingInformationInput.StateLicensed\"]");
@@ -1192,7 +1192,7 @@ public sealed class NavigationLocators
 
     public ILocator TotalCostOfWork => _page.Locator("input[fieldref=\"CovOwnersContractorsOrPrincipalsInput.UnitsOfExposureEstimated\"]");
 
-    public ILocator TotalPayrollEstimated => _page.FrameLocator("iframe").Locator("input[fieldref=\"CoverageInput.UnitsOfExposureEstimated\"]");
+    public ILocator TotalPayrollEstimated => _page.Locator("input[fieldref=\"CoverageInput.UnitsOfExposureEstimated\"]");
 
     public ILocator TotalPremium => _page.Locator("input[fieldref='CommercialGeneralLiabilityHistoryInput.TotalPremium'],input[fieldref='CommercialPropertyHistoryInput.TotalPremium']:visible,input[fieldref='CommercialGeneralLiabilityHistoryInput.TotalPremium'],input[fieldref='OtherInsuranceHistoryInput.TotalPremium']");
 
@@ -1210,11 +1210,11 @@ public sealed class NavigationLocators
 
     public ILocator TrailerInterchangeEnterOfTrailers => _page.FrameLocator("iframe[id^='dctPopup_dctPopupWindow']:visible >> nth=-1").Locator("input[fieldref=\"TrailerInterchangeInput.NumberOfTrailersEstimate\"]");
 
-    public ILocator EndorsementMainType => _page.FrameLocator("iframe").Locator("input[fieldref=\"CovEndorsementInput.Type\"]");
+    public ILocator EndorsementMainType => _page.Locator("input[fieldref=\"CovEndorsementInput.Type\"]");
 
-    public ILocator GLOCPRiskType => _page.FrameLocator("iframe").Locator("input[fieldref=\"CovOwnersContractorsOrPrincipalsInput.Type\"]");
+    public ILocator GLOCPRiskType => _page.Locator("input[fieldref=\"CovOwnersContractorsOrPrincipalsInput.Type\"]");
 
-    public ILocator RiskSignsType => _page.FrameLocator("iframe").Locator("input[fieldref=\"CoverageSignsIteratorInput.SignType\"]");
+    public ILocator RiskSignsType => _page.Locator("input[fieldref=\"CoverageSignsIteratorInput.SignType\"]");
 
     public ILocator TypeOfContractor => _page.Locator("input[fieldref=\"ContractorsEquipmentInput.TypeOfContractor\"]");
 
@@ -1305,7 +1305,7 @@ public sealed class NavigationLocators
 
     public ILocator WaiverOfSubrogation => _page.Locator("input[fieldref=\"LineStateTermInput.WaiverOfSubrogation\"]");
 
-    public ILocator WaiverOfSubrogationExposure => _page.FrameLocator("iframe").Locator("input[fieldref=\"CoverageInput.WaiverOfSubrogationExposure\"]");
+    public ILocator WaiverOfSubrogationExposure => _page.Locator("input[fieldref=\"CoverageInput.WaiverOfSubrogationExposure\"]");
 
     public ILocator WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days => _page.Locator("input[fieldref=\"PolicyInput.ExposuresInsuredAN90Days\"]");
 
@@ -1344,12 +1344,12 @@ public sealed class NavigationLocators
 
     public ILocator YearsInBusiness => _page.Locator("input[fieldref=\"AccountInput.YearsInBusiness\"]");
 
-    public ILocator LocationZipCode => _page.FrameLocator("iframe").Locator("input[fieldref=\"LocationInput.ZipCode\"]:visible")
+    public ILocator LocationZipCode => _page.Locator("input[fieldref=\"LocationInput.ZipCode\"]:visible")
         .Or(_page.FrameLocator("iframe[id^='dctPopup_dctPopupWindow']:visible >> nth=-1").Locator("input[fieldref=\"AdditionalOtherInterestInput.ZipCode\"]"));
 
     public ILocator AdditionalOtherInterestZipCode => _page.FrameLocator("iframe[id^='dctPopup_dctPopupWindow']:visible >> nth=-1").Locator("input[fieldref=\"AdditionalOtherInterestInput.ZipCode\"]");
 
-    public ILocator ThirdPartyDesigneeZipCode => _page.FrameLocator("iframe").Locator("input[fieldref=\"AdditionalOtherInterestInput.ZipCode\"]");
+    public ILocator ThirdPartyDesigneeZipCode => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.ZipCode\"]");
 
     public ILocator ThirdPartyDesigneeFirstName => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.FirstName\"]");
 
@@ -1359,7 +1359,7 @@ public sealed class NavigationLocators
 
     public ILocator ThirdPartyDesigneeBusinessName => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.BusinessName\"]");
 
-    public ILocator GLOCPRiskZipCode => _page.FrameLocator("iframe").Locator("input[fieldref=\"CovOwnersContractorsOrPrincipalsInput.PolicyHolderZipCode\"]");
+    public ILocator GLOCPRiskZipCode => _page.Locator("input[fieldref=\"CovOwnersContractorsOrPrincipalsInput.PolicyHolderZipCode\"]");
 
     public ILocator EntityInfoFrameEntityInfoWindowFax => _page.FrameLocator("iframe[id^='dctPopup_dctPopupWindow']").Locator("input[fieldref='AdditionalOtherInterestInput.Fax']");
 

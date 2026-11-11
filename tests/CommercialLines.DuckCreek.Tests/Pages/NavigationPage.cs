@@ -152,12 +152,10 @@ public sealed class NavigationPage
             {
                 // Neither locator showed up this attempt (or the click attempt faulted); give the
                 // page a beat and retry.
-                await Task.Delay(500);
                 continue;
             }
 
             // Give the page a moment to process the click/dismiss the dialog before re-checking.
-            await Task.Delay(500);
 
             // The click frequently closes/dismisses the popup entirely, detaching its iframe from the
             // DOM. Re-querying a locator scoped to an already-detached frame throws (e.g. "Frame was
@@ -4722,8 +4720,6 @@ public sealed class NavigationPage
     public Task VerifyLocationZipCodeAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.LocationZipCode, expected, property, new ControlIntent("Navigation", "LocationZipCode"));
 
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
     public Task<string> CaptureDescriptionOfSpecifiedOperationAsync(string property = "") =>
         _ui.CaptureAsync(_locators.DescriptionOfSpecifiedOperation, property, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
 

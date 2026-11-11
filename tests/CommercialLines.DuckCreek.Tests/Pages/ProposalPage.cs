@@ -36,9 +36,7 @@ public sealed class ProposalPage
 
     public async Task EnterProducerSequentiallyAsync(string value, int delayMs = 20)
     {
-        await Task.Delay(1000);
         await _ui.PressSequentiallyAsync(_locators.Producer, value, new ControlIntent("Proposal", "Producer"), delayMs);
-        await Task.Delay(1000);
     }
     public Task PressProductAsync(string key) =>
         _ui.PressAsync(_locators.Product, key, new ControlIntent("Proposal", "Product"));
@@ -58,8 +56,6 @@ public sealed class ProposalPage
 
     public async Task EnterProductSequentiallyAsync(string value, int delayMs = 20)
     {
-        await Task.Delay(1000);
         await _ui.PressSequentiallyAsync(_locators.Product, value, new ControlIntent("Proposal", "Product"), delayMs);
-        await Task.Delay(1000);
     }
 }

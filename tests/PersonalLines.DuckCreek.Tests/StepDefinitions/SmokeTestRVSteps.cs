@@ -119,13 +119,11 @@ public sealed class SmokeTestRVSteps
         }
         await page.WaitForStartQuoteAsync("True");
         await page.ClickStartQuoteAsync();
-        await page.PauseAsync(10000);
 
         if (await page.IsPROCEEDPresentAsync())
         {
             await page.VerifyPROCEEDAsync("Exists", "");
             await page.ClickCONFIRMAsync();
-            await page.PauseAsync(5000);
         }
         if (await page.IsSSNPresentAsync())
         {
@@ -133,18 +131,15 @@ public sealed class SmokeTestRVSteps
             await page.VerifyProposalStartProceedSSNSUBMITAsync("Exists", "");
             await page.EnterSSNAsync(data.Get("SSN"));
             await page.ClickProposalStartProceedSSNSUBMITAsync();
-            await page.PauseAsync(5000);
         }
         if (await page.IsCONFIRMPresentAsync())
         {
             await page.VerifyCONFIRMAsync("Exists", "");
             await page.ClickCONFIRMAsync();
-            await page.PauseAsync(5000);
         }
         if (await page.IsUSEEXISTINGACCOUNTPresentAsync())
         {
             await page.ClickUSEEXISTINGACCOUNTAsync();
-            await page.PauseAsync(5000);
         }
     }
 
@@ -175,12 +170,10 @@ public sealed class SmokeTestRVSteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await page.PauseAsync(5000);
         await page.ClickCloseTabAsync();
         await page.EnterQuoteSearchInputAsync(data.Resolve("{{runtime:QuoteNumber}}"));
         await page.WaitForQuoteSearchButtonAsync("True");
         await page.ClickTabsSearchAsync();
-        await page.PauseAsync(5000);
         await page.VerifyQNumAsync($".*\\b{data.Resolve("{{runtime:QuoteNumber}}")}\\b.*", "Regex:InnerText");
     }
 

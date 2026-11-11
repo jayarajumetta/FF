@@ -17,10 +17,6 @@ public sealed class ProposalPage
         _locators = new ProposalLocators(browser.Page);
         _ui = ui;
     }
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
     public Task EnterAgentCodeAsync(string value) =>
         _ui.FillAsync(_locators.AgentCode, value, new ControlIntent("Proposal", "AgentCode"));
     public Task ClickAgentCodeAsync() =>

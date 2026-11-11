@@ -83,10 +83,6 @@ public sealed class NavigationPage
 
     public Task WaitForVehicleInformationHeaderAsync(string expected) =>
         _ui.WaitAsync(_locators.VehicleInformationHeader, expected, new ControlIntent("Navigation", "VehicleInformationHeader"));
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
     public Task<string> CaptureDriver1Async(string property = "") =>
         _ui.CaptureAsync(_locators.Driver1, property, new ControlIntent("Navigation", "Driver1"));
 

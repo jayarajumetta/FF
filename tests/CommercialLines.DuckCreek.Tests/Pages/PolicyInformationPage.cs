@@ -103,11 +103,6 @@ public sealed class PolicyInformationPage
 
     public Task PressTotalPremiumAsync(string key) =>
         _ui.PressAsync(_locators.TotalPremium, key, new ControlIntent("PolicyInformation", "TotalPremium"));
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
-
     public Task EnterCarrierSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.Carrier, value, new ControlIntent("PolicyInformation", "Carrier"), delayMs);
 

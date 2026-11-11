@@ -42,11 +42,8 @@ public sealed class LoginPage
 
     public Task NavigateAsync(string url) =>
         _page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
-
+    public Task ReloadAsync() =>
+        _page.ReloadAsync(new PageReloadOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
     public Task EnterPasswordSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.Password, value, new ControlIntent("Login", "Password"), delayMs);
 

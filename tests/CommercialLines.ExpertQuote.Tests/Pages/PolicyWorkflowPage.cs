@@ -406,10 +406,6 @@ public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
 
     public Task NavigateAsync(string url) =>
         _page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
     public Task NoteAsync(string note) =>
         _ui.ReviewRequiredAsync(note);
 

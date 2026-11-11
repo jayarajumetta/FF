@@ -106,7 +106,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         {
             await page.VerifyPROCEEDAsync("Exists", "");
             await page.ClickCONFIRMAsync();
-            await page.PauseAsync(5000);
             //await page.EnterSSNAsync("444103367");
             //await page.ClickCONFIRMAsync();
         }
@@ -123,12 +122,10 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
             await page.EnterSSNAsync(data.Resolve("{{data:AL_ClientData.SSN}}"));
             await page.VerifyProposalStartProceedSSNSUBMITAsync("Exists", "");
             await page.ClickProposalStartProceedSSNSUBMITAsync();
-            await page.PauseAsync(5000);
         }
         if (await page.IsUSEEXISTINGACCOUNTPresentAsync())
         {
             await page.ClickUSEEXISTINGACCOUNTAsync();
-            await page.PauseAsync(5000);
         }
 
         if (await page.IsCREATENEWACCOUNTPresentAsync())
@@ -277,7 +274,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
             await applicationPage.SignInAsync(username, password);
         }
         await applicationPage.SearchQuoteAsync(quoteNumber);
-        await Task.Delay(5000);
         var page = new UnderwritingPage(browser, _scenario.Get<UiActions>());
         // Field-level orchestration derived from the canonical Tosca method sequence.
         if (await page.IsPreQualificationNextPresentAsync())
@@ -529,7 +525,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
 
         await page.EnterPurchaseDateBB8AFAsync(data.Resolve("{{data:txt_purchase_date_237}}"));
         await page.EnterOdometer3843FAsync(data.Resolve("{{data:txt_odometer_239}}"));
-        await Task.Delay(3000);
         if (await page.IsAnnualMileage12A49PresentAsync())
         {
             await page.EnterAnnualMileage12A49Async(data.Resolve("{{data:ny_ffcic_total_annual_miles_229}}"));
@@ -638,7 +633,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         }
 
         await page.WaitForDriverAssignmentHeaderAsync("Visible");
-        await Task.Delay(6000);
 
         await page.ClickSelectAVehicleToassignDriverAsync();
         await page.ClickDriver1PrincipalOccasionalAsync();
@@ -715,7 +709,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForDiscountsAdjustmentsHeaderAsync("Visible");
-        await Task.Delay(6000);
 
         if (data.Condition("State == \"MD\" OR State == \"NJ\""))
         {
@@ -795,7 +788,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         await page.ClickV3CompDed500Async();
         await page.ClickV3CollDed500Async();
         await page.ClickCoveragesNewNextAsync();
-        await Task.Delay(4000);
         data.Set("Tort Option", data.Get("Tort Option"));
         data.Set("Income Loss Coverage", data.Get("Income Loss Coverage"));
         data.Set("AD&D Coverage", data.Resolve("{{data:ad_d_coverage}}"));
@@ -836,7 +828,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
             await page.ClickTheftDeductibleNoCoverageV2Async();
             await page.ClickTheftDeductibleV3Async();
         }
-        await Task.Delay(3000);
         if (await page.IsPIPHeaderPresentAsync())
         {
             await page.ClickPIPBasic15000Async();
@@ -1192,35 +1183,25 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
 
         var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await Task.Delay(6000);
         await page.WaitForHdrBillingAsync("Visible");
         await page.ClickCreateNewBillingAccountAsync();
         await page.WaitForPrimaryAccountHolderNameAsync("Visible");
-        await Task.Delay(6000);
         await page.ClickPrimaryAccountHolderNameAsync();
-        await Task.Delay(4000);
         
         await page.WaitForDirectBillAsync("Visible");
         await page.ClickDirectBillAsync();
         
         await page.WaitForN1PaymentAsync("Visible");
-        await Task.Delay(4000);
         await page.ClickN1PaymentAsync();
         await page.WaitForPaymentDueDateAsync("Visible");
-        await Task.Delay(4000);
         await page.EnterPaymentDueDateAsync(data.Resolve("{{data:txt_paymentduedate_575}}"));
         await page.WaitForRdBtnFullBalanceAsync("Visible");
-        await Task.Delay(5000);
         await page.ClickRdBtnFullBalanceAsync();
         await page.WaitForCHECKAsync("Visible");
-        await Task.Delay(4000);
         await page.ClickCHECKAsync();
         await page.WaitForCheckNumberAsync("Visible");
-        await Task.Delay(4000);
         await page.EnterCheckNumberAsync(data.Resolve("{{data:txt_check_number_578}}"));
-        await Task.Delay(4000);
         await page.ClickBillingNEXTAsync();
-        await Task.Delay(8000);
 
     }
 
@@ -1365,7 +1346,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
             await this.OpenTheConfiguredPolicyApplicationAsync();
             await this.CompleteTheExpressUnderwritingReviewAsync();
             await this.CompleteDriverInformationForTxtQuotePolicySearchAsync();
-            await Task.Delay(4000);
         }
 
     }
@@ -1428,44 +1408,32 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
 
         var browser = _scenario.Get<BrowserSession>();
         await page.ClickSubmissionLinkAsync();
-        await Task.Delay(5000);
         await browser.SwitchToNewPageAsync(async () =>
         {
             await page.ClickChecklist1Async();
 
         });
-        await Task.Delay(15000);
         var checklistPage = new ChecklistPage(browser, _scenario.Get<UiActions>());
         await checklistPage.WaitForCurrentItemsVisibleAsync();
-        await Task.Delay(2000);
         await checklistPage.ClickFirstChecklistItemAsync();
-        await Task.Delay(2000);
         while (await checklistPage.IsAddNotePresentAsync())
         {
-            await Task.Delay(2000);
             await checklistPage.EnterNoteAsync("TestChecklistforUW");
-            await Task.Delay(2000);
             if (await checklistPage.IsValidFileTypesVisibleAsync())
             {
                 var documentFilePath = Path.Combine(
                      AppContext.BaseDirectory,
                      "TestData", "Assets", "Test.png");
                 await checklistPage.DragAndDropDocumentAsync(documentFilePath);
-                await Task.Delay(6000);
             }
         }
-        await Task.Delay(2000);
         await checklistPage.WaitForCurrentItemsVisibleAsync();
-        await Task.Delay(2000);
 
         // Always attempt to return to the original DuckCreek window and dismiss the
         // "Checklist Opened" modal, even if a checklist action above failed, so the
         // outer scenario is not left stuck on the checklist popup.
-        await Task.Delay(8000);
         await browser.SwitchToFirstPageAsync();
-        await Task.Delay(5000);
         await page.ClickChecklistOpenedOKAsync();
-        await Task.Delay(7000);
 
     }
 

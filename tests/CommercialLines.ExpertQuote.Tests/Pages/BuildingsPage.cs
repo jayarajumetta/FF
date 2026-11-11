@@ -363,8 +363,4 @@ public Task PressNumberOfStoriesAsync(string key) =>
 
     public Task EnterYearBuiltRenovatedAsync(string value) =>
         _ui.FillAsync(_locators.YearBuiltRenovated, value, new ControlIntent("Buildings", "YearBuiltRenovated"));
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
 }

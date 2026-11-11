@@ -40,6 +40,8 @@ public sealed class FrameworkConfig
             throw new InvalidOperationException($"browser.highlightDurationMs cannot be negative. Config: {path}");
         if (Waits.PageReadyTimeoutMs <= 0 || Waits.ElementReadyTimeoutMs <= 0 || Waits.VerifyTimeoutMs <= 0 || Waits.FrameProbeTimeoutMs <= 0 || Waits.DropdownOptionTimeoutMs <= 0 || Waits.DropdownPollIntervalMs <= 0)
             throw new InvalidOperationException($"Framework wait timeouts must be positive. Config: {path}");
+        if (Waits.NetworkIdleTimeoutMs <= 0 || Waits.PresenceTimeoutMs <= 0 || Waits.GenericFramePresenceTimeoutMs <= 0)
+            throw new InvalidOperationException($"Framework presence/network-idle wait timeouts must be positive. Config: {path}");
         if (string.IsNullOrWhiteSpace(Browser.Channel) && string.IsNullOrWhiteSpace(Browser.FallbackBrowser))
             throw new InvalidOperationException($"Configure browser.channel or browser.fallbackBrowser. Config: {path}");
         if (!Reporting.AttachmentMode.Equals("all", StringComparison.OrdinalIgnoreCase) &&
@@ -90,6 +92,18 @@ public sealed class WaitOptions
     public bool WaitForDomContentLoadedBeforeActions { get; init; } = true;
     // Framework-level pacing applied before every UiActions-driven action.
     public int PreActionDelayMs { get; init; } = 500;
+    // Best-effort network-idle wait after DOM/load state settles. Some pages poll continuously and never idle,
+    // so this is intentionally short and non-blocking (warn-and-continue on timeout).
+    public int NetworkIdleTimeoutMs { get; init; } = 2000;
+    // How long to wait for a control to be *attached* to the DOM (not necessarily visible) before falling
+    // back to a generic iframe scan. Deliberately shorter than ElementReadyTimeoutMs.
+    public int PresenceTimeoutMs { get; init; } = 4000;
+    // Timeout applied per-frame while probing child iframes for a control during generic frame fallback.
+    public int GenericFramePresenceTimeoutMs { get; init; } = 1500;
+    // The Duck Creek loading overlay (#loadingMask/#loadingWindow/.x-mask) is checked before every single
+    // action. It should clear quickly in the normal case; deliberately shorter than PageReadyTimeoutMs so a
+    // slow-to-clear overlay cannot silently compound PageReadyTimeoutMs-sized stalls onto every action.
+    public int LoadingOverlayTimeoutMs { get; init; } = 5000;
 }
 
 public sealed class ReportingOptions

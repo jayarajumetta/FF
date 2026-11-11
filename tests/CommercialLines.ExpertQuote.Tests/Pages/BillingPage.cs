@@ -123,8 +123,4 @@ public Task PressN1PaymentButtonAsync(string key) =>
 
     public Task EnterZipCodeAsync(string value) =>
         _ui.FillAsync(_locators.ZipCode, value, new ControlIntent("Billing", "ZipCode"));
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
 }

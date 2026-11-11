@@ -140,10 +140,6 @@ public sealed class FormsPage
 
     public Task ClickWatercraftLiabilityAsync() =>
         _locators.WaterLiability.EvaluateAsync("el => el.click()");
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
     public Task EnterEffectiveDateSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.EffectiveDate, value, new ControlIntent("Forms", "EffectiveDate"), delayMs);
 

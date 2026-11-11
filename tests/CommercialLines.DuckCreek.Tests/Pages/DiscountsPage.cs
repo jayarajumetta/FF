@@ -43,11 +43,6 @@ public sealed class DiscountsPage
 
     public Task PressNAICSCodeSearchValueAsync(string key) =>
         _ui.PressAsync(_locators.NAICSCodeSearchValue, key, new ControlIntent("Discounts", "NAICSCodeSearchValue"));
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
-
     public Task EnterAccountCreditSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.AccountCredit, value, new ControlIntent("Discounts", "AccountCredit"), delayMs);
 

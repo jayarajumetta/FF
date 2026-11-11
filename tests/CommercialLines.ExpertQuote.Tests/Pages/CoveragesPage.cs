@@ -139,8 +139,4 @@ public Task PressPremierAsync(string key) =>
 
     public Task EnterWaterDamageAsync(string value) =>
         _ui.FillAsync(_locators.WaterDamage, value, new ControlIntent("Coverages", "WaterDamage"));
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
 }

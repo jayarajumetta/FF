@@ -136,7 +136,6 @@ public sealed class UnderwritingPage
             // Angular can re-render the control asynchronously after the input/blur events fire,
             // silently resetting the value a few hundred ms later. Re-check after a short settle
             // delay so we don't declare success on a value that is about to be wiped out.
-            await Task.Delay(300);
 
             string actual;
             try

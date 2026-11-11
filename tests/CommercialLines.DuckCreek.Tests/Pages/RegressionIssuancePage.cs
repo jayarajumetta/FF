@@ -171,12 +171,10 @@ public sealed class RegressionIssuancePage
 
         await page.WaitForSubmissionAsync("Visible");
         await page.ClickSubmissionAsync();
-        await page.PauseAsync(4000);
         await page.WaitForCompleteApplicationAsync("Exists");
         await page.ClickCompleteApplicationAsync();
         await page.WaitForStoplightWaitingResultsAsync("Visible");
         await page.ClickStoplightCloseButtonAsync();
-        await page.PauseAsync(1000);
 
         if (await VisibleAsync(L.Approve))
             await _ui.ClickAsync(L.Approve, new ControlIntent("RegressionIssuance", "Approve"));

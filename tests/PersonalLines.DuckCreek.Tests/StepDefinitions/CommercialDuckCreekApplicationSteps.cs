@@ -26,22 +26,18 @@ public sealed class CommercialDuckCreekApplicationSteps
         await navigationPage.WaitForHomeLinkAsync("Visible");
         await navigationPage.ClickHomeLinkAsync();
         await page.WaitForUserNameInitialAsync("Visible");
-        await Task.Delay(8000);
         await page.ClickUserNameInitialAsync();
         await page.WaitForLogoutAsync("Visible");
         await page.ClickLogoutAsync();
-        await Task.Delay(6000);
 
         if (await page.LogoutOkButtonIsVisibleAsync())
         {
             await page.ClickLogoutOkButtonAsync();
             await page.WaitForLogoutOkButtonAsync("Hidden");
             await page.WaitForUserNameInitialAsync("Visible");
-            await Task.Delay(8000);
             await page.ClickUserNameInitialAsync();
             await page.WaitForLogoutAsync("Visible");
             await page.ClickLogoutAsync();
-            await Task.Delay(6000);
         }
     }
 
@@ -81,7 +77,6 @@ public sealed class CommercialDuckCreekApplicationSteps
     {
         var data = _scenario.Get<ScenarioData>();
         var page = new ExpertQuoteQuoteSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await Task.Delay(9000);
         data.Set("Quote_NameNum", await page.CaptureNameAndQuoteAsync("InnerText"));
 
         var quoteNameNum = data.Get("Quote_NameNum");
@@ -95,7 +90,6 @@ public sealed class CommercialDuckCreekApplicationSteps
         data.Set("Quote_Num", quoteNum.Trim());
 
         await page.ClickCloseQuoteAsync();
-        await Task.Delay(5000);
     }
 
     [Given(@"^I retrieve the quote and verify its identity$")]
@@ -106,11 +100,8 @@ public sealed class CommercialDuckCreekApplicationSteps
         var data = _scenario.Get<ScenarioData>();
         var page = new ExpertQuoteQuoteSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await Task.Delay(5000);
         await page.EnterQuoteSearchAsync(data.Resolve("{{runtime:Quote_Num}}"));
-        await Task.Delay(5000);
         await page.ClickQuoteSearchAsync();
-        await Task.Delay(5000);
 
         var screen = "PreQualification";
 
@@ -125,7 +116,6 @@ public sealed class CommercialDuckCreekApplicationSteps
                 await page.ClickKeepGoingAsync();
         }
 
-        await Task.Delay(5000);
         await page.VerifyScreenAsync(screen);
     }
 }

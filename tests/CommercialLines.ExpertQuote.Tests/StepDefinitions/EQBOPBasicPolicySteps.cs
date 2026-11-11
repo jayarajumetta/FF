@@ -87,7 +87,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.EnterZipAsync(data.GetCanonicalFieldRequired("Zip"));
         // Map/Satellite are generated only after address steering in raw Tosca.
         await page.VerifyMapAsync("Visible", "");
-        await Task.Delay(8000);
         //await page.VerifySatelliteAsync("Visible", "");
 
         await page.SelectHaveYouReceivedMailAtThisAddressForAtLeast90DaysYesAsync();
@@ -141,10 +140,8 @@ public sealed class EQBOPBasicPolicySteps
         await page.WaitForTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync("Visible");
         // Source step 0041: RANDOM input for ssn.
         await page.EnterTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync(data.Resolve("{{runtime:InsuredSSN}}"));
-        await page.PauseAsync(2000);
         await page.WaitForSubmitAngularAsync("Visible");
         await page.ClickSubmitAngularAsync();
-        await page.PauseAsync(2000);
         if (await page.IsNoPrefillMatchFoundPresentAsync())
         {
                     await page.VerifyNoPrefillMatchFoundAsync("Exists", "");
@@ -170,16 +167,11 @@ public sealed class EQBOPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickSearchAddClassCodeAsync();
-        await page.PauseAsync(2000);
         await page.WaitForFindAClassCodeAsync("Exists");
-        await page.PauseAsync(2000);
         await page.EnterClassFilterAsync(data.Resolve("{{data:class_filter_64}}"));
         await page.ClickClassFilterSearchButtonAsync();
-        await page.PauseAsync(2000);
         await page.ClickAddToPolicyCheckboxAsync();
-        await page.PauseAsync(2000);
         await page.ClickAddAsync();
-        await page.PauseAsync(2000);
 
     }
 
@@ -199,7 +191,6 @@ public sealed class EQBOPBasicPolicySteps
                     await page.VerifyScreenHeadingAsync("Absent", "");
         }
         await page.ClickNoneOfTheAboveAsync();
-        await page.PauseAsync(2000);
     }
 
     [Given(@"^I confirm Primary Insured Details and select existing client$")]
@@ -210,13 +201,9 @@ public sealed class EQBOPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
         var clientSearchPage = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.PauseAsync(2000);
         await page.ClickNextPrimaryInsuredDetailsAsync();
-        await page.PauseAsync(2000);
         await clientSearchPage.ClickExistingClientSuggestionAsync();
-        await page.PauseAsync(2000);
         await clientSearchPage.ClickPrimaryInsuredSelectionNextAsync();
-        await page.PauseAsync(2000);
 
     }
 
@@ -234,25 +221,15 @@ public sealed class EQBOPBasicPolicySteps
         var descriptionOfOperations = $"AL BOP EQ Basic {now:MMMM}.{now:dd}.{now:yyyy} {now:h:mm}";
         data.Set("DescriptionOfOperations", descriptionOfOperations);
 
-        await page.PauseAsync(2000);
         await page.ClickIndividualSoleProprietorAsync();
-        await page.PauseAsync(2000);
         await page.ClickSaveAsync();
-        await page.PauseAsync(2000);
         await page.EnterDescriptionOfOperationsAsync(descriptionOfOperations);
-        await page.PauseAsync(3000);
         await page.EnterNumberOfFulltimeEmployeesAsync("3");
-        await page.PauseAsync(3000);
         await page.EnterNumberOfPartTimeEmployeesAsync("2");
-        await page.PauseAsync(3000);
         await page.EnterNumberOfSeasonalEmployeesAsync("1");
-        await page.PauseAsync(3000);
         await page.ClickRaceAndGenderInformationNoIfPresentAsync();
-        await page.PauseAsync(3000);
         await page.ClickFarmBureauMemberNoIfPresentAsync();
-        await page.PauseAsync(3000);
         await page.ClickSaveAsync();
-        await page.PauseAsync(2000);
 
     }
 
@@ -266,9 +243,7 @@ public sealed class EQBOPBasicPolicySteps
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.PauseAsync(2000);
         await page.ClickNoneOfTheAboveCheckBoxAsync();
-        await page.PauseAsync(2000);
 
     }
 
@@ -281,9 +256,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BusinessClassificationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.PauseAsync(2000);
         await page.ClickNoneOfTheAboveLiabilityQuestionsAsync();
-        await page.PauseAsync(2000);
 
 
     }
@@ -297,9 +270,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.PauseAsync(2000);
         await page.ClickNextClaimsPriorInsuranceAsync();
-        await page.PauseAsync(2000);
 
     }
 
@@ -318,55 +289,38 @@ public sealed class EQBOPBasicPolicySteps
         var lossHistoryPage = new LossHistoryPage(_scenario.Get<BrowserSession>(), ui);
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        await Task.Delay(2000);
         await ui.WaitReadyBestEffortAsync(page.Locators.ExposuresInsuredAN90DaysNo, new ControlIntent("PolicyWorkflow", "ExposuresInsuredAN90DaysNo"), timeoutMs);
         await page.ClickExposuresInsuredAN90DaysNoAsync();
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(page.Locators.YearsInBusiness, new ControlIntent("PolicyWorkflow", "YearsInBusiness"), timeoutMs);
         await page.EnterYearsInBusinessAsync("5");
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(page.Locators.YearsMaintainedContinuousInsuranceCoverage3Plus, new ControlIntent("PolicyWorkflow", "YearsMaintainedContinuousInsuranceCoverage3Plus"), timeoutMs);
         await page.ClickYearsMaintainedContinuousInsuranceCoverage3PlusAsync();
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(lossHistoryPage.Locators.PriorInsuranceLatestExpirationDate, new ControlIntent("LossHistory", "PriorInsuranceLatestExpirationDate"), timeoutMs);
         await lossHistoryPage.EnterPriorInsuranceLatestExpirationDateAsync(data.GetCanonicalFieldRequired("PriorInsuranceExpDate"));
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(lossHistoryPage.Locators.PriorInsuranceLatestCarrier, new ControlIntent("LossHistory", "PriorInsuranceLatestCarrier"), timeoutMs);
         await lossHistoryPage.EnterPriorInsuranceLatestCarrierAsync(data.GetCanonicalFieldRequired("PriorInsuranceCarrier"));
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(lossHistoryPage.Locators.AddClaim, new ControlIntent("LossHistory", "AddClaim"), timeoutMs);
         await lossHistoryPage.ClickAddClaimAsync();
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(lossHistoryPage.Locators.ADDCLAIM, new ControlIntent("LossHistory", "DateOfOccurrence"), timeoutMs);
         await lossHistoryPage.EnterDateOfOccurrenceAsync(data.GetCanonicalFieldRequired("ClaimDateOfOccurrence"));
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(lossHistoryPage.Locators.PolicyStart, new ControlIntent("LossHistory", "PolicyStart"), timeoutMs);
         await lossHistoryPage.EnterPolicyStartAsync(data.GetCanonicalFieldRequired("ClaimPolicyPeriodEffectiveDate"));
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(lossHistoryPage.Locators.PolicyExpire, new ControlIntent("LossHistory", "PolicyExpire"), timeoutMs);
         await lossHistoryPage.EnterPolicyExpireAsync(data.GetCanonicalFieldRequired("ClaimPolicyPeriodExpirationDate"));
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(lossHistoryPage.Locators.AmountPaid, new ControlIntent("LossHistory", "AmountPaid"), timeoutMs);
         await lossHistoryPage.EnterAmountPaidAsync(data.GetCanonicalFieldRequired("ClaimAmountPaid"));
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(lossHistoryPage.Locators.AmountReserved, new ControlIntent("LossHistory", "AmountReserved"), timeoutMs);
         await lossHistoryPage.EnterAmountReservedAsync(data.GetCanonicalFieldRequired("ClaimAmountReserved"));
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(lossHistoryPage.Locators.ExpenseAmount, new ControlIntent("LossHistory", "ExpenseAmount"), timeoutMs);
         await lossHistoryPage.EnterExpenseAmountAsync(data.GetCanonicalFieldRequired("ClaimExpenseAmount"));
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(lossHistoryPage.Locators.TypeOfLossDropdown, new ControlIntent("LossHistory", "TypeOfLossDropdown"), timeoutMs);
         await lossHistoryPage.EnterTypeOfLossDropdownAsync(data.GetCanonicalFieldRequired("ClaimTypeOfLoss"));
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(lossHistoryPage.Locators.DescriptionOfOccurrenceOrClaim, new ControlIntent("LossHistory", "DescriptionOfOccurrenceOrClaim"), timeoutMs);
         await lossHistoryPage.EnterDescriptionOfOccurrenceOrClaimAsync("Accident");
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(lossHistoryPage.Locators.OpenButton, new ControlIntent("LossHistory", "OpenButton"), timeoutMs);
         await lossHistoryPage.ClickOpenButtonAsync();
-        await Task.Delay(3000);
         await ui.WaitReadyBestEffortAsync(lossHistoryPage.Locators.SaveClaim, new ControlIntent("LossHistory", "SaveClaim"), timeoutMs);
         await lossHistoryPage.ClickSaveClaimAsync();
-        await page.PauseAsync(3000);
 
     }
 
@@ -380,11 +334,8 @@ public sealed class EQBOPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickNextClientDetailsAsync();
-        await Task.Delay(2000);
         await page.ClickInspectionContactCheckBoxAsync();
-        await Task.Delay(2000);
         await page.ClickNextNarrativeFromClaimsAsync();
-        await page.PauseAsync(2000);
 
     }
 
@@ -398,11 +349,8 @@ public sealed class EQBOPBasicPolicySteps
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickAddNarrativeAsync();
-        await page.PauseAsync(2000);
         await page.EnterDescriptionOfTheBusinessExposuresActivitiesAndExperienceAsync(data.Resolve("{{data:description_of_the_business_exposures_activities_and_experience_118}}"));
-        await page.PauseAsync(2000);
         await page.ClickSaveAsync();
-        await page.PauseAsync(2000);
     }
 
     [Given(@"^I navigate to Locations/Buildings screen$")]
@@ -415,7 +363,6 @@ public sealed class EQBOPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickNextLocationsBuildingsAsync();
-        await page.PauseAsync(2000);
 
     }
 
@@ -519,15 +466,10 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickEditLocationButtonLatestAngularAsync();
-        await page.PauseAsync(2000);
         await page.EnterTerritoryAsync(data.Resolve("{{data:territory_188}}"));
-        await page.PauseAsync(2000);
         await page.EnterMilesFromFireDeptAsync("1");
-        await page.PauseAsync(2000);
         await page.EnterFeetFromHydrantAsync(data.Resolve("{{data:feetfromhydrant_190}}"));
-        await page.PauseAsync(2000);
         await page.ClickSaveAsync();
-        await page.PauseAsync(2000);
 
     }
 
@@ -540,9 +482,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await Task.Delay(4000);
         await page.ClickAddBuildingBPPAsync();
-        await page.PauseAsync(4000);
 
     }
 
@@ -556,13 +496,9 @@ public sealed class EQBOPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
         var buildingsPage = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await Task.Delay(4000);
         await page.ClickOwnButtonAsync();
-        await Task.Delay(4000);
         await buildingsPage.EnterTotalBuildingSqFootageAsync(data.GetCanonicalFieldRequired("Total Building Sq Footage"));
-        await Task.Delay(4000);
         await buildingsPage.EnterInsuredOccupancySqFtAsync(data.GetCanonicalFieldRequired("Insured Occupancy Sq Ft Basic"));
-        await page.PauseAsync(4000);
 
     }
 
@@ -575,9 +511,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await Task.Delay(4000);
         await page.ClickBuildingCoverageAngularAsync();
-        await Task.Delay(4000);
        
     }
 
@@ -607,19 +541,12 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await Task.Delay(4000);
         await page.ClickClassCodeCheckboxAsync();
-        await Task.Delay(4000);
         await page.EnterOccupancySqFootageTotalAsync(data.Resolve("{{data:expected_occupancy_sq_footage_total_value_227}}"));
-        await Task.Delay(4000);
         await page.ClickPersonalPropertyLimitCheckBoxAngularAsync();
-        await Task.Delay(4000);
         await page.EnterPersonalPropertyLimitAsync(data.GetCanonicalFieldRequired("Personal Property Limit"));
-        await Task.Delay(4000);
         await page.EnterGrossSalesReceiptsAsync(data.GetCanonicalFieldRequired("Gross Sales Receipts"));
-        await Task.Delay(4000);
         data.Set("Roof Type", data.Resolve("{{data:roof_type}}"));
-        await Task.Delay(4000);
 
     }
 
@@ -632,23 +559,14 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await Task.Delay(4000);
         await page.ClickCommercialButtonAsync();
-        await Task.Delay(4000);
         await page.ClickBVSButtonAsync();
-        await Task.Delay(4000);
         await page.SelectBVSGroupAsync(data.GetCanonicalFieldRequired("BVS Group"));
-        await Task.Delay(4000);
         await page.SelectBVSResultAsync(data.GetCanonicalFieldRequired("BVS Result"));
-        await Task.Delay(4000);
         await page.EnterYearBuiltValuationAsync(data.GetCanonicalFieldRequired("Year Built"));
-        await Task.Delay(4000);
         await page.SelectRoofTypeValuationAsync(data.GetCanonicalFieldRequired("Roof Type"));
-        await Task.Delay(4000);
         await page.ClickFrameAsync();
-        await Task.Delay(4000);
         await page.ClickGetValuationAsync();
-        await Task.Delay(4000);
 
     }
 
@@ -661,35 +579,20 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await Task.Delay(4000);
         await page.ClickReplacementCostAsync();
-        await Task.Delay(4000);
         await page.EnterBuildingLimitAsync("443000");
-        await Task.Delay(4000);
         await page.EnterYearBuiltAsync("2020");
-        await Task.Delay(4000);
         await page.EnterYearBuiltRenovatedAsync("2021");
-        await Task.Delay(4000);
         await page.EnterWiringYearAsync("2021");
-        await Task.Delay(4000);
         await page.EnterHeatingYearAsync("2022");
-        await Task.Delay(4000);
         await page.EnterPlumbingYearAsync("2023");
-        await Task.Delay(4000);
         await page.EnterNumberOfStoriesAsync("1");
-        await Task.Delay(4000);
         await page.EnterRoofYearAsync("2024");
-        await Task.Delay(4000);
         await page.SelectRoofType1Async("Aluminum- Shingle");
-        await Task.Delay(4000);
         await page.ClickSprinklerYesAsync();
-        await Task.Delay(4000);
         await page.ClickIsAnyHeatSourceThermostaticallyControlledYesAsync();
-        await Task.Delay(4000);
         await page.ClickIsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngularAsync();
-        await Task.Delay(4000);
         await page.ClickSelectAnyOfTheFollowingWhichApplyToThisBuildingNoneOfTheAboveCheckboxAngularAsync();
-        await Task.Delay(4000);
     }
 
     [Given(@"^I select Heating Sources$")]
@@ -731,13 +634,9 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await Task.Delay(4000);
         await page.ClickBuildingEligibilityQuestionsNoneOfTheAboveCheckboxAngularAsync();
-        await Task.Delay(4000);
         await page.ClickSaveAsync();
-        await page.PauseAsync(4000);
         await page.ClickKeepGoingConfirmIfPresentAsync();
-        await page.PauseAsync(4000);
 
     }
 
@@ -750,9 +649,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await Task.Delay(4000);
         await page.NavigateToScreenAsync("PolicyCoverages");
-        await page.PauseAsync(4000);
 
     }
 
@@ -765,9 +662,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await Task.Delay(4000);
         await page.NavigateToScreenAsync("AdditionalCoverages");
-        await page.PauseAsync(4000);
 
     }
 
@@ -781,15 +676,10 @@ public sealed class EQBOPBasicPolicySteps
         var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        await Task.Delay(5000);
         await page.ClickEndLiquorLiabilityNoneOfTheAboveIfPresentAsync();
-        await Task.Delay(5000);
         await page.SelectHaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwnerAsync("No");
-        await Task.Delay(7000);
         await page.SelectDoesTheInsuredAndAnyExecutiveOfficerOrOwnerHaveAnyKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync("No");
-        await Task.Delay(3000);
         await page.ClickNextAdditionalInterestsAsync();
-        await Task.Delay(3000);
 
     }
 
@@ -803,59 +693,44 @@ public sealed class EQBOPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        await Task.Delay(4000);
         await page.ClickNextPricingAsync();
-        await Task.Delay(4000);
         if (await page.IsCatastrophePotentialVisibleAndEditableAsync())
         {
-            await Task.Delay(4000);
             var catastrophePotential = data.GetCanonicalField("Catastrophe Potential");
             if (!string.IsNullOrWhiteSpace(catastrophePotential))
                 await page.SelectCatastrophePotentialAsync(catastrophePotential);
-            await Task.Delay(4000);
         }
         if (await page.IsLossRatioVisibleAndEditableAsync())
         {
-            await Task.Delay(4000);
             var lossRatio = data.GetCanonicalField("Loss Ratio", "65% or less");
             if (!string.IsNullOrWhiteSpace(lossRatio))
                 await page.SelectLossRatioAsync(lossRatio);
-            await Task.Delay(4000);
         }
         if (await page.IsLengthOfEmploymentVisibleAndEditableAsync())
         {
-            await Task.Delay(4000);
             var lengthOfEmployment = data.GetCanonicalField("Length of Employment", "50% of employees employed for 3 or more years");
             if (!string.IsNullOrWhiteSpace(lengthOfEmployment))
                 await page.SelectLengthOfEmploymentAsync(lengthOfEmployment);
-            await Task.Delay(4000);
         }
         if (await page.IsMemberOfTradeAssociationVisibleAndEditableAsync())
         {
-            await Task.Delay(4000);
             var memberOfTradeAssociation = data.GetCanonicalField("Member of a Trade Association", "No");
             if (!string.IsNullOrWhiteSpace(memberOfTradeAssociation))
                 await page.SelectMemberOfTradeAssociationAsync(memberOfTradeAssociation);
-            await Task.Delay(4000);
         }
         if (await page.IsRiskManagementProgramVisibleAndEditableAsync())
         {
-            await Task.Delay(4000);
             var riskManagementProgram = data.GetCanonicalField("Risk Management Program", "No");
             if (!string.IsNullOrWhiteSpace(riskManagementProgram))
                 await page.SelectRiskManagementProgramAsync(riskManagementProgram);
-            await Task.Delay(4000);
         }
         if (await page.IsYearsInBusinessVisibleAndEditableAsync())
         {
-            await Task.Delay(4000);
             var yearsInBusiness = data.GetCanonicalField("Years in Business", "Less than 5 years");
             if (!string.IsNullOrWhiteSpace(yearsInBusiness))
                 await page.SelectYearsInBusinessAsync(yearsInBusiness);
-            await Task.Delay(4000);
         }
         await page.ClickNextBillingAsync();
-        await Task.Delay(4000);
 
     }
 
@@ -868,25 +743,15 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.PauseAsync(3000);
         await page.ClickCreateNewBillingAccountAsync();
-        await page.PauseAsync(3000);
         await page.ClickOTHERButtonAsync();
-        await page.PauseAsync(3000);
         await page.EnterFirstNameAsync("Tommy");
-        await page.PauseAsync(3000);
         await page.EnterLastNameAsync("Automation");
-        await page.PauseAsync(3000);
         await page.EnterBusinessNameAsync("Auto Corp");
-        await page.PauseAsync(3000);
         await page.EnterAddress1Async("9 Center Road");
-        await page.PauseAsync(3000);
         await page.EnterCityAsync("Mahopac");
-        await page.PauseAsync(3000);
         await page.SelectStateAsync("NY");
-        await page.PauseAsync(3000);
         await page.EnterZipCodeAsync("10541");
-        await page.PauseAsync(3000);
 
     }
 
@@ -900,13 +765,9 @@ public sealed class EQBOPBasicPolicySteps
         var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.PauseAsync(4000);
         await page.ClickDirectBillButtonAsync();
-        await page.PauseAsync(4000);
         await page.ClickN1PaymentButtonAsync();
-        await page.PauseAsync(4000);
         await page.EnterChoosePaymentDueDateAsync("1");
-        await page.PauseAsync(4000);
 
     }
 
@@ -919,15 +780,10 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.PauseAsync(4000);
         await page.ClickInitialPaymentFullBalanceAsync();
-        await page.PauseAsync(9000);
         await page.ClickCheckButtonAsync();
-        await page.PauseAsync(3000);
         await page.EnterCheckNumberAsync("1205");
-        await page.PauseAsync(3000);
         await page.ClickNextSubmissionAsync();
-        await page.PauseAsync(9000);
 
     }
 
@@ -940,20 +796,14 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.PauseAsync(4000);
         if (await page.IsAgentCommentsVisibleAndEditableAsync())
         {
-            await page.PauseAsync(4000);
             await page.EnterAgentCommentsAsync("Test");
-            await page.PauseAsync(3000);
         }
         if (await page.IsAgentComments2VisibleAndEditableAsync())
         {
-            await page.PauseAsync(4000);
             await page.EnterAgentComments2Async("Test");
-            await page.PauseAsync(3000);
         }
-        await Task.Delay(2000);
 
     }
 
@@ -967,54 +817,38 @@ public sealed class EQBOPBasicPolicySteps
         var browser = _scenario.Get<BrowserSession>();
         var page = new NavigationPage(browser, _scenario.Get<UiActions>());
 
-        await Task.Delay(2000);
         var newPage = await browser.SwitchToNewPageAsync(async () =>
         {
             await page.ClickLaunchToChecklistAsync();
         });
-        await Task.Delay(2000);
 
         var checklistPage = new ChecklistPage(browser, _scenario.Get<UiActions>());
         try
         {
-            await Task.Delay(2000);
             await checklistPage.ClickBuildingPhoto1Async();
-            await Task.Delay(2000);
             for (var i = 0; i < 5; i++)
             {
-                await Task.Delay(2000);
                 await checklistPage.WaitForExceptionVisibleAsync();
                 await checklistPage.ClickExceptionAsync();
-                await Task.Delay(2000);
                 await checklistPage.TypeRequireNoteAsync("TestChecklistforUW");
-                await Task.Delay(2000);
                 await checklistPage.ClickExceptionNoteConfirmOKAsync();
-                await Task.Delay(2000);
             }
-            await Task.Delay(6000);
             if (await checklistPage.IsSignaturePageItemAlreadyOpenAsync())
             {
-                await Task.Delay(2000);
                 var signatureFilePath = Path.Combine(
                     AppContext.BaseDirectory,
                     "TestData", "Assets", "Test.png");
                 await checklistPage.UploadSignatureFileAsync(signatureFilePath);
-                await Task.Delay(6000);
             }
-            await Task.Delay(2000);
             await checklistPage.WaitForCurrentItemsVisibleAsync();
-            await Task.Delay(2000);
         }
         finally
         {
             // Always attempt to return to the original ExpertQuote window and dismiss the
             // "Checklist Opened" modal, even if a checklist action above failed, so the
             // outer scenario is not left stuck on the checklist popup.
-            await Task.Delay(8000);
             await browser.SwitchToFirstPageAsync();
-            await Task.Delay(5000);
             await page.ClickChecklistOpenedOKAsync();
-            await Task.Delay(7000);
         }
 
     }
@@ -1025,9 +859,7 @@ public sealed class EQBOPBasicPolicySteps
     public async Task ClickReferToUWAsync()
     {
         var underwritingPage = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await Task.Delay(2000);
         await underwritingPage.ClickReferToUWAsync();
-        await Task.Delay(9000);
     }
 
 
@@ -1428,7 +1260,6 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
-        await page.PauseAsync(1000);
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
@@ -1801,7 +1632,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.WaitForScreenHeading9696CAsync("Exists");
         }
-        await page.PauseAsync(1000);
 
     }
 
@@ -1992,7 +1822,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: if determine if on submission page
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
         if (await page.IsSubmissionHeadingPresentAsync())
         {
@@ -2001,7 +1830,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: if determine if on submission page
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
 
     }
@@ -2035,7 +1863,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: during do (Wait for Stoplight to Run) [max=90]
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
         if (await page.IsStoplightWaitingWindowErrorPresentAsync())
         {
@@ -2048,7 +1875,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: during do (Wait for Stoplight to Run) [max=90]
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
         if (await page.IsCompleteApplicationPresentAsync())
         {
@@ -2057,7 +1883,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: during do (Wait for Stoplight to Run) [max=90]
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
         await page.ClickCloseAsync();
         await page.WaitForStoplightWaitingWindowAsync("Absent");
@@ -2067,7 +1892,6 @@ public sealed class EQBOPBasicPolicySteps
         }
         await page.WaitForAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists");
         await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
-        await page.PauseAsync(1000);
         if (await page.IsLoadingMessagePresentAsync())
         {
                     await page.VerifyLoadingMessageAsync("Visible", "");
@@ -2087,7 +1911,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: if stoplight error
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
         if (await page.IsStoplightWaitingWindowErrorPresentAsync())
         {
@@ -2100,7 +1923,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: if stoplight error
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
         if (await page.IsCompleteApplicationPresentAsync())
         {
@@ -2109,7 +1931,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: if stoplight error
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
         if (await page.IsClosePresentAsync())
         {
@@ -2122,7 +1943,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: if stoplight error
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
         await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
 
@@ -2170,7 +1990,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: while check for IFRAME
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
 
     }
@@ -2205,7 +2024,6 @@ public sealed class EQBOPBasicPolicySteps
         if (false)
         {
         }
-        await page.PauseAsync(1000);
         await page.WaitForTransactionTypeAsync("Exists");
 
     }
@@ -2284,7 +2102,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: during loop to Check if Policy Details Exists [max=120]
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
         data.Set("Policy#", await page.CapturePolicyNumberAsync("InnerText"));
 
@@ -2580,7 +2397,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.WaitForLogin07237Async("Absent");
         }
-        await page.PauseAsync(1000);
 
     }
 
@@ -2600,7 +2416,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyLoadingMessageAsync("Visible", "");
         }
-        await page.PauseAsync(1000);
         await page.WaitForN1ResultsFoundCurrentlyShowing11Async("Visible");
         await page.WaitForViewPolicyAsync("Visible");
         await page.ClickViewPolicyAsync();
@@ -2608,7 +2423,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyLoadingMessageAsync("Visible", "");
         }
-        await page.PauseAsync(1000);
         if (await page.IsViewPolicyPresentAsync())
         {
                     await page.VerifyViewPolicyAsync("Visible", "");
@@ -2616,7 +2430,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: while view Policy Exists [max=90]
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
         if (await page.IsViewPolicyPresentAsync())
         {
@@ -2629,7 +2442,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: while view Policy Exists [max=90]
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
 
     }
@@ -2653,7 +2465,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source conditional not executed because no deterministic data/DOM condition was available: during loop to Check if Policy Details Exists [max=120]
         if (false)
         {
-                    await page.PauseAsync(1000);
         }
         await page.WaitForAttachmentsListGridRowCellExplicitName1Async("Visible");
         await page.VerifyAttachmentsListGridRowCellExplicitName1Async(data.Resolve("{{data:expected_row_834}}"), "");
@@ -2672,14 +2483,11 @@ public sealed class EQBOPBasicPolicySteps
         var submissionPage = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await quoteSearchPage.NavigateToScreenAsync("Submission");
-        await Task.Delay(9000);
 
         await submissionPage.ClickTransmitAsync();
-        await Task.Delay(9000);
         await submissionPage.WaitForTransmitConfirmationAsync("Visible");
 
         await quoteSearchPage.NavigateToScreenAsync("PolicyHistory");
-        await Task.Delay(9000);
         await submissionPage.WaitForTransactionStatusAsync("Committed");
 
     }

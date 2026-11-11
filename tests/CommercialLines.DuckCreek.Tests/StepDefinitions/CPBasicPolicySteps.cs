@@ -124,7 +124,6 @@ public sealed class CPBasicPolicySteps
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_44}}"));
-        await page.PauseAsync(1000);
 
     }
 
@@ -201,7 +200,6 @@ public sealed class CPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickUnderwritingInfoAsync();
-        await page.PauseAsync(4000);
         //await page.WaitForGeneralUWQuestionsAsync("Exists");
         await page.ClickPropertyUWQuestionsUpdateAnswersAsync();
         await page.ClickInsuranceHistoryAsync();
@@ -242,24 +240,19 @@ public sealed class CPBasicPolicySteps
 
         await page.ClickPolicyInfoAsync();
         //await page.WaitForPolicyInfoHeaderAsync("Exists");
-        await page.PauseAsync(1000);
         await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_109}}"));
         await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_110}}"));
-        await page.PauseAsync(1000);
         await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_112}}"));
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_116}}"));
-        await page.PauseAsync(1000);
         await page.WaitForPrimaryRatingStateAsync("Exists");
         //await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_122}}"));
         //await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         //await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         //await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
-        await page.PauseAsync(1000);
         //await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
         await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
-        await page.PauseAsync(1000);
 
         if (await page.IsEstimatedPremiumAvailableAsync())
         {
@@ -284,8 +277,6 @@ public sealed class CPBasicPolicySteps
         //await page.WaitForInsuranceScoreAsync("Exists");
         await page.ClickInsuranceScoreAsync();
         //await page.VerifyReferenceNumberAsync(data.Resolve("{{data:expected_reference_number_innertext_140}}"), "InnerText");
-        await page.PauseAsync(2000);
-        //await page.PauseAsync(1000);
 
     }
 
@@ -297,11 +288,9 @@ public sealed class CPBasicPolicySteps
         var data = _scenario.Get<ScenarioData>();
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.PauseAsync(5000);
         await page.ClickPolicyCovgerageAsync();
         //await page.WaitForPolicyCovgAsync("Exists");
         await page.EnterDoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackupAsync(data.Resolve("{{data:does_any_risk_generate_power_other_than_private_windmills_or_emergency_backup_145}}"));
-        await page.PauseAsync(4000);
     }
 
     [Given(@"^I complete mask Error Recovery$")]
@@ -356,29 +345,23 @@ public sealed class CPBasicPolicySteps
         //await page.WaitForLocationAddressAsync("Exists");
         await page.EnterFeetFromHydrantAsync(data.Resolve("{{data:feet_from_hydrant_154}}"));
         //await page.VerifyLoadingMessageAsync("Visible", "");
-        await page.PauseAsync(1000);
         //await page.VerifyLoadingMessageAsync("Visible", "");
-        await page.PauseAsync(1000);
         //await page.WaitForLocationAddressAsync("Exists");
         await page.EnterMilesFromFireDepartmentAsync(data.Resolve("{{data:miles_from_fire_department_160}}"));
         //await page.VerifyLoadingMessageAsync("Visible", "");
-        await page.PauseAsync(1000);
         //await page.VerifyFeetFromHydrantAsync(data.Resolve("{{data:expected_feet_from_hydrant_value_163}}"), "NotEqual:Value");
         //await page.WaitForLocationAddressAsync("Exists");
         await page.EnterFeetFromHydrantAsync(data.Resolve("{{data:feet_from_hydrant_165}}"));
         //await page.VerifyLoadingMessageAsync("Visible", "");
-        await page.PauseAsync(1000);
         //await page.WaitForLocationAddressAsync("Exists");
         await page.ClickCallISOAsync();
         await page.ClickSelectPPCAsync();
         await page.ClickSelectAsync();
         //await page.VerifyLoadingMessageAsync("Visible", "");
-        await page.PauseAsync(1000);
         //await page.VerifyFeetFromHydrantAsync(data.Resolve("{{data:expected_feet_from_hydrant_value_174}}"), "NotEqual:Value");
         //await page.WaitForLocationAddressAsync("Exists");
         await page.EnterFeetFromHydrantAsync(data.Resolve("{{data:feet_from_hydrant_176}}"));
         //await page.VerifyLoadingMessageAsync("Visible", "");
-        await page.PauseAsync(1000);
         //await page.WaitForLocationAddressAsync("Exists");
 
         if (await page.IsPropertyLocated2miles())
@@ -508,7 +491,6 @@ public sealed class CPBasicPolicySteps
                 "RatingGroupsDeductible"
             );
         }
-        await page.PauseAsync(3000);
 
         if (await page.IsRatingGroupDeductableAsync())
         {
@@ -528,14 +510,12 @@ public sealed class CPBasicPolicySteps
         //{
         //    await page.EnterRatingGroupsDeductibleAsync(data.Resolve("{{data:deductible_207}}"));
         //}
-        //await page.PauseAsync(2000);
 
         //if (await page.IsRatingGroupDeductableAsync())
         //{
         //    await page.EnterRatingGroupsDeductibleIncreasedTheftAsync(data.Resolve("{{data:deductible_increased_theft_208}}"));
         //}
 
-        await page.PauseAsync(2000);
         if (await page.IsRatingGroupDeductableblackhail())
         {
             await page.EnterRatingGroupsDeductibleWindHailAsync(data.Resolve("{{data:deductible_wind_hail_209}}"));
@@ -560,7 +540,6 @@ public sealed class CPBasicPolicySteps
             await page.EnterCauseOfLossAsync(data.Resolve("{{data:cause_of_loss_210}}"));
         }
 
-        await page.PauseAsync(3000);
 
         if (data.Condition("Valuation != NULL"))
         {
@@ -651,7 +630,6 @@ public sealed class CPBasicPolicySteps
             await page.EnterSearchResultsAsync("");
         }
         await page.ClickOKAsync();
-        await page.PauseAsync(3000);
 
         if (await page.IsBuildingRatingGroupVisibleAsync())
         {
@@ -665,7 +643,6 @@ public sealed class CPBasicPolicySteps
 
         }
 
-        await page.PauseAsync(3000);
 
 
         await page.EnterBuildingLimitAsync(data.Resolve("{{data:building_limit_232}}"));
@@ -683,7 +660,6 @@ public sealed class CPBasicPolicySteps
                 "Personal Property Rating Group"
             );
         }
-        await page.PauseAsync(3000);
 
         await page.EnterPersonalPropertyLimitAsync(data.Resolve("{{data:personal_property_limit_234}}"));
 
@@ -699,7 +675,6 @@ public sealed class CPBasicPolicySteps
                 "Property Of Others Rating Group"
             );
         }
-        await page.PauseAsync(3000);
 
         await page.EnterPropertyOfOthersLimitAsync(data.Resolve("{{data:property_of_others_limit_236}}"));
 
@@ -716,7 +691,6 @@ public sealed class CPBasicPolicySteps
         }
         await page.ClickLocationDetailAsync();
         await page.EnterEstimatorTypeAsync(data.Resolve("{{data:estimator_type_239}}"));
-        await page.PauseAsync(5000);
         await page.EnterValuationTypeAsync(data.Resolve("{{data:valuation_type_default_240}}"));
         await page.ClickCreateValuationAsync();
         await page.ClickGetCalculatedValueAsync();
@@ -780,7 +754,6 @@ public sealed class CPBasicPolicySteps
         await page.WaitForPayPlanAsync("Equal");
         //await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_274}}"));
-        await page.PauseAsync(1000);
 
     }
 
@@ -833,7 +806,6 @@ public sealed class CPBasicPolicySteps
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
         await page.WaitForBODYAsync("Exists");
-        await page.PauseAsync(1000);
 
     }
 
@@ -875,7 +847,6 @@ public sealed class CPBasicPolicySteps
 
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
-        await page.PauseAsync(1000);
         await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
         await page.ClickOKAsync();
         await page.WaitForOKAsync("Absent");
@@ -935,9 +906,7 @@ public sealed class CPBasicPolicySteps
         //await page.EnterOrderAuditAsync(data.Resolve("{{data:order_audit_343}}"));
         //await page.VerifySubmissionHeadingAsync("Absent", "");
         //await page.ClickSubmissionAsync();
-        await page.PauseAsync(5000);
         //await page.WaitForSubmissionHeadingAsync("Exists");
-        //await page.PauseAsync(1000);
 
     }
 
@@ -955,30 +924,21 @@ public sealed class CPBasicPolicySteps
         //await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_352}}"));
         //await page.ClickCompleteApplicationAsync();
         //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
-        //await page.PauseAsync(1000);
         //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
         //await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
-        //await page.PauseAsync(5000);
         //await page.ClickCompleteApplicationAsync();
-        await page.PauseAsync(5000);
         //await page.ClickStoplightWaitingWindowCloseAsync();
         await page.ClickCompleteApplicationAsync();
         //await page.WaitForStoplightWaitingWindowAsync("Absent");
-        await page.PauseAsync(4000);
         //await page.VerifyLoadingMessageAsync("Visible", "");
-        //await page.PauseAsync(1000);
         //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
         //await page.ClickCompleteApplicationAsync();
         //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
-        //await page.PauseAsync(1000);
         //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
         //await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
-        //await page.PauseAsync(1000);
         //await page.ClickCompleteApplicationAsync();
-        //await page.PauseAsync(1000);
         await page.ClickStoplightWaitingWindowCloseAsync();
         //await page.WaitForStoplightWaitingWindowAsync("Absent");
-        //await page.PauseAsync(1000);
         //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
 
     }
@@ -999,10 +959,8 @@ public sealed class CPBasicPolicySteps
         //await page.EnterTitleAsync(data.Resolve("{{data:title_389}}"));
         //await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_390}}"));
         //data.Set("SessionId", await page.CaptureResultAsync("value"));
-        await Task.Delay(4000);
 
         await page.ClickPolicyFormAsync();
-        await Task.Delay(4000);
 
 
     }
@@ -1097,7 +1055,6 @@ public sealed class CPBasicPolicySteps
                      && r.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase),
                 new PageWaitForResponseOptions { Timeout = 60000 });
 
-            await Task.Delay(1500);
 
             var response = latestMatchingResponse;
             if (response is null)
@@ -1186,7 +1143,6 @@ public sealed class CPBasicPolicySteps
 
             await pressTab();
 
-            await Task.Delay(2000);
 
 
             var actual = (await capture())?.Trim() ?? string.Empty;

@@ -37,7 +37,6 @@ public sealed class NavigationPage
         while (retries < 10)
         {
             if (await _locators.Add.IsEnabledAsync()) break;
-            await Task.Delay(500);
             retries++;
         }
 
@@ -122,7 +121,6 @@ public sealed class NavigationPage
         while (retries < 10)
         {
             if (await _locators.NextNarrativeFromClaims.IsEnabledAsync()) break;
-            await Task.Delay(500);
             retries++;
         }
 
@@ -183,7 +181,6 @@ public Task<bool> IsLoadingPresentAsync() =>
     {
         await _locators.AddToPolicyCheckbox.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
         await _locators.AddToPolicyCheckbox.SetCheckedAsync(true);
-        await Task.Delay(800);
     }
 
     public Task PressOnAsync(string key) =>
@@ -253,7 +250,6 @@ public Task<bool> IsLoadingPresentAsync() =>
             catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
             {
                 retries++;
-                await Task.Delay(500);
             }
         }
     }
@@ -496,10 +492,6 @@ public Task<bool> IsLoadingPresentAsync() =>
 
     public Task NavigateAsync(string url) =>
         _page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
-
-    public Task PauseAsync(int milliseconds) =>
-        Task.Delay(milliseconds);
-
     public Task NoteAsync(string note) =>
         _ui.ReviewRequiredAsync(note);
 

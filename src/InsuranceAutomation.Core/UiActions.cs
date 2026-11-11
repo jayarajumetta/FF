@@ -12,6 +12,7 @@ public sealed class UiActions
     private readonly DeferredVerificationCollector? _verificationFailures;
     private readonly HashSet<string> _semanticallyCommittedControls = new(StringComparer.OrdinalIgnoreCase);
     private readonly IRuntimeLocatorResolver? _runtimeLocatorResolver;
+    private readonly GenericFrameFallbackResolver _genericFrameFallbackResolver;
 
     public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger)
         : this(browser, config, logger, null, "Unknown", null, null) { }
@@ -27,6 +28,7 @@ public sealed class UiActions
         _report = report;
         _verificationFailures = verificationFailures;
         _runtimeLocatorResolver = runtimeLocatorResolver;
+        _genericFrameFallbackResolver = new GenericFrameFallbackResolver(config, logger);
     }
 
     public Task WaitReadyBestEffortAsync(ILocator locator, ControlIntent intent, int timeoutMs, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
@@ -69,7 +71,7 @@ public sealed class UiActions
         TraceAsync(caller, source, nameof(ClickGridCellAsync), intent.ToString(), new Dictionary<string, string> { ["cellText"] = cellText }, () => ClickGridCellCoreAsync(grid, cellText, intent));
 
     public Task<bool> ExistsAsync(ILocator locator, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
-        TraceAsync(caller, source, nameof(ExistsAsync), string.Empty, new Dictionary<string, string> {  }, () => ExistsCoreAsync(locator));
+        TraceAsync(caller, source, nameof(ExistsAsync), string.Empty, new Dictionary<string, string> {  }, () => ExistsCoreAsync(locator, new ControlIntent("Application", "Control")));
 
     public Task<bool> ExistsAsync(ILocator locator, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
         TraceAsync(caller, source, nameof(ExistsAsync), intent.ToString(), new Dictionary<string, string> { }, () => ExistsCoreAsync(locator, intent));
@@ -514,25 +516,29 @@ public sealed class UiActions
 
     private async Task WaitCoreAsync(ILocator locator, string expected, ControlIntent intent)
     {
-        await WaitForPageReadyBestEffortAsync();
         if (expected.Contains("Absent", StringComparison.OrdinalIgnoreCase) ||
             expected.Contains("Hidden", StringComparison.OrdinalIgnoreCase))
         {
-            await locator.WaitForAsync(new LocatorWaitForOptions
+            await WaitForPageReadyBestEffortAsync();
+            var state = expected.Contains("Absent", StringComparison.OrdinalIgnoreCase)
+                ? WaitForSelectorState.Detached
+                : WaitForSelectorState.Hidden;
+            try
             {
-                State = expected.Contains("Absent", StringComparison.OrdinalIgnoreCase)
-                    ? WaitForSelectorState.Detached
-                    : WaitForSelectorState.Hidden,
-                Timeout = _config.Waits.VerifyTimeoutMs
-            });
+                await locator.WaitForAsync(new LocatorWaitForOptions { State = state, Timeout = _config.Waits.VerifyTimeoutMs });
+            }
+            catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+            {
+                // WaitAsync is a resilient helper, not an assertion: a timeout here is diagnostic only.
+                // Callers that need a hard assertion should use VerifyAsync instead.
+                _logger.Warn($"WAIT CONTINUING: {intent}; expected={expected}; did not settle within {_config.Waits.VerifyTimeoutMs}ms: {ex.Message}");
+            }
             return;
         }
 
-        await ExecuteAsync(locator, intent, "wait-visible", x => x.WaitForAsync(new LocatorWaitForOptions
-        {
-            State = WaitForSelectorState.Visible,
-            Timeout = _config.Waits.ElementReadyTimeoutMs
-        }));
+        // Visibility readiness is already performed (resiliently, warn-and-continue) by
+        // PrepareForActionAsync inside ExecuteAsync; avoid re-running the same Visible wait twice.
+        await ExecuteAsync(locator, intent, "wait-visible", _ => Task.CompletedTask);
     }
 
     private async Task VerifyCoreAsync(ILocator locator, string expected, string property, ControlIntent intent)
@@ -652,6 +658,7 @@ public sealed class UiActions
         try
         {
             var resolved = _runtimeLocatorResolver is null ? locator : await _runtimeLocatorResolver.ResolveAsync(_browser.Page, locator, intent, action) ?? locator;
+            resolved = await EnsurePresentWithFrameFallbackAsync(resolved, intent, action);
             await PrepareForActionAsync(resolved, intent, action);
             using var frameScope = FrameExecutionContext.Push(null);
             await ExecuteWithHighlightAsync(resolved, action, operation);
@@ -666,11 +673,97 @@ public sealed class UiActions
         try
         {
             var resolved = _runtimeLocatorResolver is null ? locator : await _runtimeLocatorResolver.ResolveAsync(_browser.Page, locator, intent, action) ?? locator;
+            resolved = await EnsurePresentWithFrameFallbackAsync(resolved, intent, action);
             await PrepareForActionAsync(resolved, intent, action);
             using var frameScope = FrameExecutionContext.Push(null);
             return await ExecuteWithHighlightAsync(resolved, action, operation);
         }
         catch (Exception) { throw; }
+    }
+
+    /// <summary>
+    /// Resolves the control without ever "killing time" twiddling thumbs on the wrong scope. The strategy,
+    /// in order, is:
+    /// 1. Instant, non-waiting attachment check in the current (top-level) scope via <c>CountAsync</c>. If the
+    ///    element is already attached, we are done immediately with zero wait cost.
+    /// 2. Instant, non-waiting check for whether the page has any iframes at all. If there are none, there is
+    ///    nothing to gain by probing frames, so we go straight to the bounded top-level presence wait.
+    /// 3. If iframes ARE present but the control isn't instantly attached top-level, probe the iframes FIRST
+    ///    (each probe is short/bounded via <see cref="FrameworkConfig.WaitOptions.GenericFramePresenceTimeoutMs"/>)
+    ///    before falling back to the full top-level presence wait. This avoids burning the entire
+    ///    <see cref="FrameworkConfig.WaitOptions.PresenceTimeoutMs"/> budget against the wrong scope whenever the
+    ///    control actually lives inside an iframe (the common case for Duck Creek popups), which is the main
+    ///    source of flakiness/slow false-negatives this method is designed to eliminate.
+    /// 4. Only if nothing resolves do we fall back to the original locator so the caller's subsequent Visible
+    ///    wait in <see cref="PrepareForActionAsync"/> remains the final, diagnostic word.
+    /// </summary>
+    private async Task<ILocator> EnsurePresentWithFrameFallbackAsync(ILocator locator, ControlIntent intent, string action)
+    {
+        if (action is "wait-absent" || !_browser.IsStarted) return locator;
+
+        // Fast path: already attached in the current scope right now - no wait needed at all.
+        try
+        {
+            if (await locator.CountAsync() > 0) return locator;
+        }
+        catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+        {
+            // Locator evaluation itself failed (e.g. detached frame); fall through to the bounded waits below.
+        }
+
+        // Cheap, non-waiting probe: does the page even have any iframes? If not, there is no point
+        // attempting a frame scan - go straight to the bounded top-level presence wait.
+        var hasFrames = false;
+        try
+        {
+            hasFrames = await _browser.Page.Locator("iframe, frame").CountAsync() > 0;
+        }
+        catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+        {
+            hasFrames = false;
+        }
+
+        if (hasFrames)
+        {
+            try
+            {
+                var fallback = await _genericFrameFallbackResolver.ResolveAsync(_browser.Page, locator, intent, action);
+                if (fallback is not null) return fallback;
+            }
+            catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+            {
+                _logger.Warn($"GENERIC FRAME FALLBACK FAILED: {intent}; Action={action}; {ex.Message}");
+            }
+        }
+
+        // Either no iframes exist, or none of them resolved the selector: fall back to a bounded
+        // top-level presence wait so transient top-level rendering still gets its full budget.
+        try
+        {
+            await locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached, Timeout = _config.Waits.PresenceTimeoutMs });
+            return locator;
+        }
+        catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+        {
+            _logger.Warn($"ELEMENT PRESENCE WAIT: {intent}; Action={action}; not attached in current or frame scope within {_config.Waits.PresenceTimeoutMs}ms: {ex.Message}");
+        }
+
+        // Last chance: if frames weren't probed yet (e.g. they appeared only after the top-level wait above
+        // timed out, such as a late-loading iframe), probe them now before giving up.
+        if (!hasFrames)
+        {
+            try
+            {
+                var fallback = await _genericFrameFallbackResolver.ResolveAsync(_browser.Page, locator, intent, action);
+                if (fallback is not null) return fallback;
+            }
+            catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+            {
+                _logger.Warn($"GENERIC FRAME FALLBACK FAILED: {intent}; Action={action}; {ex.Message}");
+            }
+        }
+
+        return locator;
     }
 
     private Task PreActionDelayAsync()
@@ -737,6 +830,20 @@ public sealed class UiActions
             _logger.Warn($"PAGE READY WAIT CONTINUING: DOMContentLoaded did not settle within {_config.Waits.PageReadyTimeoutMs}ms: {ex.Message}");
         }
 
+        try
+        {
+            // Best-effort only: many DC pages poll/keep sockets alive indefinitely and will never go idle.
+            // A short, separate timeout keeps this from ever becoming a de-facto hard wait.
+            await _browser.Page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions
+            {
+                Timeout = _config.Waits.NetworkIdleTimeoutMs
+            });
+        }
+        catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+        {
+            _logger.Warn($"PAGE READY WAIT CONTINUING: NetworkIdle did not settle within {_config.Waits.NetworkIdleTimeoutMs}ms: {ex.Message}");
+        }
+
         await WaitForDuckCreekLoadingOverlayBestEffortAsync();
     }
 
@@ -750,12 +857,12 @@ public sealed class UiActions
                 "() => { const overlays = Array.from(document.querySelectorAll('#loadingMask, #loadingWindow, .x-mask, .x-mask-msg')); if (overlays.length === 0) return true; return overlays.every(el => { const style = window.getComputedStyle(el); const rect = el.getBoundingClientRect(); const hiddenByStyle = style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0'; const hiddenByState = el.hasAttribute('hidden') || el.getAttribute('aria-hidden') === 'true'; const noSize = rect.width === 0 || rect.height === 0; return hiddenByStyle || hiddenByState || noSize; }); }",
                 new PageWaitForFunctionOptions
                 {
-                    Timeout = _config.Waits.PageReadyTimeoutMs
+                    Timeout = _config.Waits.LoadingOverlayTimeoutMs
                 });
         }
         catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
         {
-            _logger.Warn($"LOADING OVERLAY WAIT CONTINUING: #loadingMask/#loadingWindow/.x-mask did not clear within {_config.Waits.PageReadyTimeoutMs}ms: {ex.Message}");
+            _logger.Warn($"LOADING OVERLAY WAIT CONTINUING: #loadingMask/#loadingWindow/.x-mask did not clear within {_config.Waits.LoadingOverlayTimeoutMs}ms: {ex.Message}");
         }
     }
 

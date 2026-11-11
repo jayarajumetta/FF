@@ -202,12 +202,6 @@ public sealed class VehiclesPage
     public Task ClickCONTINUED555DAsync() =>
 
         _locators.CONTINUED555D.EvaluateAsync("el => el.click()");
-
-
-    public Task PauseAsync(int milliseconds) =>
-      Task.Delay(milliseconds);
-
-
     public Task<bool> IsCONTINUED555DPresentAsync() =>
         _ui.ExistsAsync(_locators.CONTINUED555D);
 

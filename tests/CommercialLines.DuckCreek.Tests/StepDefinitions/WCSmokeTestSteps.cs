@@ -22,7 +22,6 @@ public sealed class WCSmokeTestSteps
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
         await page.WaitForBODYAsync("Exists");
-        await page.PauseAsync(1000);
 
     }
 
@@ -64,7 +63,6 @@ public sealed class WCSmokeTestSteps
 
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
-        await page.PauseAsync(1000);
         await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
         await page.ClickOKAsync();
         await page.WaitForOKAsync("Absent");
@@ -189,7 +187,6 @@ public sealed class WCSmokeTestSteps
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_93}}"));
-        await page.PauseAsync(1000);
 
     }
 
@@ -207,23 +204,18 @@ public sealed class WCSmokeTestSteps
 
         await page.EnterIndividualTypeAsync(data.Resolve("{{data:individualtype_96}}"));
         await page.WaitForPleaseVerifySSNAsync("Exists");
-        await page.PauseAsync(4000);
         await page.EnterFirstNameAsync(data.Resolve("{{runtime:FirstName_0098}}"));
         await page.EnterMiddleNameAsync(data.Resolve("{{runtime:MiddleName_0098}}"));
-        await page.PauseAsync(4000);
         await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0098}}"));
         await page.EnterAddAssociatedClientDateOfBirthAsync(data.Resolve("{{data:dateofbirth_101}}"));
         await page.EnterAddressAsync(data.Resolve("{{data:address1_102}}"));
-        await page.PauseAsync(1000);
         await page.EnterCityAsync(data.Resolve("{{data:city_103}}"));
         await page.EnterStateAsync(data.Resolve("{{data:state_104}}"));
         await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_105}}"));
         await page.EnterGenderAsync(data.Resolve("{{data:gender_106}}"));
-        await page.PauseAsync(4000);
         await page.WaitForClientSearchAsync("Exists");
         await page.ClickClientSearchAsync();
         await page.VerifySearchResultsDuckCreekPolicyFirstCheckboxAsync("Absent", "");
-        await page.PauseAsync(1000);
         await page.ClickOKAsync();
         await page.ClickOrderSSNAsync();
         await page.EnterAddAssociatedClientEnterSSNAsync(data.Resolve("{{data:enter_ssn_114}}"));
@@ -245,7 +237,6 @@ public sealed class WCSmokeTestSteps
         if (await page.IsInsuranceScoreVisibleAsync())
         {
             await page.ClickInsuranceScoreAsync();
-            await page.PauseAsync(2000);
         }
 
     }
@@ -261,16 +252,12 @@ public sealed class WCSmokeTestSteps
 
         await page.ClickPolicyInfoAsync();
         await page.WaitForPolicyInfoHeaderAsync("Exists");
-        await page.PauseAsync(1000);
         await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_138}}"));
-        await page.PauseAsync(1000);
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_141}}"));
-        await page.PauseAsync(1000);
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_145}}"));
         await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
-        await page.PauseAsync(1000);
 
     }
 
@@ -316,7 +303,6 @@ public sealed class WCSmokeTestSteps
 
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
-        await page.PauseAsync(1000);
         await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
         await page.ClickOKAsync();
         await page.WaitForOKAsync("Absent");
