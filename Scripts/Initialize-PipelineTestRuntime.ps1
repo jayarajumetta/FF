@@ -7,7 +7,7 @@ param(
     [string]$ResultsRoot,
 
     [Parameter(Mandatory)]
-    [ValidateSet("QA", "IT")]
+    [ValidateSet("Dev", "QA", "IT")]
     [string]$Environment,
 
     [Parameter(Mandatory)]
