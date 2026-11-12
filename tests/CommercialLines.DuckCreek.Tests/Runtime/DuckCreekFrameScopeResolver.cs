@@ -11,7 +11,11 @@ public sealed class DuckCreekFrameScopeResolver
     private readonly FrameworkConfig _config;
     private readonly RunLogger _logger;
     private readonly Dictionary<string, FrameHint[]> _hints;
-    private readonly ConcurrentDictionary<string, ScopeChoice> _cache = new(StringComparer.OrdinalIgnoreCase);
+    // Process-wide (static) so frame-scope discoveries are reused across scenarios within the same test
+    // run instead of being re-discovered per scenario. Safe under parallel execution because entries are
+    // keyed by the business Page|Control intent (not tied to any single IPage instance) and every cache hit
+    // is revalidated against the current page/frame via IsPresentAsync before use.
+    private static readonly ConcurrentDictionary<string, ScopeChoice> _cache = new(StringComparer.OrdinalIgnoreCase);
 
     public DuckCreekFrameScopeResolver(IPage page, FrameworkConfig config, RunLogger logger)
     {

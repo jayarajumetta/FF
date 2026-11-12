@@ -7,7 +7,11 @@ namespace InsuranceAutomation.CLDC.Runtime;
 
 public sealed class DuckCreekRuntimeLocatorResolver : IRuntimeLocatorResolver
 {
-    private readonly ConcurrentDictionary<string, LocatorRecipe> _cache = new(StringComparer.OrdinalIgnoreCase);
+    // Process-wide (static) so discovered control locators are reused across scenarios within the same test
+    // run instead of being re-discovered per scenario (e.g. every row of a Scenario Outline Examples table).
+    // Safe because every cache hit is revalidated via IsUniqueVisibleAsync before use and evicted on failure,
+    // so a stale/incorrect recipe never causes an incorrect interaction - only a fallback to fresh discovery.
+    private static readonly ConcurrentDictionary<string, LocatorRecipe> _cache = new(StringComparer.OrdinalIgnoreCase);
     private readonly string _evidencePath;
     private readonly RunLogger _logger;
     private readonly object _writeGate = new();

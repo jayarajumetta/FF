@@ -71,6 +71,7 @@
     "verifyTimeoutMs": 20000,
     "pollIntervalMs": 250,
     "waitForDomContentLoadedBeforeActions": true,
+    "preActionDelayMs": 150,
     "frameProbeTimeoutMs": 600,
     "dropdownOptionTimeoutMs": 3000,
     "dropdownPollIntervalMs": 100,

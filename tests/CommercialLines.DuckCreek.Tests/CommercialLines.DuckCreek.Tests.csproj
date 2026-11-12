@@ -28,5 +28,5 @@
   <ItemGroup>
     <Folder Include="TestData\Scenarios\Expanded\" />
   </ItemGroup>
-  <ProjectExtensions><VisualStudio><UserProperties testdata_4scenarios_4011_3wc_3expanded_3de_1json__JsonSchema="https://acp-protocol.dev/schemas/v1/config.schema.json" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 </Project>

@@ -13,6 +13,13 @@ public sealed class UiActions
     private readonly HashSet<string> _semanticallyCommittedControls = new(StringComparer.OrdinalIgnoreCase);
     private readonly IRuntimeLocatorResolver? _runtimeLocatorResolver;
     private readonly GenericFrameFallbackResolver _genericFrameFallbackResolver;
+    // Process-wide (static) memory of controls previously confirmed to resolve in the TOP-LEVEL document
+    // (never inside an iframe). Used purely to re-order EnsurePresentWithFrameFallbackAsync's probing so a
+    // known top-level control skips the generic per-iframe scan and goes straight to the bounded top-level
+    // wait. Self-healing: if a control's rendering location ever changes (e.g. moved into an iframe), the
+    // top-level wait below simply fails and the method falls back to the full iframe scan as before, so this
+    // is a pure latency optimization with no correctness risk.
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, byte> _knownTopLevelControls = new(StringComparer.OrdinalIgnoreCase);
 
     public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger)
         : this(browser, config, logger, null, "Unknown", null, null) { }
@@ -711,6 +718,25 @@ public sealed class UiActions
             // Locator evaluation itself failed (e.g. detached frame); fall through to the bounded waits below.
         }
 
+        var controlKey = intent.ToString();
+
+        // If this control was previously confirmed top-level, try the bounded top-level wait FIRST so a
+        // transient re-render (e.g. after a postback) doesn't pay for a full iframe scan that is known to be
+        // fruitless. Falls through to the normal iframe-scan-then-wait sequence if this guess doesn't pan out.
+        if (_knownTopLevelControls.ContainsKey(controlKey))
+        {
+            try
+            {
+                await locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached, Timeout = _config.Waits.PresenceTimeoutMs });
+                return locator;
+            }
+            catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+            {
+                _knownTopLevelControls.TryRemove(controlKey, out _);
+                _logger.Warn($"ELEMENT PRESENCE WAIT: {intent}; Action={action}; previously top-level control not attached within {_config.Waits.PresenceTimeoutMs}ms, falling back to frame scan: {ex.Message}");
+            }
+        }
+
         // Cheap, non-waiting probe: does the page even have any iframes? If not, there is no point
         // attempting a frame scan - go straight to the bounded top-level presence wait.
         var hasFrames = false;
@@ -741,6 +767,7 @@ public sealed class UiActions
         try
         {
             await locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached, Timeout = _config.Waits.PresenceTimeoutMs });
+            _knownTopLevelControls[controlKey] = 0;
             return locator;
         }
         catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
