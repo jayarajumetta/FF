@@ -300,7 +300,21 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         {
             if (IsRatePolicy)
             {
-                await new SFP_LiabilityOptionalCoveragePage(_context.Page).EditAsync(SfpRatePolicyInputs.Liability(table));
+                var values = SfpRatePolicyInputs.Liability(table);
+                var optionalCoveragePage = new SFP_LiabilityOptionalCoveragePage(_context.Page);
+                if (SFP_LiabilityOptionalCoveragePage.IsCoverageExpectedUnavailable(
+                    _contextData.RatingState,
+                    values["CoverageName"]))
+                {
+                    await optionalCoveragePage.ExpectCatalogCoverageUnavailableAsync(values["CoverageName"]);
+                    Console.WriteLine(
+                        $"[Liability] Verified '{values["CoverageName"]}' is unavailable in {_contextData.RatingState}; skipping.");
+                }
+                else
+                {
+                    await optionalCoveragePage.EditAsync(values);
+                }
+
                 var page = new SFP_LiabilityPage(_context.Page);
                 await page.NextMortgageeLossPayeeButton.ClickAsync();
                 await page.WaitForSpinnerAsync();

@@ -32,6 +32,7 @@ namespace PnCTestAutomation.Pages
             await SetTotalFarmingAcreage(_contextData.TotalAcreage);
 
             await WaitForSpinnerAsync();
+            await SelectProtectionClassIfRequiredAsync();
         }
 
         public async Task EnterRequiredRatePolicyLocationAsync()
@@ -48,6 +49,29 @@ namespace PnCTestAutomation.Pages
             await form.SetAsync("LocationInput.MilesFromFireDepartment", _contextData.MilesFromFireDepartment, number: true);
             await form.SetAsync("LocationInput.FeetFromHydrant", _contextData.FeetFromHydrant);
             await form.SetAsync("LocationInput.Acreage", _contextData.TotalAcreage, number: true);
+            await SelectProtectionClassIfRequiredAsync();
+        }
+
+        public async Task SelectProtectionClassIfRequiredAsync()
+        {
+            var choices = _page.GetByTestId("PPC_ZipEntity")
+                .Locator(":scope > [data-testid$='-chip-wrapper']")
+                .Filter(new() { Visible = true });
+            if (await choices.CountAsync() == 0)
+                return;
+
+            if (await choices.Locator(".chip-wrapper-selected").CountAsync() > 0)
+                return;
+
+            var choice = choices.First;
+            var label = (await choice.InnerTextAsync()).Trim();
+            await choice.Locator(".chip-wrapper").ClickAsync();
+            await WaitForSpinnerAsync();
+
+            var selected = _page.GetByTestId("PPC_ZipEntity")
+                .Locator(":scope > [data-testid$='-chip-wrapper'] .chip-wrapper-selected");
+            await Expect(selected).ToHaveCountAsync(1);
+            Console.WriteLine($"[ProtectionClass] Selected the first ISO option: {label}");
         }
 
         public async Task ApplyAddressOverrideIfRequiredAsync()
@@ -903,16 +927,17 @@ namespace PnCTestAutomation.Pages
                 return;
             }
 
+            if (expectsAbsence)
+            {
+                var visibleOptions = WindHailOptionsInScope().Filter(new() { Visible = true });
+                Assert.That(await visibleOptions.CountAsync(), Is.EqualTo(0),
+                    $"[WindHail] Zip {zipCode}: Wind/Hail must not be offered.");
+                Console.WriteLine($"[WindHail] Zip {zipCode}: Verified row-defined absence of the Wind/Hail field.");
+                return;
+            }
+
             if (rules is null)
             {
-                if (expectsAbsence)
-                {
-                    var unknownVisibleOptions = WindHailOptionsInScope().Filter(new() { Visible = true });
-                    Assert.That(await unknownVisibleOptions.CountAsync(), Is.EqualTo(0),
-                        $"[WindHail] Zip {zipCode}: Wind/Hail must not be offered.");
-                    return;
-                }
-
                 if (string.IsNullOrWhiteSpace(expectedDeductible))
                 {
                     Console.WriteLine($"[WindHail] No rules defined for zip '{zipCode}' – skipping WH verification.");

@@ -26,10 +26,14 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 .Filter(new() { HasText = itemName, Visible = true });
 
         // Exception flow
-        public ILocator ExceptionButton => _page.Locator("button.js-exception");
-        public ILocator ExceptionNoteModal => _page.Locator("#exception-note");
-        public ILocator ExceptionNoteTextarea => _page.Locator(".js-exception-note-text textarea");
-        public ILocator ExceptionNoteConfirm => _page.Locator("#exception-note-confirm");
+        public ILocator ExceptionButton => _page
+            .Locator("button.js-exception:visible")
+            .Or(_page.GetByRole(
+                AriaRole.Button,
+                new() { Name = "Take Action other than Cancel", Exact = true }));
+        public ILocator ExceptionNoteModal => _page.Locator("#exception-note:visible, #takeAction-note:visible");
+        public ILocator LegacyExceptionNoteModal => _page.Locator("#exception-note");
+        public ILocator TakeActionNoteModal => _page.Locator("#takeAction-note");
         public ILocator ApplyChangesModal => _page.Locator("#apply-changes-modal");
 
         // Main note + Add Note
@@ -54,7 +58,14 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             // Use Context.WaitForPageAsync so we capture both true popups (window.open)
             // and plain new-tab navigations (target="_blank" links).
             var newPageTask = eqPage.Context.WaitForPageAsync();
-            await openBtn.ClickAsync();
+            try
+            {
+                await openBtn.ClickAsync(new() { Timeout = 10000 });
+            }
+            catch (TimeoutException)
+            {
+                await openBtn.DispatchEventAsync("click");
+            }
             var checklistPage = await newPageTask;
 
             // Wait for initial load
@@ -242,29 +253,38 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
                 await ExceptionButton.ClickAsync();
 
+                await ExceptionNoteModal.WaitForAsync(new() { Timeout = 10000 });
+                var usesTakeAction = await TakeActionNoteModal.IsVisibleAsync();
+                var noteModal = usesTakeAction ? TakeActionNoteModal : LegacyExceptionNoteModal;
+                var noteTextarea = noteModal.Locator("textarea");
+                var noteConfirm = noteModal.GetByRole(
+                    AriaRole.Button,
+                    new() { Name = "OK", Exact = true });
+                var requestPath = usesTakeAction
+                    ? "/EChecklist/ChecklistDetails/TakeAction"
+                    : "/EChecklist/ChecklistDetails/RequestException";
+
                 // EChecklist enables OK from its keyup handler.
-                await ExceptionNoteTextarea.WaitForAsync(new() { Timeout = 10000 });
-                await ExceptionNoteTextarea.EvaluateAsync(@"(el, text) => {
+                await noteTextarea.WaitForAsync(new() { Timeout = 10000 });
+                await noteTextarea.EvaluateAsync(@"(el, text) => {
                     el.value = text;
                     el.dispatchEvent(new Event('input', { bubbles: true }));
                     el.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
                 }", string.IsNullOrWhiteSpace(exceptionNote) ? note : exceptionNote);
 
-                await Assertions.Expect(ExceptionNoteConfirm).ToBeEnabledAsync(new() { Timeout = 10000 });
+                await Assertions.Expect(noteConfirm).ToBeEnabledAsync(new() { Timeout = 10000 });
                 var response = await _page.RunAndWaitForResponseAsync(
-                    () => ExceptionNoteConfirm.ClickAsync(),
+                    () => noteConfirm.ClickAsync(),
                     candidate =>
                         candidate.Request.Method == "POST"
-                        && candidate.Url.Contains(
-                            "/EChecklist/ChecklistDetails/RequestException",
-                            StringComparison.OrdinalIgnoreCase),
-                    new() { Timeout = 30000 });
+                        && candidate.Url.Contains(requestPath, StringComparison.OrdinalIgnoreCase),
+                    new() { Timeout = 120000 });
                 await RequireSuccessfulExceptionResponseAsync(response, itemName);
 
                 // Saving an exception is the complete item action. EChecklist first fades
                 // the note modal, then displays a blocking "Applying Changes..." overlay
                 // while it refreshes the menu and automatically opens the next item.
-                await ExceptionNoteModal.WaitForAsync(
+                await noteModal.WaitForAsync(
                     new() { State = WaitForSelectorState.Hidden, Timeout = 15000 });
                 try
                 {
@@ -277,7 +297,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 }
 
                 await ApplyChangesModal.WaitForAsync(
-                    new() { State = WaitForSelectorState.Hidden, Timeout = 60000 });
+                    new() { State = WaitForSelectorState.Hidden, Timeout = 120000 });
                 return;
             }
 

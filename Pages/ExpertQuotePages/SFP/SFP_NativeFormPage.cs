@@ -624,14 +624,79 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         public async Task ContinueReviewAndRequireReadyAsync(ILocator destination)
         {
             var review = ReviewRequiredDialog();
-            await destination.Or(review).And(_page.Locator(":visible")).First.WaitForAsync(
-                new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+            try
+            {
+                await destination.Or(review).And(_page.Locator(":visible")).First.WaitForAsync(
+                    new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+            }
+            catch (TimeoutException)
+            {
+                throw new PlaywrightException(
+                    "Neither the expected destination nor a Review Required dialog became visible.");
+            }
             if (await review.IsVisibleAsync())
                 await ContinuePastReviewRequiredIfPresentAsync();
-            await destination.WaitForAsync(
-                new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+            try
+            {
+                await destination.WaitForAsync(
+                    new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+            }
+            catch (TimeoutException)
+            {
+                throw new PlaywrightException(
+                    "The expected destination did not become visible after continuing past Review Required.");
+            }
             await ThrowIfQuoteErrorAsync("continuing past the expected SFP review");
             await Expect(destination).ToBeVisibleAsync();
+        }
+
+        public async Task<bool> CompleteRequiredReviewCommentsAndSaveAsync(ILocator destination)
+        {
+            var comments = _page.GetByTestId(new Regex(
+                    @"uWRuleReview\$agentComments\.value$",
+                    RegexOptions.IgnoreCase))
+                .And(_page.Locator("input:visible, textarea:visible"));
+            var count = await comments.CountAsync();
+            if (count == 0)
+                return false;
+
+            var cosmeticLossRule = _page.GetByText(
+                    new Regex(@"^\s*10051\s*$", RegexOptions.IgnoreCase))
+                .Filter(new() { Visible = true })
+                .First;
+            if (await cosmeticLossRule.CountAsync() > 0)
+            {
+                const string cosmeticLossField = "CoverageInput.CosmeticLossExclusion";
+                await SetAsync(cosmeticLossField, "Yes");
+
+                Console.WriteLine(
+                    "[ResidenceReview] Applied Cosmetic Loss Exclusion required by rule 10051.");
+            }
+
+            for (var index = 0; index < count; index++)
+            {
+                var comment = comments.Nth(index);
+                if (!string.IsNullOrWhiteSpace(await comment.InputValueAsync()))
+                    continue;
+
+                await comment.FillAsync(
+                    "Reviewed for automated Country Estate validation.",
+                    new() { Force = true });
+                await comment.DispatchEventAsync("change");
+                await comment.DispatchEventAsync("blur");
+            }
+
+            await Expect(comments).Not.ToHaveValueAsync("");
+            var save = _page.GetByTestId("fields.data.save").Filter(new() { Visible = true }).First;
+            if (await save.CountAsync() == 0)
+                throw new PlaywrightException(
+                    "Required residence review comments were present, but no visible Save button was available.");
+
+            await save.ClickAsync();
+            await WaitForSpinnerAsync();
+            await ContinueReviewAndRequireReadyAsync(destination);
+            Console.WriteLine($"[ResidenceReview] Completed and saved {count} required agent comment(s).");
+            return true;
         }
 
         private ILocator ReviewRequiredDialog() =>

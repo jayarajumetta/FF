@@ -108,8 +108,21 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         }
 
         [When("user edits liability optional coverage and stays")]
-        public async Task UserEditsLiabilityOptionalCoverageAndStays(Table table) =>
-            await (_liabilityPage ??= new SFP_LiabilityOptionalCoveragePage(_context.Page))
-                .EditAsync(SfpRatePolicyInputs.Liability(table));
+        public async Task UserEditsLiabilityOptionalCoverageAndStays(Table table)
+        {
+            var values = SfpRatePolicyInputs.Liability(table);
+            var page = _liabilityPage ??= new SFP_LiabilityOptionalCoveragePage(_context.Page);
+            if (SFP_LiabilityOptionalCoveragePage.IsCoverageExpectedUnavailable(
+                _data.RatingState,
+                values["CoverageName"]))
+            {
+                await page.ExpectCatalogCoverageUnavailableAsync(values["CoverageName"]);
+                Console.WriteLine(
+                    $"[Liability] Verified '{values["CoverageName"]}' is unavailable in {_data.RatingState}; skipping.");
+                return;
+            }
+
+            await page.EditAsync(values);
+        }
     }
 }

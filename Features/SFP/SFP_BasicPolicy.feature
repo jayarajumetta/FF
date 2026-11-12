@@ -42,7 +42,7 @@ Feature: SFP Basic Policy
     # Step 7: Select Special Farm Package and quote details
     And user selects Special Farm Package and inputs Quote Details
       | Question       | Answer                                      |
-      | EffectiveDate  | {{tomorrow}}                                |
+      | EffectiveDate  | {{laterOfTomorrow:04/03/2027}}              |
       | PolicyTerm     | 12 months                                   |
       | AgentCode      | D2102                                       |
       | RatingState    | <State>                                     |
@@ -311,7 +311,7 @@ Feature: SFP Basic Policy
     @Shard1 @DevOnly
     Examples:
       | State      | StateAbbv | Address          | AddressLine2 | City   | Zip   | County   | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
-      | California | CA        | 3300 Glenwood St |          111 | Eureka | 95501 | Humboldt |           |                    | 1%                 |                     |                   |
+      | California | CA        | 3300 Glenwood St |          111 | Eureka | 95501 | Humboldt |           |                    | None               |                     |                   |
 
     @Shard2 @Debug
     Examples:
@@ -323,11 +323,11 @@ Feature: SFP Basic Policy
       | State         | StateAbbv | Address                       | AddressLine2 | City         | Zip   | County       | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
       | Missouri      | MO        | 1895 S Forrest Heights Avenue |          111 | Springfield  | 65809 | Greene       |           |                    | 1%                 |                     |                   |
       | Minnesota     | MN        | 115 S Main ST                 |          111 | Warren       | 56762 | Marshall     |           |                    | 1%                 |                     |                   |
-      | Montana       | MT        | 1202 3rd St W                 |           11 | Roundup      | 59072 | Musselshell  |           |                    | 1%                 |                     |                   |
+      | Montana       | MT        | 1202 3rd St W                 |           11 | Roundup      | 59072 | Musselshell  |           |                    | None               |                     |                   |
       | Nebraska      | NE        | 1517 Broadway                 |          111 | Scottsbluff  | 69361 | Scotts Bluff |           |                    | 1%                 |                     |                   |
       | Nevada        | NV        | 340 N 11th St                 |          111 | Las Vegas    | 89101 | Clark        |           |                    | 1%                 |                     |                   |
       | New Mexico    | NM        | 901 West 13th St              |          111 | Clovis       | 88101 | Curry        |           |                    | 1%                 |                     |                   |
-      | North Dakota  | ND        | 600 S 2nd St                  |          111 | Bismarck     | 58504 | Burleigh     |           |                    | 1%                 |                     |                   |
+      | North Dakota  | ND        | 600 S 2nd St                  |          111 | Bismarck     | 58504 | Burleigh     |           |                    | None               |                     |                   |
       | Oklahoma      | OK        | 436255 E 330 Rd               |          111 | Big Cabin    | 74332 | Craig        |           |                    | 1%                 |                     |                   |
 
     @Shard2 @Pollution146
@@ -383,5 +383,5 @@ Feature: SFP Basic Policy
 
     @Shard3 @DevOnly
     Examples:
-      | State         | StateAbbv | Address         | AddressLine2 | City      | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
-      | West Virginia | WV        | 1001 Adairs Run |          111 | Princeton | 24739 | Mercer |           |                    | 1%                 |                     |                   |
+      | State         | StateAbbv | Address                  | AddressLine2 | City     | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | West Virginia | WV        | 108 Victorian Commons Rd |              | Winfield | 25213 | Putnam |           |                    | 1%                 |                     |                   |

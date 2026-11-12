@@ -162,6 +162,91 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
+        public async Task Location_SelectsFirstProtectionClassWhenIsoReturnsUnselectedChoices()
+        {
+            await _page.SetContentAsync("""
+                <div data-testid="PPC_ZipEntity">
+                  <div data-testid="PPC_ZipEntity-2-chip-wrapper" onclick="selectPpc(this)">
+                    <div class="chip-wrapper">PPC: 2<br>FDName: PADUCAH</div>
+                  </div>
+                  <div data-testid="PPC_ZipEntity-3-chip-wrapper" onclick="selectPpc(this)">
+                    <div class="chip-wrapper">PPC: 3<br>FDName: REIDLAND FARLEY FD</div>
+                  </div>
+                </div>
+                <script>
+                  function selectPpc(choice) {
+                    document.querySelectorAll('[data-testid="PPC_ZipEntity"] .chip-wrapper')
+                      .forEach(item => item.className = 'chip-wrapper');
+                    choice.firstElementChild.className = 'chip-wrapper-selected';
+                  }
+                </script>
+                """);
+
+            await new LocationPage(_page, new ScenarioContextData())
+                .SelectProtectionClassIfRequiredAsync();
+
+            Assert.That(
+                (await _page.Locator(".chip-wrapper-selected").InnerTextAsync()).Trim(),
+                Does.StartWith("PPC: 2"));
+        }
+
+        [Test]
+        public async Task Location_PreservesExistingProtectionClassSelection()
+        {
+            await _page.SetContentAsync("""
+                <div data-testid="PPC_ZipEntity">
+                  <div data-testid="PPC_ZipEntity-2-chip-wrapper">
+                    <div class="chip-wrapper">PPC: 2</div>
+                  </div>
+                  <div data-testid="PPC_ZipEntity-3-chip-wrapper">
+                    <div class="chip-wrapper-selected">PPC: 3</div>
+                  </div>
+                </div>
+                """);
+
+            await new LocationPage(_page, new ScenarioContextData())
+                .SelectProtectionClassIfRequiredAsync();
+
+            Assert.That(
+                (await _page.Locator(".chip-wrapper-selected").InnerTextAsync()).Trim(),
+                Is.EqualTo("PPC: 3"));
+        }
+
+        [Test]
+        public async Task Submission_DetectsRequiredPrimaryInsuredAddressOverride()
+        {
+            await _page.SetContentAsync(
+                "<a>Primary Insured Details - Address Override</a>");
+
+            Assert.That(
+                await new SubmissionPage(_page)
+                    .RequiresPrimaryInsuredAddressOverrideAsync(),
+                Is.True);
+        }
+
+        [Test]
+        public async Task PrimaryInsured_AppliesRequiredMailingAddressOverride()
+        {
+            await _page.SetContentAsync("""
+                <button data-testid="fields.data.account.editPrimaryNamedInsured"
+                        onclick="
+                  this.insertAdjacentHTML(
+                    'afterend',
+                    '<input type=&quot;checkbox&quot; data-testid=&quot;fields.account.accountInput$addressOverride.value&quot;>')">
+                  EDIT
+                </button>
+                """);
+
+            var page = new SFP_PrimaryInsuredPage(_page);
+            await page.ApplyMailingAddressOverrideAsync();
+
+            Assert.That(
+                await _page.GetByTestId(
+                    "fields.account.accountInput$addressOverride.value").IsCheckedAsync(),
+                Is.True);
+        }
+
+        [Test]
         public async Task RenovationInputs_UseExistingWiringHeatingPlumbingControls()
         {
             await _page.SetContentAsync(
@@ -503,6 +588,38 @@ namespace PnCTestAutomation.Tests
 
             await page.SelectWindHailDeductibleAsync("2%", "20855", selectExactRequestedValue: true);
             Assert.That(await _page.Locator("body").GetAttributeAsync("data-wind-hail"), Is.EqualTo("2%"));
+        }
+
+        [Test]
+        public async Task CaliforniaWindHail_WhenAbsent_VerifiesNoDeductibleIsOffered()
+        {
+            await _page.SetContentAsync("<main>No Wind/Hail field</main>");
+            var page = new LocationPage(_page, new ScenarioContextData { RatingState = "California" });
+
+            await page.VerifyWindHailDeductibleOptionsAsync("95501", "None");
+            await page.SelectWindHailDeductibleAsync("None", "95501");
+        }
+
+        [Test]
+        public async Task CaliforniaWindHail_WhenPresent_FailsBothVerificationAndSelection()
+        {
+            await SetWindHailOptionsAsync("SFP Location", "N/A", "1%");
+            var page = new LocationPage(_page, new ScenarioContextData { RatingState = "California" });
+
+            Assert.ThrowsAsync<AssertionException>(() =>
+                page.VerifyWindHailDeductibleOptionsAsync("95501", "None"));
+            Assert.ThrowsAsync<AssertionException>(() =>
+                page.SelectWindHailDeductibleAsync("None", "95501"));
+        }
+
+        [TestCase("Montana", "59072")]
+        [TestCase("North Dakota", "58504")]
+        public async Task RowDefinedWindHailAbsence_OverridesLegacyZipRule(string state, string zip)
+        {
+            await _page.SetContentAsync("<main>No Wind/Hail field</main>");
+            var page = new LocationPage(_page, new ScenarioContextData { RatingState = state });
+
+            await page.VerifyWindHailDeductibleOptionsAsync(zip, "None");
         }
 
         [Test]

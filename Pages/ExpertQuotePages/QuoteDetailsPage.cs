@@ -54,6 +54,13 @@ namespace PnCTestAutomation.Pages
         private ILocator SSNInput => _page.GetByTestId("ssn");
         private ILocator QuoteStartedWithoutSsn =>
             _page.Locator("body:not(:has(#startQuote:visible))");
+        private ILocator PotentialInvalidAddressDialog =>
+            _page.GetByRole(AriaRole.Dialog)
+                .Filter(new() { HasText = "Potential Invalid Address" })
+                .First;
+        private ILocator ProceedWithInvalidAddressButton =>
+            PotentialInvalidAddressDialog.GetByRole(
+                AriaRole.Button, new() { Name = "Proceed", Exact = true });
         // btnConfirmYes is wrapped in <ng-component> which intercepts pointer events.
         // Use DispatchEventAsync("click") instead of ClickAsync everywhere this is used.
         private ILocator DialogSubmitButton => _page.GetByTestId("btnConfirmYes");
@@ -308,23 +315,37 @@ namespace PnCTestAutomation.Pages
 
         public async Task HandleSSNPopupsAsync(ScenarioContextData contextData)
         {
-            try
+            for (var addressPromptCount = 0; addressPromptCount < 2; addressPromptCount++)
             {
-                await SSNPopup
-                    .Or(QuoteStartedWithoutSsn)
-                    .First
-                    .WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60000 });
-            }
-            catch (TimeoutException)
-            {
-                throw new InvalidOperationException(
-                    $"Start Quote produced neither an SSN dialog nor a page transition within 60 seconds. "
-                    + await BuildPageDiagnosticsAsync());
+                try
+                {
+                    await PotentialInvalidAddressDialog
+                        .Or(SSNPopup)
+                        .Or(QuoteStartedWithoutSsn)
+                        .First
+                        .WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60000 });
+                }
+                catch (TimeoutException)
+                {
+                    throw new InvalidOperationException(
+                        $"Start Quote produced neither an address prompt, SSN dialog, nor a page transition within 60 seconds. "
+                        + await BuildPageDiagnosticsAsync());
+                }
+
+                if (!await PotentialInvalidAddressDialog.IsVisibleAsync())
+                    break;
+
+                Console.WriteLine("[StartQuote] Potential Invalid Address shown; proceeding with the entered address.");
+                await ProceedWithInvalidAddressButton.DispatchEventAsync("click");
+                await WaitForSpinnerAsync();
             }
 
             var popupVisible = await SSNPopup.CountAsync() > 0 && await SSNPopup.IsVisibleAsync();
-            if (!popupVisible)
+            if (!popupVisible && await QuoteStartedWithoutSsn.IsVisibleAsync())
                 return;
+            if (!popupVisible)
+                throw new InvalidOperationException(
+                    $"Start Quote did not continue after the address prompt. " + await BuildPageDiagnosticsAsync());
 
             string ssnToUse = !string.IsNullOrWhiteSpace(contextData.SSN)
                 ? contextData.SSN

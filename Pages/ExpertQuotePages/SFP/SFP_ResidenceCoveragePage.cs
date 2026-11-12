@@ -217,7 +217,18 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             // Step 2: Select Valuation Type — reveals Get Valuation button
             if (!string.IsNullOrEmpty(contextData.ResidenceRCTOption) || !string.IsNullOrEmpty(contextData.ResidenceUseDefaults))
             {
-                await GetValuationTypeButton(contextData.ResidenceRCTOption, contextData.ResidenceUseDefaults).ClickAsync();
+                var valuationType = GetValuationTypeButton(
+                    contextData.ResidenceRCTOption, contextData.ResidenceUseDefaults);
+                if (!await valuationType.IsVisibleAsync())
+                {
+                    System.Console.WriteLine(
+                        "[ResidenceCoverage] Valuation Type did not appear after selecting RCT; retrying the estimator selection once.");
+                    await EstimatorTypeRCTButton.ClickAsync();
+                    await WaitForSpinnerAsync();
+                }
+
+                await Expect(valuationType).ToBeVisibleAsync(new() { Timeout = 30000 });
+                await valuationType.ClickAsync();
                 await WaitForSpinnerAsync();
             }
 
@@ -264,9 +275,24 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         {
             await Expect(select).ToHaveCountAsync(1);
             await select.ClickAsync();
-            var option = _page.GetByRole(AriaRole.Listbox).And(_page.Locator(":visible"))
-                .GetByRole(AriaRole.Option, new() { Name = caption, Exact = true });
-            await Expect(option).ToHaveCountAsync(1);
+            var listbox = _page.GetByRole(AriaRole.Listbox).And(_page.Locator(":visible"));
+            var option = listbox.GetByRole(
+                AriaRole.Option, new() { Name = caption, Exact = true });
+            try
+            {
+                await option.WaitForAsync(
+                    new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine(
+                    $"[ResidenceCoverage] Exact option '{caption}' did not render on first open; reopening once.");
+                if (string.Equals(await select.GetAttributeAsync("aria-expanded"), "true",
+                        StringComparison.OrdinalIgnoreCase))
+                    await select.PressAsync("Escape");
+                await select.ClickAsync();
+                await Expect(option).ToHaveCountAsync(1, new() { Timeout = 30000 });
+            }
             await option.ClickAsync();
         }
 

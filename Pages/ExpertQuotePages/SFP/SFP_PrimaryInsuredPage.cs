@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static Microsoft.Playwright.Assertions;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
@@ -43,6 +45,11 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         private ILocator PrimaryPhoneInput => _page.GetByTestId("fields.account.accountInput$primaryPhone.value");
         private ILocator EmailAddressInput => _page.GetByTestId("fields.account.accountInput$email.value");
         private ILocator FEINInput => _page.GetByTestId("fields.account.accountInput$fEIN.value");
+        private ILocator MailingAddressOverride =>
+            _page.GetByTestId(new Regex(
+                    @"accountInput\$addressOverride\.value$",
+                    RegexOptions.IgnoreCase))
+                .And(_page.Locator("input[type='checkbox']:visible"));
         private ILocator ClientSSNOnFile => _page.GetByText("Social Security #:", new() { Exact = true })
                                                     .Locator("..")
                                                     .Locator(".readonly-value");
@@ -112,6 +119,36 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await WaitForSpinnerAsync();
             await ClickSaveAsync();
             await ContinueToUwQuestionsAsync();
+        }
+
+        public async Task ApplyMailingAddressOverrideAsync()
+        {
+            if (await MailingAddressOverride.CountAsync() == 0
+                || !await MailingAddressOverride.IsVisibleAsync())
+            {
+                var edit = _page.GetByTestId(
+                    "fields.data.account.editPrimaryNamedInsured");
+                await edit.WaitForAsync(new()
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = 30000
+                });
+                await edit.ClickAsync();
+                await WaitForSpinnerAsync();
+            }
+
+            await MailingAddressOverride.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = 30000
+            });
+
+            if (!await MailingAddressOverride.IsCheckedAsync())
+                await MailingAddressOverride.CheckAsync();
+
+            await WaitForSpinnerAsync();
+            await Expect(MailingAddressOverride).ToBeCheckedAsync();
+            Console.WriteLine("[PrimaryInsured] Applied the required mailing Address Override.");
         }
 
         private async Task ContinueToUwQuestionsAsync()

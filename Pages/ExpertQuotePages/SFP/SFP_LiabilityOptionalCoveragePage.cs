@@ -72,6 +72,28 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             _ => throw new ArgumentException($"Unsupported liability coverage '{name}'.")
         };
 
+        internal async Task ExpectCatalogCoverageUnavailableAsync(string name)
+        {
+            await Expect(Catalog).ToBeVisibleAsync();
+            var cell = _page.Locator("td, mat-cell").Filter(new()
+            {
+                HasTextRegex = CatalogCaption(name)
+            });
+            var row = Catalog.Locator("tr, mat-row").Filter(new() { Has = cell });
+            await Expect(row).ToHaveCountAsync(0);
+        }
+
+        internal static bool IsCoverageExpectedUnavailable(string ratingState, string coverageName) =>
+            string.Equals(ratingState?.Trim(), "Wyoming", StringComparison.OrdinalIgnoreCase)
+            && (string.Equals(
+                    coverageName?.Trim(),
+                    "Special Farm Pollution",
+                    StringComparison.OrdinalIgnoreCase)
+                || string.Equals(
+                    coverageName?.Trim(),
+                    "Chemical Drift and Transportation Increased Limits",
+                    StringComparison.OrdinalIgnoreCase));
+
         private static string AcreageCoverageEntity(string name) => name switch
         {
             "Special Farm Pollution" => "CovLivestockOperationsSpecialFarmPollutionInput",

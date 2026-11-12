@@ -106,7 +106,26 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
         public async Task GoToInsuranceScoreAsync() { await NavigateToAsync(InsuranceScoreNav); }
         public async Task GoToPricingAsync() { await NavigateToAsync(PricingNav); }
         public async Task GoToBillingAsync() { await NavigateToAsync(BillingNav); }
-        public async Task GoToSubmissionAsync() { await NavigateToAsync(SubmissionNav); }
+        public async Task GoToSubmissionAsync()
+        {
+            var heading = _page.GetByRole(
+                AriaRole.Heading, new() { Name = "Submission", Exact = true });
+            if (await heading.IsVisibleAsync())
+                return;
+
+            await SubmissionNav.WaitForAsync(
+                new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+            try
+            {
+                await SubmissionNav.ClickAsync(new() { Timeout = 10000 });
+            }
+            catch (TimeoutException)
+            {
+                await SubmissionNav.DispatchEventAsync("click");
+            }
+            await heading.WaitForAsync(
+                new() { State = WaitForSelectorState.Visible, Timeout = 120000 });
+        }
 
         /// <summary>
         /// Navigates to any left-menu item by friendly name (case-insensitive).

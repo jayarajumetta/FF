@@ -12,7 +12,7 @@ namespace PnCTestAutomation.Tests
     [TestFixture]
     public class SfpCountryEstateFeatureTests
     {
-        private static readonly string[] EmptyAddressLine2States = { "MD", "PA", "VT" };
+        private static readonly string[] EmptyAddressLine2States = { "MD", "PA", "VT", "WV" };
         private static readonly string[] DevOnlyStateAbbreviations = { "CA", "VA", "WV" };
 
         private static Scenario ReadScenario(string featureFile = "SFP_CE.feature")
@@ -24,6 +24,28 @@ namespace PnCTestAutomation.Tests
                 throw new InvalidOperationException("Cannot locate TestAutomation.csproj for the canonical SFP feature.");
             var path = Path.Combine(directory.FullName, "Features", "SFP", featureFile);
             return new Parser().Parse(path).Feature.Children.OfType<Scenario>().Single();
+        }
+
+        [Test]
+        public void CanonicalCeResidence_UsesRequestedConstructionAndRenovationYears()
+        {
+            var step = ReadScenario().Steps.Single(
+                item => item.Text == "user adds a Country Estate Residence to the Location");
+            var rows = ((DataTable)step.Argument).Rows.ToArray();
+            var table = new Reqnroll.Table(rows[0].Cells.Select(cell => cell.Value).ToArray());
+            foreach (var row in rows.Skip(1))
+                table.AddRow(row.Cells.Select(cell => cell.Value).ToArray());
+
+            var data = new ScenarioContextData();
+            TableMappingHelpers.ResidenceFields(table, data);
+            Assert.Multiple(() =>
+            {
+                Assert.That(data.ResidenceYearBuilt, Is.EqualTo("1995"));
+                Assert.That(data.ResidenceRoofYear, Is.EqualTo("2016"));
+                Assert.That(data.Farm.ResidenceHeatingYear, Is.EqualTo("2022"));
+                Assert.That(data.Farm.ResidencePlumbingYear, Is.EqualTo("2020"));
+                Assert.That(data.Farm.ResidenceElectricalYear, Is.EqualTo("2017"));
+            });
         }
 
         [Test]
@@ -194,7 +216,7 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
-        public void DevConfiguration_AllowsEveryDevOnlyState()
+        public void DevConfiguration_AllowsCurrentSevenStateRollout()
         {
             var json = File.ReadAllText(Path.Combine(ProjectRoot(), "appsettings.Dev.json"));
             using var document = System.Text.Json.JsonDocument.Parse(json);
@@ -202,7 +224,7 @@ namespace PnCTestAutomation.Tests
                 .GetProperty("DevAllowedStates").EnumerateArray()
                 .Select(value => value.GetString()).ToArray();
 
-            Assert.That(allowed, Does.Contain("CA").And.Contain("VA").And.Contain("WV"));
+            Assert.That(allowed, Is.EqualTo(new[] { "WY", "IL", "MT", "IN", "ND", "TN", "KY" }));
         }
 
         private static string ProjectRoot()
@@ -249,7 +271,7 @@ namespace PnCTestAutomation.Tests
                 Is.EqualTo(new[]
                 {
                     "California", "CA", "3300 Glenwood St", "111", "Eureka", "95501", "Humboldt",
-                    "", "", "1%", "", ""
+                    "", "", "None", "", ""
                 }));
             Assert.That(rows.Single(row => row[1] == "VA"),
                 Is.EqualTo(new[]
@@ -260,7 +282,7 @@ namespace PnCTestAutomation.Tests
             Assert.That(rows.Single(row => row[1] == "WV"),
                 Is.EqualTo(new[]
                 {
-                    "West Virginia", "WV", "1001 Adairs Run", "111", "Princeton", "24739", "Mercer",
+                    "West Virginia", "WV", "108 Victorian Commons Rd", "", "Winfield", "25213", "Putnam",
                     "", "", "1%", "", ""
                 }));
         }

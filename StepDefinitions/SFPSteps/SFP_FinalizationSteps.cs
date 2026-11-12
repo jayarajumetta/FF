@@ -758,10 +758,26 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         {
             var sideMenu = new SideMenuNavigation(_context.Page);
             await sideMenu.GoToSubmissionAsync();
+            var submissionPage = new SubmissionPage(_context.Page);
+            await submissionPage.CompleteRequiredAgentCommentsAsync();
+
+            if (await submissionPage.RequiresPrimaryInsuredAddressOverrideAsync())
+            {
+                await sideMenu.GoToPrimaryInsuredDetailsAsync();
+                var primaryInsuredPage = new SFP_PrimaryInsuredPage(_context.Page);
+                await primaryInsuredPage.ApplyMailingAddressOverrideAsync();
+                await primaryInsuredPage.SavePrimaryInsuredAsync();
+                await primaryInsuredPage.WaitForSpinnerAsync(
+                    timeoutMs: 120000,
+                    appearanceGraceMs: 3000);
+                await sideMenu.GoToSubmissionAsync();
+                await submissionPage.CompleteRequiredAgentCommentsAsync();
+                Console.WriteLine(
+                    "[Submission] Resolved the required Primary Insured mailing Address Override.");
+            }
 
             if (IsChecklistOutageFormsOnly())
             {
-                var submissionPage = new SubmissionPage(_context.Page);
                 await submissionPage.WaitForSpinnerAsync();
                 await SFP_ChecklistPage.EnsureSubmissionReadyAsync(_context.Page);
                 Console.WriteLine("[Checklist outage] Submission opened; Checklist and Transmit will not be tested.");
@@ -873,10 +889,23 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 Console.WriteLine("No overlay dialog appeared — continuing");
             }
 
-            await submissionPage.WaitForSpinnerAsync();
             var expectedStatus = IsPollution146Scenario()
                 ? submissionPage.ReferralRequiredText
                 : submissionPage.NoReferralsText;
+            if (!await expectedStatus.First.IsVisibleAsync())
+            {
+                try
+                {
+                    await submissionPage.WaitForSpinnerAsync();
+                }
+                catch (TimeoutException)
+                {
+                    if (!await expectedStatus.First.IsVisibleAsync())
+                        throw;
+                    Console.WriteLine(
+                        "[Submission] Spinner remained visible after checklist update; status is actionable.");
+                }
+            }
             await expectedStatus.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
             Console.WriteLine("Checklist tab closed and EQ Submission page is ready");
         }
@@ -896,14 +925,13 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             await sideMenu.GoToSubmissionAsync();
 
             var submissionPage = new SubmissionPage(_context.Page);
-            await submissionPage.WaitForSpinnerAsync();
 
-            // Try role name first, then testId, then any button containing "Transmit" text
-            var transmitBtn = submissionPage.TransmitButtonAlt;
-            if (await transmitBtn.CountAsync() == 0)
-                transmitBtn = submissionPage.TransmitButton;
-            if (await transmitBtn.CountAsync() == 0)
-                transmitBtn = _context.Page.Locator("button").Filter(new() { HasText = "Transmit" });
+            var transmitBtn = submissionPage.TransmitButtonAlt
+                .Or(submissionPage.TransmitButton)
+                .Or(_context.Page.Locator("button").Filter(new() { HasText = "Transmit" }))
+                .First;
+            await transmitBtn.WaitForAsync(
+                new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
 
             Assert.That(await transmitBtn.CountAsync() > 0, Is.True, "Transmit button should be present on Submission page");
 

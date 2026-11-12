@@ -14,6 +14,7 @@ using NUnit.Framework;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Models;
+using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 using PnCTestAutomation.Services;
 using PnCTestAutomation.StepDefinitions.SFPSteps;
 using Reqnroll;
@@ -48,7 +49,7 @@ namespace PnCTestAutomation.Tests
                 .Single(row => row.Cells.First().Value == "EffectiveDate");
             Assert.That(
                 effectiveDate.Cells.ElementAt(1).Value,
-                Is.EqualTo("{{laterOfTomorrow:03/21/2027}}"));
+                Is.EqualTo("{{laterOfTomorrow:04/03/2027}}"));
             lines[effectiveDate.Location.Line - 1] = "| EffectiveDate | {{tomorrow}} |";
             foreach (var (coverage, originalAcres) in new[]
             {
@@ -62,6 +63,7 @@ namespace PnCTestAutomation.Tests
                 Assert.That(acreage.Cells.ElementAt(1).Value, Is.EqualTo("200"), coverage);
                 lines[acreage.Location.Line - 1] = $"| Acres | {originalAcres} |";
             }
+
             var pollutionTable = tables.Single(table => table.Rows.Any(row =>
                 row.Cells.First().Value == "CoverageName"
                 && row.Cells.ElementAt(1).Value == "Special Farm Pollution"));
@@ -115,6 +117,22 @@ namespace PnCTestAutomation.Tests
                 "Only table alignment, the Rate Policy effective-date token, the two user-approved 200-acre expectations, the current pollution-coverage contracts, the billing-compatible escrow answer, the verification-only referral/transmit expectations, and the approved Jan-27 examples may differ from the supplied scenario.");
         }
 
+        [TestCase("Wyoming", "Special Farm Pollution", true)]
+        [TestCase("Wyoming", "Chemical Drift and Transportation Increased Limits", true)]
+        [TestCase("Minnesota", "Special Farm Pollution", false)]
+        [TestCase("Minnesota", "Chemical Drift and Transportation Increased Limits", false)]
+        public void RatePolicyCoverageAvailability_IsStateSpecific(
+            string ratingState,
+            string coverageName,
+            bool expectedUnavailable)
+        {
+            Assert.That(
+                SFP_LiabilityOptionalCoveragePage.IsCoverageExpectedUnavailable(
+                    ratingState,
+                    coverageName),
+                Is.EqualTo(expectedUnavailable));
+        }
+
         private static void NormalizeApprovedStep(string[] lines, string current, string original)
         {
             var indexes = lines
@@ -127,9 +145,9 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
-        public void RateEffectiveDate_UsesMarch2027OrTomorrowWhicheverIsLater()
+        public void RateEffectiveDate_UsesApril2027OrTomorrowWhicheverIsLater()
         {
-            var releaseDate = new DateTime(2027, 3, 21);
+            var releaseDate = new DateTime(2027, 4, 3);
             var tomorrow = DateTime.Today.AddDays(1);
             var expected = (releaseDate > tomorrow ? releaseDate : tomorrow)
                 .ToString("M/d/yyyy", System.Globalization.CultureInfo.InvariantCulture);
@@ -137,7 +155,7 @@ namespace PnCTestAutomation.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(
-                    DateHelpers.ResolveDateToken("{{laterOfTomorrow:03/21/2027}}"),
+                    DateHelpers.ResolveDateToken("{{laterOfTomorrow:04/03/2027}}"),
                     Is.EqualTo(expected));
                 Assert.That(
                     DateHelpers.ResolveDateToken("{{laterOfTomorrow:01/01/2000}}"),

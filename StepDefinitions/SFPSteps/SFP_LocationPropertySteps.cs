@@ -157,6 +157,9 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             await residenceCovPage.ClickSaveAsync();
 
             var locationsPage = new SFP_LocationsResidencesBuildingsPage(_context.Page);
+            if (countryEstate)
+                await new SFP_NativeFormPage(_context.Page)
+                    .ContinueReviewAndRequireReadyAsync(locationsPage.EditResidenceButton());
             if (verify)
             {
                 await locationsPage.OpenResidenceAsync();
@@ -168,8 +171,14 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                     await residenceCovPage.VerifyCountryEstateResidenceCoverageAsync(_contextData);
                 else
                     await residenceCovPage.VerifyResidenceCoverageAsync(_contextData);
-                await locationsPage.LocationsNavigation.ClickAsync();
-                await locationsPage.WaitForSpinnerAsync();
+                var reviewSaved = countryEstate
+                    && await new SFP_NativeFormPage(_context.Page)
+                        .CompleteRequiredReviewCommentsAndSaveAsync(locationsPage.EditResidenceButton());
+                if (!reviewSaved)
+                {
+                    await locationsPage.LocationsNavigation.ClickAsync();
+                    await locationsPage.WaitForSpinnerAsync();
+                }
             }
             await locationsPage.NextButton.ClickAsync();
             await locationsPage.WaitForSpinnerAsync();

@@ -1235,15 +1235,16 @@ namespace PnCTestAutomation.Tests
                     </li>
                   </ul>
                   <div id="checklist-details" style="display:none">
-                    <button class="js-exception">Exception</button>
+                    <button class="js-exception" style="display:none">Exception</button>
+                    <button class="js-take-action-other">Take Action other than Cancel</button>
                     <textarea class="js-note"></textarea>
                     <button class="js-add-note">Add Note</button>
 
-                    <div id="exception-note" class="modal fade" aria-hidden="true" style="display:none">
-                      <div class="js-exception-note-text">
+                    <div id="takeAction-note" role="dialog" class="modal fade" aria-hidden="true" style="display:none">
+                      <div class="js-takeAction-note-text">
                         <textarea></textarea>
                       </div>
-                      <button id="exception-note-confirm" disabled>OK</button>
+                      <button id="takeAction-note-confirm" disabled>OK</button>
                     </div>
                   </div>
 
@@ -1255,10 +1256,10 @@ namespace PnCTestAutomation.Tests
                   <script>
                     const row = document.querySelector('.js-checklist-summary-item');
                     const details = document.getElementById('checklist-details');
-                    const exceptionButton = document.querySelector('.js-exception');
-                    const exceptionModal = document.getElementById('exception-note');
-                    const exceptionNote = document.querySelector('.js-exception-note-text textarea');
-                    const exceptionConfirm = document.getElementById('exception-note-confirm');
+                    const exceptionButton = document.querySelector('.js-take-action-other');
+                    const exceptionModal = document.getElementById('takeAction-note');
+                    const exceptionNote = document.querySelector('.js-takeAction-note-text textarea');
+                    const exceptionConfirm = document.getElementById('takeAction-note-confirm');
                     const applyChanges = document.getElementById('apply-changes-modal');
                     const addNote = document.querySelector('.js-add-note');
                     const toastContainer = document.getElementById('toast-container');
@@ -1297,7 +1298,7 @@ namespace PnCTestAutomation.Tests
                       }, 25);
 
                       const response = await fetch(
-                        '/EChecklist/ChecklistDetails/RequestException',
+                        '/EChecklist/ChecklistDetails/TakeAction',
                         {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -1341,7 +1342,7 @@ namespace PnCTestAutomation.Tests
             await _page.RouteAsync("https://test.anpac.info/EChecklist/**", route =>
             {
                 if (route.Request.Url.Contains(
-                        "/EChecklist/ChecklistDetails/RequestException",
+                        "/EChecklist/ChecklistDetails/TakeAction",
                         StringComparison.OrdinalIgnoreCase))
                 {
                     exceptionRequests++;
@@ -1635,6 +1636,73 @@ namespace PnCTestAutomation.Tests
             await new QuoteDetailsPage(_page).HandleSSNPopupsAsync(new ScenarioContextData());
 
             Assert.That(await _page.Locator("#startQuote").CountAsync(), Is.Zero);
+        }
+
+        [Test]
+        public async Task SubmissionNavigation_UsesRenderedPageInsteadOfLingeringSpinner()
+        {
+            await _page.SetContentAsync("""
+                <div class="ngx-spinner-overlay">Loading</div>
+                <button data-testid="Submission-nav"
+                        onclick="document.querySelector('h1').style.display='block'">Submission</button>
+                <h1 style="display:none">Submission</h1>
+                """);
+
+            await new SideMenuNavigation(_page).GoToSubmissionAsync();
+
+            Assert.That(await _page.GetByRole(
+                AriaRole.Heading, new() { Name = "Submission", Exact = true }).IsVisibleAsync(), Is.True);
+        }
+
+        [Test]
+        public async Task Submission_CompletesRequiredUnderwritingAgentComments()
+        {
+            await _page.SetContentAsync("""
+                <textarea data-testid="fields.data.policyUWRules.uWRulesReview.uWRuleReview-ReviewRequired.rows[0].uWRuleReview$agentComments.value"></textarea>
+                """);
+            var submission = new SubmissionPage(_page);
+
+            await submission.CompleteRequiredAgentCommentsAsync();
+
+            Assert.That(await submission.RequiredAgentComments.InputValueAsync(),
+                Is.EqualTo("Reviewed for automated Country Estate validation."));
+        }
+
+        [Test]
+        public async Task StartQuote_ProceedsThroughInvalidAddressBeforeSsnDialog()
+        {
+            await _page.SetContentAsync("""
+                <button id="startQuote">Start Quote</button>
+                <div role="dialog" id="address-dialog">
+                  <h2>Potential Invalid Address</h2>
+                  <button id="proceed">Proceed</button>
+                </div>
+                <script>
+                  window.events = [];
+                  document.getElementById('proceed').addEventListener('click', () => {
+                    events.push('proceed');
+                    document.getElementById('address-dialog').remove();
+                    document.body.insertAdjacentHTML('beforeend', `
+                      <div role="dialog" id="ssn-dialog">
+                        <h2>Enter the Client's Full SSN#</h2>
+                        <input data-testid="ssn">
+                        <button data-testid="btnConfirmYes">Submit</button>
+                      </div>`);
+                    const dialog = document.getElementById('ssn-dialog');
+                    dialog.querySelector('[data-testid=btnConfirmYes]').addEventListener('click', () => {
+                      events.push('ssn:' + dialog.querySelector('[data-testid=ssn]').value);
+                      dialog.remove();
+                      document.getElementById('startQuote').remove();
+                    });
+                  });
+                </script>
+                """);
+
+            await new QuoteDetailsPage(_page).HandleSSNPopupsAsync(
+                new ScenarioContextData { SSN = "123-45-6789" });
+
+            Assert.That(await _page.EvaluateAsync<string[]>("window.events"),
+                Is.EqualTo(new[] { "proceed", "ssn:123456789" }));
         }
 
         [TestCase(false, false)]

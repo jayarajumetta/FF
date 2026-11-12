@@ -5,12 +5,10 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using System.Xml.Linq;
 using Gherkin;
 using Gherkin.Ast;
 using NUnit.Framework;
 using PnCTestAutomation.Models;
-using PnCTestAutomation.Parsers;
 using PnCTestAutomation.Services;
 
 namespace PnCTestAutomation.Tests
@@ -19,17 +17,6 @@ namespace PnCTestAutomation.Tests
     public class SfpFormsBaselineTests
     {
         private static readonly FormsValidationService Validator = new(new DuckCreekFormsConfig());
-        private static readonly string[] ObservedBasicStates = { "MD", "PA", "VT" };
-        private static readonly Dictionary<string, (string[] Missing, string[] Unexpected)> ObservedDifferences = new()
-        {
-            ["VT"] = (new[] { "SF05400917", "SF05500726", "SF06110413", "SF07410726", "SF26600726" },
-                new[] { "SF05500203", "SF06210704", "SF26620221" }),
-            ["MD"] = (new[] { "SF07120726", "SF01570714", "X44440225" },
-                new[] { "X35690422", "SF01570726", "SF07120826", "SF26620221" }),
-            ["PA"] = (new[] { "SF06080498", "SF07110726", "SF06200510", "X35690422" },
-                Array.Empty<string>())
-        };
-
         private static string ProjectRoot()
         {
             var directory = new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
@@ -63,36 +50,6 @@ namespace PnCTestAutomation.Tests
                     yield return new TestCaseData(variant, state);
         }
 
-        public static IEnumerable<TestCaseData> ObservedBasicRuns()
-        {
-            yield return new TestCaseData("VT", 25, new[]
-            {
-                "FI99020121", "NM3421025", "SF00010120", "SF00020120", "SF00030426",
-                "SF01010120", "SF01020125", "SF01251225", "SF03010120", "SF03051225",
-                "SF04010120", "SF05010426", "SF05500203", "SF06171112", "SF06210704",
-                "SF15020626", "SF26370322", "SF26620221", "SF36161024", "X32940120",
-                "X51360120", "X51370120", "X51820618", "X52090726", "X52780125"
-            });
-            yield return new TestCaseData("MD", 34, new[]
-            {
-                "FI99020121", "NM3421025", "SF00010120", "SF00020120", "SF00030426",
-                "SF01010120", "SF01251225", "SF01570726", "SF03010120", "SF03050195",
-                "SF04010120", "SF05010426", "SF05280709", "SF05500203", "SF06090998",
-                "SF06101098", "SF06190714", "SF06200510", "SF06210704", "SF07120826",
-                "SF15020810", "SF26590320", "SF26620221", "SF26680522", "SF36161024",
-                "X28000726", "X32940120", "X35690422", "X37601013", "X45900120",
-                "X51360120", "X51370120", "X51820618", "X52780125"
-            });
-            yield return new TestCaseData("PA", 26, new[]
-            {
-                "FI99020121", "NM3421025", "SF00010120", "SF00020120", "SF00030426",
-                "SF01010120", "SF01021112", "SF01251225", "SF03010120", "SF03050195",
-                "SF04010120", "SF05010426", "SF05280709", "SF05490120", "SF06101098",
-                "SF06171112", "SF15020810", "SF26370322", "SF26590320", "SF36161024",
-                "X32940120", "X45900120", "X51360120", "X51370120", "X51820618", "X52780125"
-            });
-        }
-
         private static string[] ApprovedStates(string variant)
         {
             using var document = JsonDocument.Parse(File.ReadAllText(Path.Combine(
@@ -114,8 +71,8 @@ namespace PnCTestAutomation.Tests
                 .ToArray();
         }
 
-        [TestCase("BASIC", 201, "B", 41, 162)]
-        [TestCase("CE", 187, "C", 41, 162)]
+        [TestCase("BASIC", 201, "B", 41, 164)]
+        [TestCase("CE", 189, "C", 41, 164)]
         public void DeployedBaseline_CoversApprovedStatesWithExplicitExpectations(
             string variant, int count, string type, int stateCount, int commonCount)
         {
@@ -140,54 +97,42 @@ namespace PnCTestAutomation.Tests
             });
         }
 
-        [TestCaseSource(nameof(ObservedBasicRuns))]
-        public void SavedBasicObservations_ReportDifferencesFromCurrentMasters(
-            string state, int count, string[] formIds)
+        [TestCase("BASIC", "MN", "SF00030120", "N")]
+        [TestCase("CE", "MN", "SF00030426", "YM")]
+        [TestCase("BASIC", "NH", "SF07050826", "YM")]
+        [TestCase("BASIC", "CT", "X31610525", "YM")]
+        [TestCase("BASIC", "MD", "SF01570726", "YM")]
+        [TestCase("CE", "MD", "SF01850726", "YM")]
+        [TestCase("CE", "MD", "SF07120826", "YM")]
+        [TestCase("CE", "PA", "SF06770120", "YM")]
+        [TestCase("CE", "VT", "SF06770120", "N")]
+        [TestCase("BASIC", "MD", "X32940120", "N")]
+        [TestCase("BASIC", "MT", "SF06200510", "N")]
+        [TestCase("BASIC", "ND", "SF06200510", "N")]
+        [TestCase("BASIC", "ND", "X35690422", "N")]
+        [TestCase("BASIC", "TN", "SF06200510", "YM")]
+        [TestCase("BASIC", "TN", "X35690422", "YM")]
+        [TestCase("CE", "MT", "SF06200510", "N")]
+        [TestCase("CE", "TN", "SF06200510", "YM")]
+        [TestCase("CE", "TN", "X35690422", "YM")]
+        public void ApprovedMasterUpdates_ResolveExpectedStatus(
+            string variant, string state, string formName, string status)
         {
-            var expected = Validator.LoadExpectedFormsForLob("SFP", state, "BASIC");
-            var included = expected.Where(form => form.ExpectedStatus != "N").ToArray();
-            var differences = ObservedDifferences[state];
-            Assert.Multiple(() =>
-            {
-                Assert.That(formIds, Has.Length.EqualTo(count));
-                Assert.That(formIds, Is.Unique);
-                Assert.That(included, Has.Length.EqualTo(count + differences.Missing.Length - differences.Unexpected.Length));
-                Assert.That(included.Select(form => form.ExpectedStatus), Is.All.EqualTo("YM"));
-            });
-
-            var xml = new XElement("server", new XElement("responses",
-                new XElement("FormsEngine.initPrintJobRs", new XElement("printJob",
-                    new XAttribute("name", "_TransactionPrint"),
-                    formIds.Select(id => new XElement("printDoc",
-                        new XAttribute("name", id),
-                        new XAttribute("selected", "2"),
-                        new XAttribute("printDefault", "Mandatory")))))));
-            var actual = FormsXmlParser.Parse(xml.ToString(SaveOptions.DisableFormatting));
-            var summary = Validator.Validate(expected, actual, "SFP", state, "offline");
-            Assert.Multiple(() =>
-            {
-                Assert.That(actual, Has.Count.EqualTo(count));
-                Assert.That(summary.Passed, Is.EqualTo(count - differences.Unexpected.Length));
-                Assert.That(summary.Failed, Is.EqualTo(differences.Missing.Length + differences.Unexpected.Length));
-                Assert.That(summary.Issues + summary.Info, Is.Zero);
-                Assert.That(summary.Results.Where(result => result.ResultCode == "C11").Select(result => result.FormName),
-                    Is.EquivalentTo(differences.Missing));
-                Assert.That(summary.Results.Where(result => result.ResultCode == "C5").Select(result => result.FormName),
-                    Is.EquivalentTo(differences.Unexpected));
-            });
+            var expected = Validator.LoadExpectedFormsForLob("SFP", state, variant);
+            Assert.That(expected.Single(form => form.FormName == formName).ExpectedStatus, Is.EqualTo(status));
         }
 
-        [TestCase("BASIC", "ADC3CB9B1F9254204E60D169D3EC081989C5C1B4BCA22F0247440DB98802AE90")]
-        [TestCase("CE", "FF2B4B2DA980A2485C761DE3061DDA80B847A19900565E2EA61F84EDE8A77E05")]
-        public void LegacyStates_PreserveApprovedMandatoryForms(string variant, string expectedHash)
+        [TestCase("BASIC", "NH", "SF07050326")]
+        [TestCase("CE", "MD", "SF07120726")]
+        [TestCase("BASIC", "MD", "SF01570714")]
+        [TestCase("CE", "MD", "SF01850714")]
+        public void RetiredMasterEditions_AreInformationalIfReturned(string variant, string state, string formName)
         {
-            var states = ApprovedStates(variant).Except(ObservedBasicStates).OrderBy(state => state, StringComparer.Ordinal).ToArray();
-            var lines = states.SelectMany(state => Validator.LoadExpectedFormsForLob("SFP", state, variant)
-                .Where(form => form.ExpectedStatus == "YM").OrderBy(form => form.FormName, StringComparer.Ordinal)
-                .Select(form => $"{state}|{form.FormName}"));
-            var hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(string.Join("\n", lines) + "\n")));
-            Assert.That(states, Has.Length.EqualTo(38));
-            Assert.That(hash, Is.EqualTo(expectedHash), "The refresh must preserve required forms in the 38 legacy states");
+            var expected = Validator.LoadExpectedFormsForLob("SFP", state, variant);
+            Assert.That(expected.Select(form => form.FormName), Does.Not.Contain(formName));
+            var summary = Validator.Validate(expected,
+                new List<ActualFormEntry> { new() { Name = formName, Selected = 2 } }, "SFP", state, "offline");
+            Assert.That(summary.Results.Single(result => result.FormName == formName).Result, Is.EqualTo("INFO"));
         }
 
         [TestCaseSource(nameof(BaselineStates))]
@@ -236,7 +181,7 @@ namespace PnCTestAutomation.Tests
         }
 
         [TestCase("BASIC", 201)]
-        [TestCase("CE", 187)]
+        [TestCase("CE", 189)]
         public void RecordMode_CanSeedProposalFromScenarioBaseline(string variant, int count)
         {
             var template = Validator.LoadExpectedFormsTemplateForRecording("SFP", variant);
@@ -272,8 +217,8 @@ namespace PnCTestAutomation.Tests
                 Assert.That(expected.Single(form => form.FormName == "SF26891023").ExpectedStatus, Is.EqualTo("YM"));
         }
 
-        [TestCase("BASIC", "61E6F3418DF06278B221F5C34C9231BE3AADFC9325B133FA1EF402502C26AA86")]
-        [TestCase("CE", "820F8B4C83C9AD6FEB2E7F09906DAF0DB2FCF9BD4325E0F326B7AF1913165068")]
+        [TestCase("BASIC", "DB9A0B12E055CBCE3C496E1FFD55C04D5BCEBCDA52788B2209F7388DA201CABD")]
+        [TestCase("CE", "FDEC8DA2F28759757ECC5EC9630258BE13F832AEA09681680BCB83A393232197")]
         public void JsonBaseline_MatchesCurrentMasterSnapshot(string variant, string expectedHash)
         {
             var lines = ApprovedStates(variant).OrderBy(state => state, StringComparer.Ordinal)

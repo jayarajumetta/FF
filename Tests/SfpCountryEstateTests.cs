@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using NUnit.Framework;
@@ -78,6 +79,84 @@ namespace PnCTestAutomation.Tests
             await page.VerifyCountryEstateResidenceFormAsync(data);
             await page.RoofYearInput.FillAsync("2026");
             Assert.ThrowsAsync<PlaywrightException>(() => page.VerifyCountryEstateResidenceFormAsync(data));
+        }
+
+        [Test]
+        public async Task ResidenceEntry_FillsRequestedConstructionAndRenovationYears()
+        {
+            await _page.SetContentAsync(
+                "<div data-testid='fields.building.rows[0].buildingInput$occupancy.value-chip-item-wrapper'>Owner</div>"
+                + Input("yearBuilt", "") + Input("roofYear", "") + Input("heatingYear", "")
+                + Input("plumbingYear", "") + Input("wiringYear", ""));
+            var data = new ScenarioContextData();
+            TableMappingHelpers.ResidenceFields(SfpBasicInputTests.TableOf(
+                ("YearBuilt", "1995"), ("RoofYear", "2016"), ("HeatingYear", "2022"),
+                ("PlumbingYear", "2020"), ("ElectricalYear", "2017")), data);
+
+            var page = new SFP_AddResidencePage(_page);
+            await page.FillResidenceFormAsync(data);
+            Assert.That(await page.YearBuiltInput.InputValueAsync(), Is.EqualTo("1995"));
+            Assert.That(await page.RoofYearInput.InputValueAsync(), Is.EqualTo("2016"));
+            Assert.That(await page.HeatingYearInput.InputValueAsync(), Is.EqualTo("2022"));
+            Assert.That(await page.PlumbingYearInput.InputValueAsync(), Is.EqualTo("2020"));
+            Assert.That(await page.WiringYearInput.InputValueAsync(), Is.EqualTo("2017"));
+        }
+
+        [Test]
+        public async Task CountryEstateBinding_VerifiesRequestedYearsAfterSaving()
+        {
+            await _page.SetContentAsync(BindingHtmlWithUpdatedYears());
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, UpdatedResidenceData());
+            await steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable("6"));
+
+            Assert.That(await _page.EvaluateAsync<string[]>("window.actions"),
+                Is.EqualTo(new[] { "save", "reopen", "locations", "next" }));
+        }
+
+        [Test]
+        public async Task CountryEstateBinding_CompletesResidenceReviewCommentsBeforeContinuing()
+        {
+            await _page.SetContentAsync(BindingHtml());
+            await _page.EvaluateAsync("""
+                document.querySelector('button[data-testid$="editResidence"]').addEventListener('click', () => {
+                  document.body.insertAdjacentHTML('beforeend',
+                    '<div>10051</div>' +
+                    '<input type="checkbox" ' +
+                    'data-testid="fields.risk.rows[0].residenceCoverage.rows[0].CoverageInput$CosmeticLossExclusion.value" ' +
+                    'onclick="window.actions.push(`cosmetic`)">' +
+                    '<input data-testid="fields.data.policyUWRules.uWRulesReview.uWRuleReview-ReviewRequired.rows[0].uWRuleReview$agentComments.value">');
+                });
+                """);
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, ResidenceData());
+
+            await steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable("6"));
+
+            Assert.That(await _page.EvaluateAsync<string[]>("window.actions"),
+                Is.EqualTo(new[] { "save", "reopen", "cosmetic", "save", "next" }));
+            Assert.That(await _page.GetByTestId(new Regex(
+                    @"uWRuleReview\$agentComments\.value$",
+                    RegexOptions.IgnoreCase)).InputValueAsync(),
+                Is.EqualTo("Reviewed for automated Country Estate validation."));
+        }
+
+        [TestCase("yearBuilt")]
+        [TestCase("roofYear")]
+        [TestCase("heatingYear")]
+        [TestCase("plumbingYear")]
+        [TestCase("wiringYear")]
+        public async Task CountryEstateBinding_RejectsIncorrectSavedResidenceYear(string field)
+        {
+            await _page.SetContentAsync(BindingHtmlWithUpdatedYears());
+            await _page.EvaluateAsync(@"field => {
+                document.querySelector('button[data-testid$=""editResidence""]').addEventListener('click', () => {
+                    document.querySelector(`[data-testid$=""buildingInput$${field}.value""]`).value = '2000';
+                });
+            }", field);
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, UpdatedResidenceData());
+            Assert.ThrowsAsync<PlaywrightException>(() =>
+                steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable("6")));
+            Assert.That(await _page.EvaluateAsync<string[]>("window.actions"),
+                Is.EqualTo(new[] { "save", "reopen" }));
         }
 
         [TestCase("187500", "50%")]
@@ -360,6 +439,35 @@ namespace PnCTestAutomation.Tests
             Assert.That(await _page.EvaluateAsync<string[]>("window.actions"), Is.Empty);
         }
 
+        [Test]
+        public async Task CountryEstateBinding_ReopensSettlementWhenExactOptionRendersLate()
+        {
+            await _page.SetContentAsync(BindingHtml(""));
+            await _page.EvaluateAsync("""
+                () => {
+                  window.settlementOpens = 0;
+                  const select = document.querySelector(
+                    '[data-testid$="coverageInput$replacementCost.value"]');
+                  select.addEventListener('click', () => {
+                    window.settlementOpens++;
+                    if (window.settlementOpens === 2) {
+                      document.querySelector('[role=listbox]').insertAdjacentHTML(
+                        'afterbegin',
+                        `<div role="option" onclick="document.querySelector(
+                          '[data-testid$=&quot;coverageInput$replacementCost.value&quot;]'
+                        ).textContent = this.textContent">Expanded Replacement Cost</div>`);
+                    }
+                  });
+                }
+                """);
+            var steps = new SFP_LocationPropertySteps(
+                new PlaywrightContext { Page = _page }, ResidenceData());
+
+            await steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable("6"));
+
+            Assert.That(await _page.EvaluateAsync<int>("window.settlementOpens"), Is.EqualTo(2));
+        }
+
         private static string SettlementOption(string caption) =>
             $"<div role='option' onclick=\"document.querySelector('[data-testid$=&quot;coverageInput$replacementCost.value&quot;]').textContent = this.textContent\">{caption}</div>";
 
@@ -394,6 +502,20 @@ namespace PnCTestAutomation.Tests
                 ("SolidFuelQuestion", "No")), data);
             return data;
         }
+
+        private static ScenarioContextData UpdatedResidenceData()
+        {
+            var data = ResidenceData();
+            TableMappingHelpers.ResidenceFields(SfpBasicInputTests.TableOf(
+                ("YearBuilt", "1995"), ("RoofYear", "2016"), ("HeatingYear", "2022"),
+                ("PlumbingYear", "2020"), ("ElectricalYear", "2017")), data);
+            return data;
+        }
+
+        private static string BindingHtmlWithUpdatedYears() =>
+            BindingHtml().Replace(Input("yearBuilt", "2022"), Input("yearBuilt", "1995"))
+                .Replace(Input("roofYear", "2022"), Input("roofYear", "2016"))
+            + Input("heatingYear", "2022") + Input("plumbingYear", "2020") + Input("wiringYear", "2017");
 
         private static Reqnroll.Table CoverageTable(string perils) => SfpBasicInputTests.TableOf(
             ("InsuranceAmount", "375000"), ("SquareFeet", "1800"), ("Perils", perils),

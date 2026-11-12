@@ -5,8 +5,14 @@ trigger: none
 pr: none
 
 schedules:
-- cron: "0 6 * * *"
-  displayName: "Nightly full suite - 06:00 UTC (00:00 CST / 01:00 CDT)"
+- cron: "0 23 * * *"
+  displayName: "Nightly full suite - 6 PM Central (CDT)"
+  branches:
+    include:
+    - Development
+  always: true
+- cron: "0 0 * * *"
+  displayName: "Nightly full suite - 6 PM Central (CST)"
   branches:
     include:
     - Development
@@ -116,9 +122,41 @@ variables:
     value: "TestCategory=Smoke&TestCategory!=DevOnly"
 
 stages:
+- stage: ScheduleGate
+  displayName: "Resolve 6 PM Central schedule"
+  pool:
+    vmImage: "windows-latest"
+  jobs:
+  - job: ResolveSchedule
+    displayName: "Select the active Central time schedule"
+    steps:
+    - powershell: |
+        $shouldRun = $true
+
+        if ("$(Build.Reason)" -eq "Schedule") {
+          $centralTimeZone = [TimeZoneInfo]::FindSystemTimeZoneById("Central Standard Time")
+          $centralNow = [TimeZoneInfo]::ConvertTimeFromUtc([DateTime]::UtcNow, $centralTimeZone)
+          $isDaylightSavingTime = $centralTimeZone.IsDaylightSavingTime($centralNow)
+          $expectedSchedule = if ($isDaylightSavingTime) {
+            "Nightly full suite - 6 PM Central (CDT)"
+          } else {
+            "Nightly full suite - 6 PM Central (CST)"
+          }
+
+          $shouldRun = "$(Build.CronSchedule.DisplayName)" -eq $expectedSchedule
+          Write-Host "Central time: $($centralNow.ToString('yyyy-MM-dd HH:mm:ss'))"
+          Write-Host "Triggered schedule: $(Build.CronSchedule.DisplayName)"
+          Write-Host "Expected schedule: $expectedSchedule"
+        }
+
+        Write-Host "##vso[task.setvariable variable=shouldRun;isOutput=true]$($shouldRun.ToString().ToLowerInvariant())"
+      name: Resolve
+      displayName: "Resolve CST/CDT schedule"
+
 - stage: Build
   displayName: "Build immutable test package"
-  condition: and(succeeded(), ${{ eq(parameters.pipelineMode, 'Regression') }})
+  dependsOn: ScheduleGate
+  condition: and(succeeded(), eq(dependencies.ScheduleGate.outputs['ResolveSchedule.Resolve.shouldRun'], 'true'), ${{ eq(parameters.pipelineMode, 'Regression') }})
   pool:
     vmImage: "windows-latest"
   jobs:
@@ -531,8 +569,8 @@ stages:
 
 - stage: FormsDeltaReview
   displayName: "Forms delta review"
-  dependsOn: []
-  condition: and(succeeded(), ${{ eq(parameters.pipelineMode, 'FormsDelta') }})
+  dependsOn: ScheduleGate
+  condition: and(succeeded(), eq(dependencies.ScheduleGate.outputs['ResolveSchedule.Resolve.shouldRun'], 'true'), ${{ eq(parameters.pipelineMode, 'FormsDelta') }})
   pool:
     name: "Playwright"
   jobs:

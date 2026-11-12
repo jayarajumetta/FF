@@ -44,7 +44,7 @@ Feature: SFP Country Estate Policy
     And user selects Special Farm Package and inputs Quote Details
       | Question         | Answer                                      |
       | ProductSelection | CE                                          |
-      | EffectiveDate    | {{tomorrow}}                                |
+      | EffectiveDate    | {{laterOfTomorrow:04/03/2027}}              |
       | PolicyTerm       | 12 months                                   |
       | AgentCode        | D2102                                       |
       | RatingState      | <State>                                     |
@@ -130,11 +130,14 @@ Feature: SFP Country Estate Policy
     When user adds a Country Estate Residence to the Location
       | Question          | Answer        |
       | AdditionalDesc    | Main House    |
-      | YearBuilt         | 2022          |
+      | YearBuilt         | 1995          |
       | NumberOfFamilies  | Single Family |
       | RateType          | Frame         |
       | ConditionRating   | 1             |
-      | RoofYear          | 2022          |
+      | RoofYear          | 2016          |
+      | HeatingYear       | 2022          |
+      | PlumbingYear      | 2020          |
+      | ElectricalYear    | 2017          |
       | RoofType          | Asphalt       |
       | RoofImpact        | UL 2          |
       | SolidFuelQuestion | No            |
@@ -268,7 +271,7 @@ Feature: SFP Country Estate Policy
     @Shard4 @DevOnly
     Examples:
       | State      | StateAbbv | Address          | AddressLine2 | City   | Zip   | County   | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
-      | California | CA        | 3300 Glenwood St |          111 | Eureka | 95501 | Humboldt |           |                    | 1%                 |                     |                   |
+      | California | CA        | 3300 Glenwood St |          111 | Eureka | 95501 | Humboldt |           |                    | None               |                     |                   |
 
     @Shard5 @Debug
     Examples:
@@ -282,13 +285,13 @@ Feature: SFP Country Estate Policy
       | Massachusetts | MA        | 75 Tyler St            |          111 | Pittsfield    | 01202 | Berkshire    |           |                    | 1%                 |                     |                   |
       | Maine         | ME        | 21 Main St             |          111 | Caribou       | 04736 | Aroostook    |           |                    | 1%                 |                     |                   |
       | Minnesota     | MN        | 1800 University Ave SE |          111 | Minneapolis   | 55414 | Hennepin     |           |                    | 1%                 |                     |                   |
-      | Montana       | MT        | 307 W Front St         |          111 | Missoula      | 59802 | Missoula     |           |                    | 1%                 |                     |                   |
+      | Montana       | MT        | 307 W Front St         |          111 | Missoula      | 59802 | Missoula     |           |                    | None               |                     |                   |
       | Nebraska      | NE        | 2502 1st Ave           |          111 | Scottsbluff   | 69363 | Scotts Bluff |           |                    | 1%                 |                     |                   |
       | Nevada        | NV        | 4850 W Flamingo Rd     |          111 | Las Vegas     | 89103 | Clark        |           |                    | 1%                 |                     |                   |
       | New Hampshire | NH        | 149 Emerald St         |          111 | Keene         | 03431 | Cheshire     |           |                    | 1%                 |                     |                   |
       | New Jersey    | NJ        | 120 Albany St          |          111 | New Brunswick | 08901 | Middlesex    |           |                    | 1%                 |                     |                   |
       | New Mexico    | NM        | 2501 N Prince St       |          111 | Clovis        | 88103 | Curry        |           |                    | 1%                 |                     |                   |
-      | North Dakota  | ND        | 4204 Ottawa St         |          111 | Bismarck      | 58503 | Burleigh     |           |                    | 1%                 |                     |                   |
+      | North Dakota  | ND        | 4204 Ottawa St         |          111 | Bismarck      | 58503 | Burleigh     |           |                    | None               |                     |                   |
       | Oklahoma      | OK        | 621 W Broadway Ave     |          111 | Enid          | 73701 | Garfield     |           |                    | 1%                 |                     |                   |
 
     @Shard5
@@ -328,5 +331,5 @@ Feature: SFP Country Estate Policy
 
     @Shard6 @DevOnly
     Examples:
-      | State         | StateAbbv | Address         | AddressLine2 | City      | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
-      | West Virginia | WV        | 1001 Adairs Run |          111 | Princeton | 24739 | Mercer |           |                    | 1%                 |                     |                   |
+      | State         | StateAbbv | Address                  | AddressLine2 | City     | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | West Virginia | WV        | 108 Victorian Commons Rd |              | Winfield | 25213 | Putnam |           |                    | 1%                 |                     |                   |
