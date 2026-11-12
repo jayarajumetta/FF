@@ -19,6 +19,10 @@ public sealed class ApplicationSteps
     public Task OpenBrowserSessionAsync() =>
     _scenario.Get<BrowserSession>().OpenAsync(_scenario.Get<RunLogger>());
 
+    [Given("I close the browser session")]
+    public Task CloseBrowserSessionAsync() =>
+    _scenario.Get<BrowserSession>().CloseAsync(_scenario.Get<RunLogger>());
+
     [Given("test data {string} and external data {string} are loaded")]
     public void LoadScenarioData(string scenarioDataFile, string externalDataFile)
     {
@@ -86,16 +90,17 @@ public sealed class ApplicationSteps
         await page.ClickUserNameInitialAsync();
         //await page.WaitForLogoutAsync("Visible");
         await page.ClickLogoutAsync();
+      
 
-        if (await page.LogoutOkButtonIsVisibleAsync())
-        {
-            await page.ClickLogoutOkButtonAsync();
-            //await page.WaitForLogoutOkButtonAsync("Hidden");
-            //await page.WaitForUserNameInitialAsync("Visible");
-            await page.ClickUserNameInitialAsync();
-            //await page.WaitForLogoutAsync("Visible");
-            await page.ClickLogoutAsync();
-        }
+        //if (await page.LogoutOkButtonIsVisibleAsync())
+        //{
+        //    await page.ClickLogoutOkButtonAsync();
+        //    //await page.WaitForLogoutOkButtonAsync("Hidden");
+        //    //await page.WaitForUserNameInitialAsync("Visible");
+        //    await page.ClickUserNameInitialAsync();
+        //    //await page.WaitForLogoutAsync("Visible");
+        //    await page.ClickLogoutAsync();
+        //}
 
     }
 

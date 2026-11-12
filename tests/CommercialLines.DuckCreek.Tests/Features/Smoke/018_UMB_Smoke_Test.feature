@@ -17,6 +17,8 @@ Scenario Outline: UMB Smoke Test - <stateCode>
 	#And I run insurance score
 	#And I navigate to Policy Info and Verify Desc
 	And I click on QA button to logout
+	And I close the browser session
+	And I open a browser session
 	And I open the configured Commercial Lines Duck Creek application
 	And I sign in to Commercial Lines Duck Creek using configured credentials
 	And I search for the quote description using quick search
