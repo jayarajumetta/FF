@@ -134,8 +134,16 @@ if ($ValidateEndpoints) {
     $environmentConfigPath = Join-Path $testsRoot "appsettings.$Environment.json"
     if (Test-Path -LiteralPath $environmentConfigPath) {
         $environmentConfig = Get-Content -LiteralPath $environmentConfigPath -Raw | ConvertFrom-Json
-        if ($environmentConfig.Playwright -and $environmentConfig.Playwright.ExpertQuoteBase) {
-            $expertQuoteBase = [string]$environmentConfig.Playwright.ExpertQuoteBase
+        $playwrightProperty = $environmentConfig.PSObject.Properties["Playwright"]
+        $expertQuoteProperty = if ($playwrightProperty) {
+            $playwrightProperty.Value.PSObject.Properties["ExpertQuoteBase"]
+        }
+        else {
+            $null
+        }
+
+        if ($expertQuoteProperty -and -not [string]::IsNullOrWhiteSpace([string]$expertQuoteProperty.Value)) {
+            $expertQuoteBase = [string]$expertQuoteProperty.Value
         }
     }
 
