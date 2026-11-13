@@ -5,12 +5,6 @@ trigger: none
 pr: none
 
 schedules:
-- cron: "0 23 * * *"
-  displayName: "Nightly full suite - 6 PM Central (CDT)"
-  branches:
-    include:
-    - Development
-  always: true
 - cron: "0 0 * * *"
   displayName: "Nightly full suite - 6 PM Central (CST)"
   branches:
@@ -36,30 +30,17 @@ parameters:
   - QA
   - IT
 
-- name: runBasicPolicy
-  displayName: "Run SFP Basic Policy"
-  type: boolean
-  default: true
-
-- name: runCountryEstate
-  displayName: "Run SFP Country Estate"
-  type: boolean
-  default: true
-
-- name: runRatePolicy
-  displayName: "Run SFP RatePolicy"
-  type: boolean
-  default: true
-
-- name: runSingleExample
-  displayName: "Run diagnostic single example only"
-  type: boolean
-  default: false
-
-- name: runSmokeOnly
-  displayName: "Run smoke tests only"
-  type: boolean
-  default: false
+- name: suite
+  displayName: "Suite"
+  type: string
+  default: All
+  values:
+  - All
+  - SingleExample
+  - BasicPolicy
+  - CountryEstate
+  - RatePolicy
+  - Smoke
 
 - name: checklistOutageFormsOnly
   displayName: "Checklist outage: Forms-only (full workflow not tested)"
@@ -116,42 +97,29 @@ variables:
   - name: RUN_SCOPE
     value: "Normal workflow"
 
+- ${{ if eq(parameters.suite, 'All') }}:
+  - name: TEST_FILTER
+    value: "TestCategory=SFP&TestCategory!=DevOnly"
+- ${{ if eq(parameters.suite, 'SingleExample') }}:
+  - name: TEST_FILTER
+    value: "TestCategory=PipelineSmoke&TestCategory!=DevOnly"
+- ${{ if eq(parameters.suite, 'BasicPolicy') }}:
+  - name: TEST_FILTER
+    value: "TestCategory=SFP&TestCategory!=CE&TestCategory!=DevOnly"
+- ${{ if eq(parameters.suite, 'CountryEstate') }}:
+  - name: TEST_FILTER
+    value: "TestCategory=CE&TestCategory!=DevOnly"
+- ${{ if eq(parameters.suite, 'RatePolicy') }}:
+  - name: TEST_FILTER
+    value: "TestCategory=RatePolicy&TestCategory!=DevOnly"
+- ${{ if eq(parameters.suite, 'Smoke') }}:
+  - name: TEST_FILTER
+    value: "TestCategory=Smoke&TestCategory!=DevOnly"
+
 stages:
-- stage: ScheduleGate
-  displayName: "Resolve 6 PM Central schedule"
-  pool:
-    vmImage: "windows-latest"
-  jobs:
-  - job: ResolveSchedule
-    displayName: "Select the active Central time schedule"
-    steps:
-    - powershell: |
-        $shouldRun = $true
-
-        if ("$(Build.Reason)" -eq "Schedule") {
-          $centralTimeZone = [TimeZoneInfo]::FindSystemTimeZoneById("Central Standard Time")
-          $centralNow = [TimeZoneInfo]::ConvertTimeFromUtc([DateTime]::UtcNow, $centralTimeZone)
-          $isDaylightSavingTime = $centralTimeZone.IsDaylightSavingTime($centralNow)
-          $expectedSchedule = if ($isDaylightSavingTime) {
-            "Nightly full suite - 6 PM Central (CDT)"
-          } else {
-            "Nightly full suite - 6 PM Central (CST)"
-          }
-
-          $shouldRun = "$(Build.CronSchedule.DisplayName)" -eq $expectedSchedule
-          Write-Host "Central time: $($centralNow.ToString('yyyy-MM-dd HH:mm:ss'))"
-          Write-Host "Triggered schedule: $(Build.CronSchedule.DisplayName)"
-          Write-Host "Expected schedule: $expectedSchedule"
-        }
-
-        Write-Host "##vso[task.setvariable variable=shouldRun;isOutput=true]$($shouldRun.ToString().ToLowerInvariant())"
-      name: Resolve
-      displayName: "Resolve CST/CDT schedule"
-
 - stage: Build
   displayName: "Build immutable test package"
-  dependsOn: ScheduleGate
-  condition: and(succeeded(), eq(dependencies.ScheduleGate.outputs['ResolveSchedule.Resolve.shouldRun'], 'true'), ${{ eq(parameters.pipelineMode, 'Regression') }})
+  condition: and(succeeded(), ${{ eq(parameters.pipelineMode, 'Regression') }})
   pool:
     vmImage: "windows-latest"
   jobs:
@@ -159,28 +127,7 @@ stages:
     displayName: "Restore, build, and package"
     timeoutInMinutes: 20
     steps:
-    - powershell: |
-        $workflows = @(
-          [bool]::Parse("${{ parameters.runBasicPolicy }}"),
-          [bool]::Parse("${{ parameters.runCountryEstate }}"),
-          [bool]::Parse("${{ parameters.runRatePolicy }}")
-        )
-        $diagnostics = @(
-          [bool]::Parse("${{ parameters.runSingleExample }}"),
-          [bool]::Parse("${{ parameters.runSmokeOnly }}")
-        )
-
-        $workflowCount = @($workflows | Where-Object { $_ }).Count
-        $diagnosticCount = @($diagnostics | Where-Object { $_ }).Count
-        if ($workflowCount -eq 0 -and $diagnosticCount -eq 0) {
-          throw "Select at least one SFP workflow or diagnostic run."
-        }
-        if ($diagnosticCount -gt 1 -or ($diagnosticCount -gt 0 -and $workflowCount -gt 0)) {
-          throw "Diagnostic single-example and smoke-only runs cannot be combined with each other or with SFP workflows."
-        }
-      displayName: "Validate selected workflows"
-
-    - ${{ if and(eq(parameters.retryDiagnostics, true), or(ne(parameters.environment, 'QA'), ne(parameters.runSingleExample, true), ne(parameters.agentCount, 1), eq(parameters.checklistOutageFormsOnly, true))) }}:
+    - ${{ if and(eq(parameters.retryDiagnostics, true), or(ne(parameters.environment, 'QA'), ne(parameters.suite, 'SingleExample'), ne(parameters.agentCount, 1), eq(parameters.checklistOutageFormsOnly, true))) }}:
       - powershell: |
           throw "Retry diagnostics requires QA, SingleExample, one agent, and the normal workflow."
         displayName: "Validate retry diagnostics scope"
@@ -346,7 +293,7 @@ stages:
 
     - task: VSTest@3
       displayName: "Run ExpertQuote smoke gate"
-      condition: and(succeeded(), ${{ and(eq(parameters.runSmokeGate, true), eq(parameters.runSingleExample, false), eq(parameters.runSmokeOnly, false)) }})
+      condition: and(succeeded(), ${{ and(eq(parameters.runSmokeGate, true), ne(parameters.suite, 'SingleExample')) }})
       inputs:
         testSelector: testAssemblies
         testAssemblyVer2: |
@@ -394,12 +341,12 @@ stages:
         artifact: "evidence-preflight-$(System.StageAttempt)-$(System.JobAttempt)"
 
 - stage: Test
-  displayName: "Distributed selected SFP execution"
+  displayName: "Distributed ${{ parameters.suite }} execution"
   dependsOn: Preflight
   condition: and(succeeded(), ${{ eq(parameters.pipelineMode, 'Regression') }})
   jobs:
   - job: ExecuteTests
-    displayName: "Execute selected SFP workflows"
+    displayName: "Execute ${{ parameters.suite }}"
     timeoutInMinutes: 360
     pool:
       name: "Playwright"
@@ -454,45 +401,6 @@ stages:
         DuckCreekForms__CLASUsername: "$(CL_DC_USERNAME)"
         DuckCreekForms__CLASPassword: "$(CL_DC_PASSWORD)"
 
-    - powershell: |
-        $filters = [Collections.Generic.List[string]]::new()
-        $names = [Collections.Generic.List[string]]::new()
-
-        if ([bool]::Parse("${{ parameters.runSingleExample }}")) {
-          $filters.Add("(TestCategory=PipelineSmoke&TestCategory!=DevOnly)")
-          $names.Add("SingleExample")
-        }
-        elseif ([bool]::Parse("${{ parameters.runSmokeOnly }}")) {
-          $filters.Add("(TestCategory=Smoke&TestCategory!=DevOnly)")
-          $names.Add("Smoke")
-        }
-        else {
-          if ([bool]::Parse("${{ parameters.runBasicPolicy }}")) {
-            $filters.Add("(TestCategory=SFP&TestCategory!=CE&TestCategory!=RatePolicy&TestCategory!=DevOnly)")
-            $names.Add("BasicPolicy")
-          }
-          if ([bool]::Parse("${{ parameters.runCountryEstate }}")) {
-            $filters.Add("(TestCategory=CE&TestCategory!=DevOnly)")
-            $names.Add("CountryEstate")
-          }
-          if ([bool]::Parse("${{ parameters.runRatePolicy }}")) {
-            $filters.Add("(TestCategory=RatePolicy&TestCategory!=DevOnly)")
-            $names.Add("RatePolicy")
-          }
-        }
-
-        $filter = $filters -join "|"
-        $scope = $names -join "+"
-        if ([string]::IsNullOrWhiteSpace($filter)) {
-          throw "No test filter was produced from the selected workflows."
-        }
-
-        Write-Host "Selected scope: $scope"
-        Write-Host "Test filter: $filter"
-        Write-Host "##vso[task.setvariable variable=TEST_FILTER]$filter"
-        Write-Host "##vso[task.setvariable variable=TEST_SCOPE]$scope"
-      displayName: "Build selected workflow filter"
-
     - task: VSTest@3
       displayName: "Execute tests with time-based agent slicing"
       inputs:
@@ -517,7 +425,7 @@ stages:
         publishRunAttachments: true
         failOnMinTestsNotRun: ${{ not(parameters.checklistOutageFormsOnly) }}
         minimumExpectedTests: "1"
-        testRunTitle: "PnC $(RUN_SCOPE) $(TEST_SCOPE) ${{ parameters.environment }} $(Build.BuildNumber)"
+        testRunTitle: "PnC $(RUN_SCOPE) ${{ parameters.suite }} ${{ parameters.environment }} $(Build.BuildNumber)"
       env:
         CI: "true"
         TEST_ENVIRONMENT: "${{ parameters.environment }}"
@@ -603,13 +511,7 @@ stages:
           buildId = "$(Build.BuildId)"
           buildNumber = "$(Build.BuildNumber)"
           environment = "${{ parameters.environment }}"
-          selectedWorkflows = [ordered]@{
-            basicPolicy = [bool]::Parse("${{ parameters.runBasicPolicy }}")
-            countryEstate = [bool]::Parse("${{ parameters.runCountryEstate }}")
-            ratePolicy = [bool]::Parse("${{ parameters.runRatePolicy }}")
-            singleExample = [bool]::Parse("${{ parameters.runSingleExample }}")
-            smokeOnly = [bool]::Parse("${{ parameters.runSmokeOnly }}")
-          }
+          suite = "${{ parameters.suite }}"
           requestedAgents = ${{ parameters.agentCount }}
           evidenceFileCount = $files.Count
           collectedUtc = [DateTime]::UtcNow.ToString("O")
@@ -630,8 +532,8 @@ stages:
 
 - stage: FormsDeltaReview
   displayName: "Forms delta review"
-  dependsOn: ScheduleGate
-  condition: and(succeeded(), eq(dependencies.ScheduleGate.outputs['ResolveSchedule.Resolve.shouldRun'], 'true'), ${{ eq(parameters.pipelineMode, 'FormsDelta') }})
+  dependsOn: []
+  condition: and(succeeded(), ${{ eq(parameters.pipelineMode, 'FormsDelta') }})
   pool:
     name: "Playwright"
   jobs:
