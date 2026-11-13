@@ -378,35 +378,8 @@ namespace PnCTestAutomation.StepDefinitions.SharedSteps
 
             Console.WriteLine($"Searching for quote: {quoteNumber}");
 
-            var searchInput = _context.Page.GetByTestId("quoteSearchInput");
-            await searchInput.FillAsync(quoteNumber);
-
-            var searchButton = _context.Page.GetByRole(AriaRole.Button, new() { Name = "Search" });
-            await searchButton.ClickAsync();
-
-            // Wait for search results to populate
-            await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-
-            // Try multiple strategies to find the quote
-            // Strategy 1: Link with quote number
-            var quoteLocator = _context.Page.GetByRole(AriaRole.Link, new() { Name = quoteNumber });
-            var isQuoteVisible = await quoteLocator.IsVisibleAsync();
-
-            // Strategy 2: Cell or text containing quote number
-            if (!isQuoteVisible)
-            {
-                var cellLocator = _context.Page.Locator($"td:has-text('{quoteNumber}'), span:has-text('{quoteNumber}')").First;
-                isQuoteVisible = await cellLocator.IsVisibleAsync();
-            }
-
-            // Strategy 3: Any element containing the quote number
-            if (!isQuoteVisible)
-            {
-                var anyLocator = _context.Page.GetByText(quoteNumber);
-                isQuoteVisible = await anyLocator.IsVisibleAsync();
-            }
-
-            Assert.That(isQuoteVisible, Is.True, $"Quote {quoteNumber} should be visible in search results");
+            var clientSearchPage = new ClientSearchPage(_context.Page);
+            await clientSearchPage.SearchForQuoteAsync(quoteNumber);
             Console.WriteLine($"Quote {quoteNumber} verified in search results.");
         }
 

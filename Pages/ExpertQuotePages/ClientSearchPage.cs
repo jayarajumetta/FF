@@ -1,5 +1,6 @@
 ﻿// Pages/ExpertQuotePages/ClientSearchPage.cs
 using Microsoft.Playwright;
+using System;
 using System.Threading.Tasks;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages
@@ -41,6 +42,38 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
             await SearchButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
             await SearchButton.ClickAsync();
             await WaitForSpinnerAsync();
+        }
+
+        public async Task SearchForQuoteAsync(string quoteNumber, int timeoutMs = 60000)
+        {
+            await SearchInput.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+            await SearchInput.FillAsync(quoteNumber);
+            await SearchButton.ClickAsync();
+
+            var loadingQuote = _page.GetByText("Loading Quote", new() { Exact = true }).First;
+            try
+            {
+                await loadingQuote.WaitForAsync(new()
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = 5000
+                });
+                await loadingQuote.WaitForAsync(new()
+                {
+                    State = WaitForSelectorState.Hidden,
+                    Timeout = timeoutMs
+                });
+            }
+            catch (TimeoutException)
+            {
+                if (await loadingQuote.IsVisibleAsync())
+                    throw;
+
+                // The loading state may complete before Playwright observes it.
+            }
+
+            var exactQuoteResult = _page.GetByText(quoteNumber, new() { Exact = true }).First;
+            await Assertions.Expect(exactQuoteResult).ToBeVisibleAsync(new() { Timeout = timeoutMs });
         }
 
         /// <summary>
