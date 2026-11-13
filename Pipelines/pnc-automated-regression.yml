@@ -31,11 +31,11 @@ parameters:
   - IT
 
 - name: suite
-  displayName: "Suite"
+  displayName: "Suite (RatePolicy runs separately)"
   type: string
-  default: All
+  default: BasicAndCountryEstate
   values:
-  - All
+  - BasicAndCountryEstate
   - SingleExample
   - BasicPolicy
   - CountryEstate
@@ -97,15 +97,15 @@ variables:
   - name: RUN_SCOPE
     value: "Normal workflow"
 
-- ${{ if eq(parameters.suite, 'All') }}:
+- ${{ if eq(parameters.suite, 'BasicAndCountryEstate') }}:
   - name: TEST_FILTER
-    value: "TestCategory=SFP&TestCategory!=DevOnly"
+    value: "TestCategory=SFP&TestCategory!=RatePolicy&TestCategory!=DevOnly"
 - ${{ if eq(parameters.suite, 'SingleExample') }}:
   - name: TEST_FILTER
     value: "TestCategory=PipelineSmoke&TestCategory!=DevOnly"
 - ${{ if eq(parameters.suite, 'BasicPolicy') }}:
   - name: TEST_FILTER
-    value: "TestCategory=SFP&TestCategory!=CE&TestCategory!=DevOnly"
+    value: "TestCategory=SFP&TestCategory!=CE&TestCategory!=RatePolicy&TestCategory!=DevOnly"
 - ${{ if eq(parameters.suite, 'CountryEstate') }}:
   - name: TEST_FILTER
     value: "TestCategory=CE&TestCategory!=DevOnly"
